@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       WP Aset BMD
  * Plugin URI:        https://github.com/agusnurwanto/wp-aset-bmd
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Aplikasi untuk menajemen, menampilkan dan menambahkan data meta aset yang terintegrasi dengan SIMDA BMD
  * Version:           1.0.0
  * Author:            Agus Nurwanto
  * Author URI:        https://github.com/agusnurwanto
@@ -29,6 +29,31 @@
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
+
+define( 'BMD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+// ============== https://carbonfields.net/ ================
+if(!defined('Carbon_Fields_Plugin\PLUGIN_FILE')){
+    define( 'Carbon_Fields_Plugin\PLUGIN_FILE', __FILE__ );
+
+    define( 'Carbon_Fields_Plugin\RELATIVE_PLUGIN_FILE', basename( dirname( \Carbon_Fields_Plugin\PLUGIN_FILE ) ) . '/' . basename( \Carbon_Fields_Plugin\PLUGIN_FILE ) );
+}
+
+add_action( 'after_setup_theme', 'carbon_fields_boot_plugin' );
+if(!function_exists('carbon_fields_boot_plugin')){
+    function carbon_fields_boot_plugin() {
+        if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+            require( __DIR__ . '/vendor/autoload.php' );
+        }
+        \Carbon_Fields\Carbon_Fields::boot();
+
+        if ( is_admin() ) {
+            \Carbon_Fields_Plugin\Libraries\Plugin_Update_Warning\Plugin_Update_Warning::boot();
+        }
+    }
+}
+// copy folder vendor & core
+// ============== https://carbonfields.net/ ================
 
 /**
  * Currently plugin version.
