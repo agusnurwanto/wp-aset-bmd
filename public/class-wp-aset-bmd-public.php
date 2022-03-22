@@ -40,6 +40,8 @@ class Wp_Aset_Bmd_Public {
 	 */
 	private $version;
 
+	private $simda;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -47,10 +49,11 @@ class Wp_Aset_Bmd_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( $plugin_name, $version, $simda ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->simda = $simda;
 
 	}
 
@@ -74,6 +77,8 @@ class Wp_Aset_Bmd_Public {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-aset-bmd-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style($this->plugin_name . 'bootstrap', plugin_dir_url(__FILE__) . 'css/bootstrap.min.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->plugin_name . 'select2', plugin_dir_url(__FILE__) . 'css/select2.min.css', array(), $this->version, 'all');
 
 	}
 
@@ -97,7 +102,19 @@ class Wp_Aset_Bmd_Public {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-aset-bmd-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script($this->plugin_name . 'bootstrap', plugin_dir_url(__FILE__) . 'js/bootstrap.bundle.min.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name . 'select2', plugin_dir_url(__FILE__) . 'js/select2.min.js', array('jquery'), $this->version, false);
+		wp_localize_script( $this->plugin_name, 'ajax', array(
+		    'url' => admin_url( 'admin-ajax.php' )
+		));
 
 	}
 
+	function dashboard_aset(){
+		// untuk disable render shortcode di halaman edit page/post
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset.php';
+	}
 }
