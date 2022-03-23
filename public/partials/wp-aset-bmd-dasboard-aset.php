@@ -3,9 +3,17 @@ $nama_pemda = get_option('_crb_bmd_nama_pemda');
 $tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 $api_key = get_option( '_crb_apikey_simda_bmd' );
 
+$limit = '';
+if(
+    !empty($_GET)
+    && !empty($_GET['limit'])
+    && is_numeric($_GET['limit'])
+){
+    $limit = 'top '.$_GET['limit'];
+}
 $body_skpd = '';
 $skpd = $this->functions->CurlSimda(array(
-    'query' => 'select * from ref_upb',
+    'query' => 'select '.$limit.' * from ref_upb',
     'no_debug' => 1
 ));
 $jml = 10;
@@ -66,53 +74,53 @@ $body .= '
     <tr>
         <td class="text-center" rowspan="2">1</td>
         <td rowspan="2">Aset Tanah</td>
-        <td class="text-right">'.number_format($tanah[0]->jml,0,",",".").'</td>
+        <td class="text-right">'.number_format($tanah[0]->jml,2,",",".").'</td>
         <td class="text-center">Meter Persegi</td>
-        <td class="text-right" rowspan="2">'.number_format($tanah[0]->harga,0,",",".").'</td>
+        <td class="text-right" rowspan="2">'.number_format($tanah[0]->harga,2,",",".").'</td>
         <td class="text-center" rowspan="2"><a href="#" class="btn btn-primary">Detail</a></td>
     </tr>
     <tr>
-        <td class="text-right">'.number_format($tanah[0]->jml_bidang,0,",",".").'</td>
+        <td class="text-right">'.number_format($tanah[0]->jml_bidang,2,",",".").'</td>
         <td class="text-center">Bidang Tanah</td>
     </tr>
     <tr>
         <td class="text-center">2</td>
         <td>Aset Mesin</td>
-        <td class="text-right">'.number_format($mesin[0]->jml,0,",",".").'</td>
+        <td class="text-right">'.number_format($mesin[0]->jml,2,",",".").'</td>
         <td class="text-center">Pcs</td>
-        <td class="text-right">'.number_format($mesin[0]->harga,0,",",".").'</td>
+        <td class="text-right">'.number_format($mesin[0]->harga,2,",",".").'</td>
         <td class="text-center"><a href="#" class="btn btn-primary">Detail</a></td>
     </tr>
     <tr>
         <td class="text-center">3</td>
         <td>Aset Bangunan</td>
-        <td class="text-right">'.number_format($gedung[0]->jml,0,",",".").'</td>
+        <td class="text-right">'.number_format($gedung[0]->jml,2,",",".").'</td>
         <td class="text-center">Gedung</td>
-        <td class="text-right">'.number_format($gedung[0]->harga,0,",",".").'</td>
+        <td class="text-right">'.number_format($gedung[0]->harga,2,",",".").'</td>
         <td class="text-center"><a href="#" class="btn btn-primary">Detail</a></td>
     </tr>
     <tr>
         <td class="text-center">4</td>
         <td>Aset Jalan Irigrasi</td>
-        <td class="text-right">'.number_format($jalan[0]->jml,0,",",".").'</td>
+        <td class="text-right">'.number_format($jalan[0]->jml,2,",",".").'</td>
         <td class="text-center">Meter (Panjang)</td>
-        <td class="text-right">'.number_format($jalan[0]->harga,0,",",".").'</td>
+        <td class="text-right">'.number_format($jalan[0]->harga,2,",",".").'</td>
         <td class="text-center"><a href="#" class="btn btn-primary">Detail</a></td>
     </tr>
     <tr>
         <td class="text-center">5</td>
         <td>Aset Tetap seperti buku, tanaman, hewan</td>
-        <td class="text-right">'.number_format($tetap_lainnya[0]->jml,0,",",".").'</td>
+        <td class="text-right">'.number_format($tetap_lainnya[0]->jml,2,",",".").'</td>
         <td class="text-center">Pcs</td>
-        <td class="text-right">'.number_format($tetap_lainnya[0]->harga,0,",",".").'</td>
+        <td class="text-right">'.number_format($tetap_lainnya[0]->harga,2,",",".").'</td>
         <td class="text-center"><a href="#" class="btn btn-primary">Detail</a></td>
     </tr>
     <tr>
         <td class="text-center">6</td>
         <td>Aset Kontruksi Dalam Pengerjaan</td>
-        <td class="text-right">'.number_format($gedung_pengerjaan[0]->jml,0,",",".").'</td>
+        <td class="text-right">'.number_format($gedung_pengerjaan[0]->jml,2,",",".").'</td>
         <td class="text-center">Gedung</td>
-        <td class="text-right">'.number_format($gedung_pengerjaan[0]->harga,0,",",".").'</td>
+        <td class="text-right">'.number_format($gedung_pengerjaan[0]->harga,2,",",".").'</td>
         <td class="text-center"><a href="#" class="btn btn-primary">Detail</a></td>
     </tr>
 ';
@@ -167,7 +175,7 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
             </tbody>
             <tfoot>
                 <th colspan="4" class="text-center">Total Nilai</th>
-                <th class="text-right"><?php echo number_format($total_nilai,0,",","."); ?></th>
+                <th class="text-right"><?php echo number_format($total_nilai,2,",","."); ?></th>
                 <th></th>
             <tfoot>
         </table>
@@ -187,7 +195,7 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
             </tbody>
             <tfoot>
                 <th colspan="3" class="text-center">Total Nilai</th>
-                <th class="text-right">Menunggu... </th>
+                <th class="text-right" id="total_all_skpd">Menunggu... </th>
                 <th></th>
             <tfoot>
         </table>
@@ -202,7 +210,7 @@ jQuery(document).on('ready', function() {
         return sequence.then(function(current_data){
             return new Promise(function(resolve_reduce, reject_reduce){
                 var sendData2 = current_data.map(function(opd, i){
-                    console.log('Get pagu SKPD', opd);
+                    // console.log('Get pagu SKPD', opd);
                     return new Promise(function(resolve2, reject2){
                         jQuery.ajax({
                             url: ajax.url,
@@ -215,7 +223,7 @@ jQuery(document).on('ready', function() {
                             dataType: 'json',
                             success: function(ret){
                                 jQuery('td[data-kd_lokasi="'+ret.data.kd_lokasi+'"]').text(ret.data.total);
-                                total_all += +ret.data.total;
+                                total_all += +ret.data.total_asli;
                                 resolve2();
                             }
                         });
@@ -237,7 +245,7 @@ jQuery(document).on('ready', function() {
         });
     }, Promise.resolve(skpd[last]))
     .then(function(data_last){
-        console.log('Berhasil!');
+        console.log('Berhasil! total=', total_all);
         jQuery('#total_all_skpd').text(formatRupiah(total_all));
     });
 });

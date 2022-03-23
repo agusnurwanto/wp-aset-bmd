@@ -171,8 +171,8 @@ class Wp_Aset_Bmd_Public {
 				    	'tetap_lainnya' => $tetap_lainnya,
 				    	'gedung_pengerjaan' => $gedung_pengerjaan,
 				    	'kd_lokasi' => $_POST['data']['kd_lokasi'],
-				    	'total' => number_format($harga,0,",","."),
-				    	'total_asli' => number_format($harga,0,",",".")
+				    	'total' => number_format($harga,2,",","."),
+				    	'total_asli' => $harga
 				    );
 				} else {
 					$ret['status'] = 'error';
