@@ -122,12 +122,14 @@ class Wp_Aset_Bmd {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-aset-bmd-public.php';
 
-		// Untuk SCRIPT SIMDA
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-aset-bmd-simda.php';
-
-		$this->simda = new Wp_Aset_Bmd_Simda( $this->plugin_name, $this->version );
-
 		$this->loader = new Wp_Aset_Bmd_Loader();
+
+		// Functions tambahan
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-aset-bmd-functions.php';
+
+		$this->functions = new Wp_Aset_Bmd_Simda( $this->plugin_name, $this->version );
+
+		$this->loader->add_action('template_redirect', $this->functions, 'allow_access_private_post', 0);
 
 	}
 
@@ -157,12 +159,11 @@ class Wp_Aset_Bmd {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Wp_Aset_Bmd_Admin( $this->get_plugin_name(), $this->get_version(), $this->simda );
+		$plugin_admin = new Wp_Aset_Bmd_Admin( $this->get_plugin_name(), $this->get_version(), $this->functions );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action('carbon_fields_register_fields', $plugin_admin, 'crb_attach_simda_options');
-		$this->loader->add_action('template_redirect', $plugin_admin, 'allow_access_private_post', 0);
 
 	}
 
@@ -175,10 +176,13 @@ class Wp_Aset_Bmd {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Wp_Aset_Bmd_Public( $this->get_plugin_name(), $this->get_version(), $this->simda );
+		$plugin_public = new Wp_Aset_Bmd_Public( $this->get_plugin_name(), $this->get_version(), $this->functions );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+
+		$this->loader->add_action('wp_ajax_get_total_skpd',  $plugin_public, 'get_total_skpd');
+		$this->loader->add_action('wp_ajax_nopriv_get_total_skpd',  $plugin_public, 'get_total_skpd');
 
 		add_shortcode('dashboard_aset',  array($plugin_public, 'dashboard_aset'));
 

@@ -40,7 +40,7 @@ class Wp_Aset_Bmd_Public {
 	 */
 	private $version;
 
-	private $simda;
+	private $functions;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -49,11 +49,11 @@ class Wp_Aset_Bmd_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version, $simda ) {
+	public function __construct( $plugin_name, $version, $functions ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-		$this->simda = $simda;
+		$this->functions = $functions;
 
 	}
 
@@ -116,5 +116,73 @@ class Wp_Aset_Bmd_Public {
 			return '';
 		}
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset.php';
+	}
+
+	function get_total_skpd(){
+		global $wpdb;
+		$ret = array(
+			'status'	=> 'success',
+			'message'	=> 'Berhasil total aset SKPD!'
+		);
+		if (!empty($_POST)) {
+			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
+				if (!empty($_POST['data'])) {
+					$where = ' where Kd_Prov=\''.$_POST['data']['Kd_Prov'].'\' and Kd_Kab_Kota=\''.$_POST['data']['Kd_Kab_Kota'].'\' and Kd_Bidang=\''.$_POST['data']['Kd_Bidang'].'\' and Kd_Unit=\''.$_POST['data']['Kd_Unit'].'\' and Kd_Sub=\''.$_POST['data']['Kd_Sub'].'\' and Kd_UPB=\''.$_POST['data']['Kd_UPB'].'\'';
+				    if(!empty($_POST['data']['Kd_Kecamatan'])){
+				        $where .= ' and Kd_Kecamatan=\''.$_POST['data']['Kd_Kecamatan'].'\'';
+				    }else{
+				        $where .= ' and Kd_Kecamatan is null';
+				    }
+				    if(!empty($_POST['data']['Kd_Desa'])){
+				        $where .= ' and Kd_Desa=\''.$_POST['data']['Kd_Desa'].'\'';
+				    }else{
+				        $where .= ' and Kd_Desa is null';
+				    }
+				    $tanah = $this->functions->CurlSimda(array(
+				        'query' => 'select sum(Luas_M2) as jml, COUNT(*) as jml_bidang, sum(Harga) as harga from ta_kib_a'.$where,
+				        'no_debug' => 1
+				    ));
+				    $mesin = $this->functions->CurlSimda(array(
+				        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_b'.$where,
+				        'no_debug' => 1
+				    ));
+				    $gedung = $this->functions->CurlSimda(array(
+				        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_c'.$where,
+				        'no_debug' => 1
+				    ));
+				    $jalan = $this->functions->CurlSimda(array(
+				        'query' => 'select sum(Panjang) as jml, sum(Harga) as harga from ta_kib_d'.$where,
+				        'no_debug' => 1
+				    ));
+				    $tetap_lainnya = $this->functions->CurlSimda(array(
+				        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_e'.$where,
+				        'no_debug' => 1
+				    ));
+				    $gedung_pengerjaan = $this->functions->CurlSimda(array(
+				        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_f'.$where,
+				        'no_debug' => 1
+				    ));
+				    $harga = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->harga+$tetap_lainnya[0]->harga+$gedung_pengerjaan[0]->harga;
+				    $ret['data'] = array(
+				    	'tanah' => $tanah,
+				    	'mesin' => $mesin,
+				    	'gedung' => $gedung,
+				    	'jalan' => $jalan,
+				    	'tetap_lainnya' => $tetap_lainnya,
+				    	'gedung_pengerjaan' => $gedung_pengerjaan,
+				    	'kd_lokasi' => $_POST['data']['kd_lokasi'],
+				    	'total' => number_format($harga,0,",","."),
+				    	'total_asli' => number_format($harga,0,",",".")
+				    );
+				} else {
+					$ret['status'] = 'error';
+					$ret['message'] = 'Format ID SKPD Salah!';
+				}
+			} else {
+				$ret['status'] = 'error';
+				$ret['message'] = 'APIKEY tidak sesuai!';
+			}
+		}
+		die(json_encode($ret));
 	}
 }
