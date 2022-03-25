@@ -65,7 +65,7 @@ foreach($skpd as $k => $val){
             <td class="text-center">'.$no.'</td>
             <td class="text-center">'.$kd_lokasi.'</td>
             <td>'.$val->Nm_UPB.' '.$alamat.'</td>
-            <td class="text-right" data-kd_lokasi="'.$kd_lokasi.'">Menunggu... </td>
+            <td class="text-right harga_total" data-kd_lokasi="'.$kd_lokasi.'">Menunggu... </td>
             <td class="text-center"><a href="#" class="btn btn-primary">Detail</a></td>
         </tr>
     ';
@@ -234,7 +234,37 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
 </div>
 <script type="text/javascript">
 var skpd = <?php echo json_encode($skpd_all); ?>;
+var row_skpd = {};
 jQuery(document).on('ready', function() {
+    jQuery('#table-aset-skpd tbody tr').map(function(i, b){
+        var tr = jQuery(b);
+        var kd_lokasi = tr.find('td.harga_total').attr('data-kd_lokasi');
+        row_skpd[kd_lokasi] = i;
+    });
+    var tableRender = jQuery('#table-aset-skpd').dataTable({
+        lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
+        footerCallback: function ( row, data, start, end, display ) {
+            var api = this.api();
+            var cek_menunggu = false;
+            var text_menunggu = 'Menunggu...';
+            var total_page = api.column( 3, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    if(b == text_menunggu){
+                        cek_menunggu = text_menunggu;
+                        return a;
+                    }else{
+                        return a + to_number(b);
+                    }
+                }, 0 );
+            if(cek_menunggu){
+                total_page = cek_menunggu;
+            }else{
+                total_page = formatRupiah(total_page);
+            }
+            jQuery('#total_all_skpd').text(total_page);
+        }
+    });
     var total_all = 0;
     var last = skpd.length-1;
     skpd.reduce(function(sequence, nextData){
@@ -253,7 +283,7 @@ jQuery(document).on('ready', function() {
                             },
                             dataType: 'json',
                             success: function(ret){
-                                jQuery('td[data-kd_lokasi="'+ret.data.kd_lokasi+'"]').text(ret.data.total);
+                                tableRender.api().cell({row: row_skpd[ret.data.kd_lokasi], column:3}).data(ret.data.total).draw()
                                 total_all += +ret.data.total_asli;
                                 resolve2();
                             }
@@ -276,9 +306,13 @@ jQuery(document).on('ready', function() {
         });
     }, Promise.resolve(skpd[last]))
     .then(function(data_last){
-        jQuery('#table-aset-skpd').dataTable();
         console.log('Berhasil! total=', total_all);
-        jQuery('#total_all_skpd').text(formatRupiah(total_all));
+        var total_page = tableRender.api().column( 3, { page: 'current'} )
+            .data()
+            .reduce( function (a, b) {
+                return a + to_number(b);
+            }, 0 );
+        jQuery('#total_all_skpd').text(formatRupiah(total_page));
     });
 });
 </script>

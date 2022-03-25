@@ -12,13 +12,6 @@ function formatRupiah(angka, prefix){
 			angka += '';
 			angka = angka.replace(/\./g, ',').toString();
 		}
-		// if(typeof angka == 'number'){
-		// 	angka += '';
-		// 	var number_string = angka.replace(/\./g, ',').toString();
-		// }else{
-		// 	angka += '';
-		// 	var number_string = angka.replace(/[^,\d]/g, '').toString();
-		// }
 		angka += '';
 		number_string = angka;
 	}catch(e){
@@ -42,4 +35,15 @@ function formatRupiah(angka, prefix){
 	}else{
 		return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
 	}
+}
+
+function to_number(text){
+	if(typeof text == 'number'){
+		return text;
+	}
+	text = +(text.replace(/\./g, '').replace(/,/g, '.'));
+	if(typeof text == 'NaN'){
+		text = 0;
+	}
+	return text;
 }

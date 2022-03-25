@@ -259,19 +259,19 @@ class Wp_Aset_Bmd_Public {
 		    $table_simda = 'Ta_KIB_A';
 		}else if($options['jenis_aset'] == 'mesin'){
 		    $nama_jenis_aset = 'Aset Mesin';
-		    $table_simda = 'Ta_KIB_A';
+		    $table_simda = 'Ta_KIB_B';
 		}else if($options['jenis_aset'] == 'bangunan'){
 		    $nama_jenis_aset = 'Aset Bangunan';
-		    $table_simda = 'Ta_KIB_A';
+		    $table_simda = 'Ta_KIB_C';
 		}else if($options['jenis_aset'] == 'jalan'){
 		    $nama_jenis_aset = 'Aset Jalan Irigrasi';
-		    $table_simda = 'Ta_KIB_A';
+		    $table_simda = 'Ta_KIB_D';
 		}else if($options['jenis_aset'] == 'aset_tetap'){
 		    $nama_jenis_aset = 'Aset Tetap seperti buku, tanaman, hewan';
-		    $table_simda = 'Ta_KIB_A';
+		    $table_simda = 'Ta_KIB_E';
 		}else if($options['jenis_aset'] == 'bangunan_dalam_pengerjaan'){
 		    $nama_jenis_aset = 'Aset Kontruksi Dalam Pengerjaan';
-		    $table_simda = 'Ta_KIB_A';
+		    $table_simda = 'Ta_KIB_F';
 		}
 		return array(
 			'nama' => $nama_jenis_aset,

@@ -8,10 +8,17 @@ if(empty($nama_jenis_aset)){
     die('Jenis Aset tidak ditemukan!');
 }
 
+$select_custom = '';
+if($table_simda == 'Ta_KIB_A'){
+    $select_custom = 'sum(a.Luas_M2) as jml, ';
+}
+
 $body_skpd = '';
 $skpd = $this->functions->CurlSimda(array(
     'query' => '
-        select a.Kd_Prov, 
+        select 
+            '.$select_custom.'
+            a.Kd_Prov, 
             a.Kd_Kab_Kota, 
             a.Kd_Bidang, 
             a.Kd_Unit, 
@@ -19,13 +26,12 @@ $skpd = $this->functions->CurlSimda(array(
             a.Kd_UPB, 
             a.Kd_Kecamatan, 
             a.Kd_Desa, 
-            sum(a.Luas_M2) as jml, 
             COUNT(a.Harga) as jml_bidang, 
             sum(a.Harga) as harga,
             u.Nm_UPB,
             k.Nm_Kecamatan,
             d.Nm_Desa
-        from ta_kib_a a
+        from '.$data_jenis['table_simda'].' a
         LEFT JOIN ref_upb u ON a.Kd_Prov=u.Kd_Prov
             AND a.Kd_Kab_Kota = u.Kd_Kab_Kota 
             AND a.Kd_Bidang = u.Kd_Bidang 
@@ -82,7 +88,7 @@ foreach($skpd as $k => $val){
             <td class="text-center">'.$no.'</td>
             <td class="text-center">'.$kd_lokasi.'</td>
             <td>'.$val->Nm_UPB.' '.$alamat.'</td>
-            <td class="text-right" data-kd_lokasi="'.$kd_lokasi.'">'.number_format($val->harga,2,",",".").'</td>
+            <td class="text-right" data-kd_lokasi="'.$kd_lokasi.'" data-sort="'.$val->harga.'">'.number_format($val->harga,2,",",".").'</td>
             <td class="text-center"><a href="#" class="btn btn-primary">Detail</a></td>
         </tr>
     ';
@@ -123,3 +129,19 @@ if(!empty($skpd_sementara)){
         </table>
     </div>
 </div>
+<script type="text/javascript">
+jQuery(document).on('ready', function(){
+    jQuery('#table-aset-skpd').dataTable({
+        lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
+        footerCallback: function ( row, data, start, end, display ) {
+            var api = this.api();
+            var total_page = api.column( 3, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return a + to_number(b);
+                }, 0 );
+            jQuery('#total_all_skpd').text(formatRupiah(total_page));
+        }
+    });
+});
+</script>
