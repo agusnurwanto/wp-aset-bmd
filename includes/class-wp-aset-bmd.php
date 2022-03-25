@@ -185,6 +185,7 @@ class Wp_Aset_Bmd {
 		$this->loader->add_action('wp_ajax_nopriv_get_total_skpd',  $plugin_public, 'get_total_skpd');
 
 		add_shortcode('dashboard_aset',  array($plugin_public, 'dashboard_aset'));
+		add_shortcode('daftar_aset',  array($plugin_public, 'daftar_aset'));
 
 	}
 

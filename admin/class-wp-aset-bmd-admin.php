@@ -169,11 +169,6 @@ class Wp_Aset_Bmd_Admin {
 			'post_status' => 'public'
 		));
 
-		$this->functions->generatePage(array(
-			'nama_page' => 'Dasboard Aset Barang Milik Daerah Per SKPD',
-			'content' => '[dashboard_aset_skpd]'
-		));
-
         $status = $this->get_status_simda();
         $nama_pemda = $status['data']['nama_pemda'];
         $alamat_pemda = $status['data']['alamat_pemda'];

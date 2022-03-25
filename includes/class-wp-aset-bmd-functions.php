@@ -198,6 +198,21 @@ class Wp_Aset_Bmd_Simda
 		return $key;
 	}
 
+	public function decode_key($value){
+		$key = base64_decode($value);
+		$key_db = md5(get_option( '_crb_apikey_simda_bmd' ));
+		$key = explode($key_db, $key);
+		$get = array();
+		if(!empty($key[2])){
+			$all_get = explode('&', $key[2]);
+			foreach ($all_get as $k => $v) {
+				$current_get = explode('=', $v);
+				$get[$current_get[0]] = $current_get[1];
+			}
+		}
+		return $get;
+	}
+
 	public function get_link_post($custom_post){
 		$link = get_permalink($custom_post);
 		$options = array();
@@ -247,6 +262,9 @@ class Wp_Aset_Bmd_Simda
 			$_post['ID'] = $custom_post->ID;
 			wp_update_post( $_post );
 			$_post['update'] = 1;
+		}
+		if(!empty($options['custom_url'])){
+			$custom_post->custom_url = $options['custom_url'];
 		}
 		return array(
 			'title' => $options['nama_page'],

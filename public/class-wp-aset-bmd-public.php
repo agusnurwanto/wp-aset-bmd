@@ -79,6 +79,7 @@ class Wp_Aset_Bmd_Public {
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-aset-bmd-public.css', array(), $this->version, 'all' );
 		wp_enqueue_style($this->plugin_name . 'bootstrap', plugin_dir_url(__FILE__) . 'css/bootstrap.min.css', array(), $this->version, 'all');
 		wp_enqueue_style($this->plugin_name . 'select2', plugin_dir_url(__FILE__) . 'css/select2.min.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->plugin_name . 'datatables', plugin_dir_url(__FILE__) . 'css/jquery.dataTables.min.css', array(), $this->version, 'all');
 
 	}
 
@@ -104,6 +105,7 @@ class Wp_Aset_Bmd_Public {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-aset-bmd-public.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script($this->plugin_name . 'bootstrap', plugin_dir_url(__FILE__) . 'js/bootstrap.bundle.min.js', array('jquery'), $this->version, false);
 		wp_enqueue_script($this->plugin_name . 'select2', plugin_dir_url(__FILE__) . 'js/select2.min.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name . 'datatables', plugin_dir_url(__FILE__) . 'js/jquery.dataTables.min.js', array('jquery'), $this->version, false);
 		wp_localize_script( $this->plugin_name, 'ajax', array(
 		    'url' => admin_url( 'admin-ajax.php' )
 		));
@@ -116,6 +118,44 @@ class Wp_Aset_Bmd_Public {
 			return '';
 		}
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset.php';
+	}
+
+	function daftar_aset(){
+		// untuk disable render shortcode di halaman edit page/post
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		if(empty($_GET['key'])){
+		    die('Halaman tidak dapat diakses!');
+		}
+		$nama_pemda = get_option('_crb_bmd_nama_pemda');
+		$tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
+		$api_key = get_option( '_crb_apikey_simda_bmd' );
+		$params = $this->functions->decode_key($_GET['key']);
+
+		$limit = '';
+		if(
+		    !empty($_GET)
+		    && !empty($_GET['limit'])
+		    && is_numeric($_GET['limit'])
+		){
+		    $limit = 'top '.$_GET['limit'];
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset.php';
+	}
+
+	function get_link_daftar_aset($options=array('get' => array())){
+		$custom_url = array();
+		foreach($options['get'] as $key => $val){
+			$custom_url[] = array('key' => $key, 'value' => $val);
+		}
+		$link = $this->functions->generatePage(array(
+			'nama_page' => 'Daftar Aset Barang Milik Daerah',
+			'content' => '[daftar_aset]',
+			'post_status' => 'public',
+			'custom_url' => $custom_url
+		));
+		return $link['url'];
 	}
 
 	function get_total_skpd(){
@@ -138,31 +178,54 @@ class Wp_Aset_Bmd_Public {
 				    }else{
 				        $where .= ' and Kd_Desa is null';
 				    }
-				    $tanah = $this->functions->CurlSimda(array(
-				        'query' => 'select sum(Luas_M2) as jml, COUNT(*) as jml_bidang, sum(Harga) as harga from ta_kib_a'.$where,
-				        'no_debug' => 1
-				    ));
-				    $mesin = $this->functions->CurlSimda(array(
-				        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_b'.$where,
-				        'no_debug' => 1
-				    ));
-				    $gedung = $this->functions->CurlSimda(array(
-				        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_c'.$where,
-				        'no_debug' => 1
-				    ));
-				    $jalan = $this->functions->CurlSimda(array(
-				        'query' => 'select sum(Panjang) as jml, sum(Harga) as harga from ta_kib_d'.$where,
-				        'no_debug' => 1
-				    ));
-				    $tetap_lainnya = $this->functions->CurlSimda(array(
-				        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_e'.$where,
-				        'no_debug' => 1
-				    ));
-				    $gedung_pengerjaan = $this->functions->CurlSimda(array(
-				        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_f'.$where,
-				        'no_debug' => 1
-				    ));
-				    $harga = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->harga+$tetap_lainnya[0]->harga+$gedung_pengerjaan[0]->harga;
+
+				    $harga = 0;
+				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'tanah'){
+					    $tanah = $this->functions->CurlSimda(array(
+					        'query' => 'select sum(Luas_M2) as jml, COUNT(*) as jml_bidang, sum(Harga) as harga from ta_kib_a'.$where,
+					        'no_debug' => 1
+					    ));
+				    	$harga += $tanah[0]->harga;
+					}
+				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'mesin'){
+					    $mesin = $this->functions->CurlSimda(array(
+					        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_b'.$where,
+					        'no_debug' => 1
+					    ));
+				    	$harga += $mesin[0]->harga;
+				    }
+				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'bangunan'){
+					    $gedung = $this->functions->CurlSimda(array(
+					        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_c'.$where,
+					        'no_debug' => 1
+					    ));
+				    	$harga += $gedung[0]->harga;
+				    }
+				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'jalan'){
+					    $jalan = $this->functions->CurlSimda(array(
+					        'query' => 'select sum(Panjang) as jml, sum(Harga) as harga from ta_kib_d'.$where,
+					        'no_debug' => 1
+					    ));
+				    	$harga += $jalan[0]->harga;
+				    }
+				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'aset_tetap'){
+					    $tetap_lainnya = $this->functions->CurlSimda(array(
+					        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_e'.$where,
+					        'no_debug' => 1
+					    ));
+				    	$harga += $tetap_lainnya[0]->harga;
+				    }
+				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'bangunan_dalam_pengerjaan'){
+					    $gedung_pengerjaan = $this->functions->CurlSimda(array(
+					        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_f'.$where,
+					        'no_debug' => 1
+					    ));
+				    	$harga += $gedung_pengerjaan[0]->harga;
+				    }
+				    $jenis_aset = '';
+				    if(!empty($_POST['jenis_aset'])){
+				    	$jenis_aset = $_POST['jenis_aset'];
+				    }
 				    $ret['data'] = array(
 				    	'tanah' => $tanah,
 				    	'mesin' => $mesin,
@@ -172,7 +235,9 @@ class Wp_Aset_Bmd_Public {
 				    	'gedung_pengerjaan' => $gedung_pengerjaan,
 				    	'kd_lokasi' => $_POST['data']['kd_lokasi'],
 				    	'total' => number_format($harga,2,",","."),
-				    	'total_asli' => $harga
+				    	'total_asli' => $harga,
+				    	'jenis_aset' => $jenis_aset,
+				    	'where' => $where
 				    );
 				} else {
 					$ret['status'] = 'error';
@@ -184,5 +249,33 @@ class Wp_Aset_Bmd_Public {
 			}
 		}
 		die(json_encode($ret));
+	}
+
+	function get_nama_jenis_aset($options=array()){
+		$nama_jenis_aset = '';
+		$table_simda = '';
+		if($options['jenis_aset'] == 'tanah'){
+		    $nama_jenis_aset = 'Aset Tanah';
+		    $table_simda = 'Ta_KIB_A';
+		}else if($options['jenis_aset'] == 'mesin'){
+		    $nama_jenis_aset = 'Aset Mesin';
+		    $table_simda = 'Ta_KIB_A';
+		}else if($options['jenis_aset'] == 'bangunan'){
+		    $nama_jenis_aset = 'Aset Bangunan';
+		    $table_simda = 'Ta_KIB_A';
+		}else if($options['jenis_aset'] == 'jalan'){
+		    $nama_jenis_aset = 'Aset Jalan Irigrasi';
+		    $table_simda = 'Ta_KIB_A';
+		}else if($options['jenis_aset'] == 'aset_tetap'){
+		    $nama_jenis_aset = 'Aset Tetap seperti buku, tanaman, hewan';
+		    $table_simda = 'Ta_KIB_A';
+		}else if($options['jenis_aset'] == 'bangunan_dalam_pengerjaan'){
+		    $nama_jenis_aset = 'Aset Kontruksi Dalam Pengerjaan';
+		    $table_simda = 'Ta_KIB_A';
+		}
+		return array(
+			'nama' => $nama_jenis_aset,
+			'table_simda' => $table_simda
+		);
 	}
 }
