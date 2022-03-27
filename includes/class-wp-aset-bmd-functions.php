@@ -304,9 +304,10 @@ class Wp_Aset_Bmd_Simda
 		if(!empty($user)){
 			$username = $user['loginname'];
 			$email = $username.'@qodrbee.com';
-			$role = get_role('user_aset_skpd');
+			$nama_role = 'user_aset_skpd';
+			$role = get_role($nama_role);
 			if(empty($role)){
-				add_role( $role, $role, array( 
+				add_role( $nama_role, $nama_role, array( 
 					'read' => true,
 					'edit_posts' => true,
 					'upload_files' => true,
@@ -323,7 +324,7 @@ class Wp_Aset_Bmd_Simda
 				'user_email' => $email,
 				'first_name' => $user['nama'],
 				'display_name' => $user['nama'],
-				'role' => $role
+				'role' => $nama_role
 			);
 			if(!$insert_user){
 				$insert_user = wp_insert_user($option);
