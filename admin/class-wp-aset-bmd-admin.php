@@ -103,6 +103,9 @@ class Wp_Aset_Bmd_Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-aset-bmd-admin.js', array( 'jquery' ), $this->version, false );
+		wp_localize_script( $this->plugin_name, 'wp_aset_bmd', array(
+		    'api_key' => get_option( '_crb_apikey_simda_bmd' )
+		));
 
 	}
 
@@ -217,7 +220,64 @@ class Wp_Aset_Bmd_Admin {
 	            Field::make( 'text', 'crb_bmd_kepala_umum_nip', 'NIP Kepala Umum' )
 	            	->set_default_value($kepala_umum_nip),
 	            Field::make( 'text', 'crb_bmd_kepala_umum_jabatan', 'Jabatan Kepala Umum' )
-	            	->set_default_value($kepala_umum_jabatan)
+	            	->set_default_value($kepala_umum_jabatan),
+	            Field::make( 'html', 'crb_generate_user_aset' )
+	            	->set_html( '<a id="generate_user_aset" onclick="return false;" href="#" class="button button-primary button-large">Generate User SKPD Aset BMD</a>' )
+	            	->set_help_text('Username SKPD adalah kode lokasi dengan format (<b>Kd_Prov.Kd_Kab_Kota.Kd_Bidang.Kd_Unit.Kd_Sub.Kd_UPB.Kd_Kecamatan.Kd_Desa</b>). Contoh <b>13.5.1.1.1.1.9.5</b> dengan password default yang bisa dirubah sendiri oleh user.'),
 	        ) );
+	}
+
+	function generate_user_aset(){
+		global $wpdb;
+		$ret = array();
+		$ret['status'] = 'success';
+		$ret['message'] = 'Berhasil Generate User Wordpress dari DB SIMDA BMD';
+		if (!empty($_POST)) {
+			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
+				$skpd = $this->functions->CurlSimda(array(
+				    'query' => '
+				        select '.$limit.' 
+				            u.Kd_Prov, 
+				            u.Kd_Kab_Kota, 
+				            u.Kd_Bidang, 
+				            u.Kd_Unit, 
+				            u.Kd_Sub, 
+				            u.Kd_UPB, 
+				            u.Kd_Kecamatan, 
+				            u.Kd_Desa, 
+				            u.Nm_UPB,
+				            k.Nm_Kecamatan,
+				            d.Nm_Desa
+				        from ref_upb u
+				        LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
+				            AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
+				            AND k.Kd_Kecamatan = u.Kd_Kecamatan
+				        LEFT JOIN Ref_Desa d ON d.Kd_Prov=u.Kd_Prov
+				            AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
+				            AND d.Kd_Kecamatan = u.Kd_Kecamatan
+				            AND d.Kd_Desa = u.Kd_Desa'
+				));
+				if(!empty($skpd)){
+					foreach ($skpd as $k => $user) {
+						$user->pass = $_POST['pass'];
+						$user->loginname = $user->Kd_Prov.'.'.$user->Kd_Kab_Kota.'.'.$user->Kd_Bidang.'.'.$user->Kd_Unit.'.'.$user->Kd_Sub.'.'.$user->Kd_UPB.'.'.$user->Kd_Kecamatan.'.'.$user->Kd_Desa;
+						$user->nama = $user->Nm_UPB;
+						$user->kecamatan = $user->Nm_Kecamatan;
+						$user->desa = $user->Nm_Desa;
+						$this->functions->gen_user_aset((array) $user);
+					}
+				}else{
+					$ret['status'] = 'error';
+					$ret['message'] = 'Data user SKPD di table Ref_UPB kosong!';
+				}
+			} else {
+				$ret['status'] = 'error';
+				$ret['message'] = 'APIKEY tidak sesuai!';
+			}
+		} else {
+			$ret['status'] = 'error';
+			$ret['message'] = 'Format Salah!';
+		}
+		die(json_encode($ret));
 	}
 }

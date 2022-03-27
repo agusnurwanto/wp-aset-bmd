@@ -120,6 +120,60 @@ class Wp_Aset_Bmd_Public {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset.php';
 	}
 
+	function detail_aset($atts){
+		// untuk disable render shortcode di halaman edit page/post
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		global $wpdb;
+		$params = shortcode_atts( array(
+			'kd_lokasi' => '0.0.0.0.0.0.0.0',
+			'kd_barang' => '0.0.0.0.0.0.0',
+			'kd_register' => '0',
+			'jenis_aset' => ''
+		), $atts );
+		$kd_lokasi = explode('.', $params['kd_lokasi']);
+		$Kd_Prov = (int) $kd_lokasi[1];
+        $Kd_Kab_Kota = (int) $kd_lokasi[2];
+        $Kd_Bidang = (int) $kd_lokasi[3];
+        $Kd_Unit = (int) $kd_lokasi[4];
+        $Kd_Sub = (int) $kd_lokasi[5];
+        $Kd_UPB = (int) $kd_lokasi[6];
+        $Kd_Kecamatan = (int) $kd_lokasi[7];
+        $Kd_Desa = (int) $kd_lokasi[8];
+
+		$kd_barang = explode('.', $params['kd_barang']);
+		$Kd_Aset8 = (int) $kd_barang[0];
+		$Kd_Aset80 = (int) $kd_barang[1];
+		$Kd_Aset81 = (int) $kd_barang[2];
+		$Kd_Aset82 = (int) $kd_barang[3];
+		$Kd_Aset83 = (int) $kd_barang[4];
+		$Kd_Aset84 = (int) $kd_barang[5];
+		$Kd_Aset85 = (int) $kd_barang[6];
+		$No_Reg8 = (int) $params['kd_register'];
+
+		$nama_skpd = $this->functions->CurlSimda(array(
+    		'query' => "
+				SELECT Nm_UPB 
+				from ref_upb 
+				where Kd_Prov = $Kd_Prov
+	            AND Kd_Kab_Kota = $Kd_Kab_Kota 
+	            AND Kd_Bidang = $Kd_Bidang 
+	            AND Kd_Unit = $Kd_Unit 
+	            AND Kd_Sub = $Kd_Sub 
+	            AND Kd_UPB = $Kd_UPB
+			",
+			'no_debug' => 0
+		));
+		$params['nama_skpd'] = $nama_skpd[0]->Nm_UPB;
+		$nama_pemda = get_option('_crb_bmd_nama_pemda');
+		$tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
+		$api_key = get_option( '_crb_apikey_simda_bmd' );
+        if($params['jenis_aset'] == 'tanah'){
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-tanah.php';
+        }
+	}
+
 	function daftar_aset(){
 		// untuk disable render shortcode di halaman edit page/post
 		if(!empty($_GET) && !empty($_GET['post'])){
@@ -128,6 +182,7 @@ class Wp_Aset_Bmd_Public {
 		if(empty($_GET['key'])){
 		    die('Halaman tidak dapat diakses!');
 		}
+		global $wpdb;
 		$nama_pemda = get_option('_crb_bmd_nama_pemda');
 		$tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 		$api_key = get_option( '_crb_apikey_simda_bmd' );
@@ -141,7 +196,20 @@ class Wp_Aset_Bmd_Public {
 		){
 		    $limit = 'top '.$_GET['limit'];
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset.php';
+		if(!empty($params['kd_lokasi'])){
+			$kd_lokasi = explode('.', $params['kd_lokasi']);
+			$Kd_Prov = (int) $kd_lokasi[1];
+            $Kd_Kab_Kota = (int) $kd_lokasi[2];
+            $Kd_Bidang = (int) $kd_lokasi[3];
+            $Kd_Unit = (int) $kd_lokasi[4];
+            $Kd_Sub = (int) $kd_lokasi[5];
+            $Kd_UPB = (int) $kd_lokasi[6];
+            $Kd_Kecamatan = (int) $kd_lokasi[7];
+            $Kd_Desa = (int) $kd_lokasi[8];
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset-rinci.php';
+		}else{
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset.php';
+		}
 	}
 
 	function get_link_daftar_aset($options=array('get' => array())){

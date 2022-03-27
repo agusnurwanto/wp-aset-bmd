@@ -10,7 +10,7 @@ if(empty($nama_jenis_aset)){
 
 $select_custom = '';
 if($table_simda == 'Ta_KIB_A'){
-    $select_custom = 'sum(a.Luas_M2) as jml, ';
+    $select_custom = 'sum(a.Luas_M2) as luas, ';
 }
 
 $body_skpd = '';
@@ -26,7 +26,7 @@ $skpd = $this->functions->CurlSimda(array(
             a.Kd_UPB, 
             a.Kd_Kecamatan, 
             a.Kd_Desa, 
-            COUNT(a.Harga) as jml_bidang, 
+            COUNT(a.Harga) as jml, 
             sum(a.Harga) as harga,
             u.Nm_UPB,
             k.Nm_Kecamatan,
@@ -83,13 +83,37 @@ foreach($skpd as $k => $val){
     }else{
         $alamat = '';
     }
+    $jumlah = number_format($val->jml,2,",",".");
+    if($table_simda == 'Ta_KIB_A'){
+        $jumlah = number_format($val->jml,2,",",".").'<br>'.number_format($val->luas,2,",",".");
+        $satuan = 'Bidang Tanah<br>Meter Persegi';
+    }else if($table_simda == 'Ta_KIB_B'){
+        $satuan = 'Pcs';
+    }else if($table_simda == 'Ta_KIB_C'){
+        $satuan = 'Gedung';
+    }else if($table_simda == 'Ta_KIB_D'){
+        $satuan = 'Meter (Panjang)';
+    }else if($table_simda == 'Ta_KIB_E'){
+        $satuan = 'Pcs';
+    }else if($table_simda == 'Ta_KIB_F'){
+        $satuan = 'Gedung';
+    }
+    $link_detail = $this->get_link_daftar_aset(array(
+        'get' => array(
+            'nama_skpd' => $val->Nm_UPB.' '.$alamat,
+            'kd_lokasi' => $kd_lokasi,
+            'jenis_aset' => $params['jenis_aset']
+        )
+    ));
     $body_skpd .= '
         <tr>
             <td class="text-center">'.$no.'</td>
             <td class="text-center">'.$kd_lokasi.'</td>
             <td>'.$val->Nm_UPB.' '.$alamat.'</td>
+            <td class="text-right">'.$jumlah.'</td>
+            <td class="text-center">'.$satuan.'</td>
             <td class="text-right" data-kd_lokasi="'.$kd_lokasi.'" data-sort="'.$val->harga.'">'.number_format($val->harga,2,",",".").'</td>
-            <td class="text-center"><a href="#" class="btn btn-primary">Detail</a></td>
+            <td class="text-center"><a target="_blank" href="'.$link_detail.'" class="btn btn-primary">Detail</a></td>
         </tr>
     ';
 }
@@ -114,6 +138,8 @@ if(!empty($skpd_sementara)){
                     <th class="text-center">No</th>
                     <th class="text-center">Kode Lokasi</th>
                     <th class="text-center">Nama SKPD</th>
+                    <th class="text-center">Jumlah</th>
+                    <th class="text-center">Satuan</th>
                     <th class="text-center">Nilai (Rupiah)</th>
                     <th class="text-center">Aksi</th>
                 </tr>
@@ -122,7 +148,7 @@ if(!empty($skpd_sementara)){
                 <?php echo $body_skpd; ?>
             </tbody>
             <tfoot>
-                <th colspan="3" class="text-center">Total Nilai</th>
+                <th colspan="5" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_all_skpd"><?php echo number_format($total_nilai,2,",","."); ?></th>
                 <th></th>
             <tfoot>
@@ -132,10 +158,13 @@ if(!empty($skpd_sementara)){
 <script type="text/javascript">
 jQuery(document).on('ready', function(){
     jQuery('#table-aset-skpd').dataTable({
+        columnDefs: [
+            { "width": "100px", "targets": 4 }
+        ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
             var api = this.api();
-            var total_page = api.column( 3, { page: 'current'} )
+            var total_page = api.column( 5, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);

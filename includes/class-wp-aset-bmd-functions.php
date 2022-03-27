@@ -249,7 +249,7 @@ class Wp_Aset_Bmd_Simda
 			$id = wp_insert_post($_post);
 			$_post['insert'] = 1;
 			$_post['ID'] = $id;
-			$custom_post = get_page_by_title($options['nama_page'], OBJECT, 'page');
+			$custom_post = get_page_by_title($options['nama_page'], OBJECT, $post_type);
 			update_post_meta($custom_post->ID, 'ast-breadcrumbs-content', 'disabled');
 			update_post_meta($custom_post->ID, 'ast-featured-img', 'disabled');
 			update_post_meta($custom_post->ID, 'ast-main-header-display', 'disabled');
@@ -266,9 +266,14 @@ class Wp_Aset_Bmd_Simda
 		if(!empty($options['custom_url'])){
 			$custom_post->custom_url = $options['custom_url'];
 		}
+		if(!empty($options['no_key'])){
+			$link = get_permalink($custom_post);
+		}else{
+			$link = $this->get_link_post($custom_post);
+		}
 		return array(
 			'title' => $options['nama_page'],
-			'url' => $this->get_link_post($custom_post)
+			'url' => $link
 		);
 	}
 
@@ -293,4 +298,49 @@ class Wp_Aset_Bmd_Simda
         $ret .= $number;
         return $ret;
     }
+
+	function gen_user_aset($user = array()){
+		global $wpdb;
+		if(!empty($user)){
+			$username = $user['loginname'];
+			$email = $username.'@qodrbee.com';
+			$role = get_role('user_aset_skpd');
+			if(empty($role)){
+				add_role( $role, $role, array( 
+					'read' => true,
+					'edit_posts' => true,
+					'upload_files' => true,
+					'edit_published_posts' => true,
+					'publish_posts' => true,
+					'edit_others_posts' => true,
+					'delete_posts' => false
+				) );
+			}
+			$insert_user = username_exists($username);
+			$option = array(
+				'user_login' => $username,
+				'user_pass' => $user['pass'],
+				'user_email' => $email,
+				'first_name' => $user['nama'],
+				'display_name' => $user['nama'],
+				'role' => $role
+			);
+			if(!$insert_user){
+				$insert_user = wp_insert_user($option);
+			}else{
+				$option['ID'] = $insert_user;
+				wp_update_user($option);
+			}
+
+			$meta = array(
+			    '_crb_nama_skpd' => $user['nama'],
+			    '_crb_kd_lokasi' => $user['loginname'],
+			    '_crb_desa' => $user['desa'],
+			    '_crb_kecamatan' => $user['kecamatan']
+			);
+		    foreach( $meta as $key => $val ) {
+		      	update_user_meta( $insert_user, $key, $val ); 
+		    }
+		}
+	}
 }
