@@ -36,6 +36,17 @@ $aset = $this->functions->CurlSimda(array(
 $koordinatX = '-7.7524434396470605';
 $koordinatY = '111.51809306769144';
 $polygon = '[{lat: -7.751975, lng: 111.517829},{lat: -7.752092, lng: 111.518424},{lat: -7.752815, lng: 111.518344},{lat: -7.752661, lng: 111.5177}]';
+$link_edit = get_edit_post_link($post->ID);
+$edit_post = $this->cek_edit_post(array(
+    'Kd_Prov' => $Kd_Prov,
+    'Kd_Kab_Kota' => $Kd_Kab_Kota,
+    'Kd_Bidang' => $Kd_Bidang,
+    'Kd_Unit' => $Kd_Unit,
+    'Kd_Sub' => $Kd_Sub,
+    'Kd_UPB' => $Kd_UPB,
+    'Kd_Kecamatan' => $Kd_Kecamatan,
+    'Kd_Desa' => $Kd_Desa
+));
 ?>
 <style type="text/css">
     .warning {
@@ -153,6 +164,14 @@ $polygon = '[{lat: -7.751975, lng: 111.517829},{lat: -7.752092, lng: 111.518424}
                     <input type="text" disabled class="form-control" name="">
                 </div>
             </div>
+            <?php if(!empty($edit_post)): ?>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Aksi</label>
+                <div class="col-md-10">
+                    <a target="_blank" href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a>
+                </div>
+            </div>
+        <?php endif; ?>
         </form>
     </div>
 </div>

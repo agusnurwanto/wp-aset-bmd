@@ -236,7 +236,7 @@ class Wp_Aset_Bmd_Admin {
 			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
 				$skpd = $this->functions->CurlSimda(array(
 				    'query' => '
-				        select '.$limit.' 
+				        select  
 				            u.Kd_Prov, 
 				            u.Kd_Kab_Kota, 
 				            u.Kd_Bidang, 
@@ -264,11 +264,51 @@ class Wp_Aset_Bmd_Admin {
 						$user->nama = $user->Nm_UPB;
 						$user->kecamatan = $user->Nm_Kecamatan;
 						$user->desa = $user->Nm_Desa;
+						$user->role = 'user_aset_skpd';
+						$user->nama_role = 'User Aset UPB';
 						$this->functions->gen_user_aset((array) $user);
 					}
-				}else{
-					$ret['status'] = 'error';
-					$ret['message'] = 'Data user SKPD di table Ref_UPB kosong!';
+				}
+				$skpd = $this->functions->CurlSimda(array(
+				    'query' => '
+				        select  
+				            u.Kd_Prov, 
+				            u.Kd_Kab_Kota, 
+				            u.Kd_Bidang, 
+				            u.Kd_Unit, 
+				            u.Kd_Sub, 
+				            u.Nm_Sub_Unit
+				        from Ref_Sub_Unit u'
+				));
+				if(!empty($skpd)){
+					foreach ($skpd as $k => $user) {
+						$user->pass = $_POST['pass'];
+						$user->loginname = $user->Kd_Prov.'.'.$user->Kd_Kab_Kota.'.'.$user->Kd_Bidang.'.'.$user->Kd_Unit.'.'.$user->Kd_Sub;
+						$user->nama = $user->Nm_Sub_Unit;
+						$user->role = 'user_aset_sub_unit_skpd';
+						$user->nama_role = 'User Aset Sub Unit';
+						$this->functions->gen_user_aset((array) $user);
+					}
+				}
+				$skpd = $this->functions->CurlSimda(array(
+				    'query' => '
+				        select  
+				            u.Kd_Prov, 
+				            u.Kd_Kab_Kota, 
+				            u.Kd_Bidang, 
+				            u.Kd_Unit,
+				            u.Nm_Unit
+				        from Ref_Unit u'
+				));
+				if(!empty($skpd)){
+					foreach ($skpd as $k => $user) {
+						$user->pass = $_POST['pass'];
+						$user->loginname = $user->Kd_Prov.'.'.$user->Kd_Kab_Kota.'.'.$user->Kd_Bidang.'.'.$user->Kd_Unit;
+						$user->nama = $user->Nm_Unit;
+						$user->role = 'user_aset_unit_skpd';
+						$user->nama_role = 'User Aset Unit';
+						$this->functions->gen_user_aset((array) $user);
+					}
 				}
 			} else {
 				$ret['status'] = 'error';
@@ -279,5 +319,24 @@ class Wp_Aset_Bmd_Admin {
 			$ret['message'] = 'Format Salah!';
 		}
 		die(json_encode($ret));
+	}
+
+	function posts_where_request($where){
+		global $wpdb;
+		$user_id = get_current_user_id();
+		if(
+			$this->functions->user_has_role($user_id, 'user_aset_skpd')
+			|| $this->functions->user_has_role($user_id, 'user_aset_unit_skpd')
+			|| $this->functions->user_has_role($user_id, 'user_aset_sub_unit_skpd')
+		){
+			$kd_lokasi_user = get_user_meta($user_id, '_crb_kd_lokasi', true);
+			$kd_lokasi = explode('.', $kd_lokasi_user);
+			foreach($kd_lokasi as $i => $v){
+				$kd_lokasi[$i] = $this->functions->CekNull($v);
+			}
+			$kd_lokasi_user = implode('.', $kd_lokasi);
+			$where .= " AND ".$wpdb->prefix."posts.post_title like '%".$kd_lokasi_user."%'";
+		}
+		return $where;
 	}
 }

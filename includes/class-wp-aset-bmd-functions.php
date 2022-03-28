@@ -304,17 +304,18 @@ class Wp_Aset_Bmd_Simda
 		if(!empty($user)){
 			$username = $user['loginname'];
 			$email = $username.'@qodrbee.com';
-			$nama_role = 'user_aset_skpd';
+			$nama_role = $user['role'];
 			$role = get_role($nama_role);
 			if(empty($role)){
-				add_role( $nama_role, $nama_role, array( 
+				add_role( $nama_role, $user['nama_role'], array( 
 					'read' => true,
 					'edit_posts' => true,
 					'upload_files' => true,
 					'edit_published_posts' => true,
 					'publish_posts' => true,
 					'edit_others_posts' => true,
-					'delete_posts' => false
+					'read_private_posts' => true,
+					'edit_private_posts' => true
 				) );
 			}
 			$insert_user = username_exists($username);
@@ -335,13 +336,27 @@ class Wp_Aset_Bmd_Simda
 
 			$meta = array(
 			    '_crb_nama_skpd' => $user['nama'],
-			    '_crb_kd_lokasi' => $user['loginname'],
-			    '_crb_desa' => $user['desa'],
-			    '_crb_kecamatan' => $user['kecamatan']
+			    '_crb_kd_lokasi' => $user['loginname']
 			);
+			if(!empty($user['desa'])){
+				$meta['_crb_desa'] = $user['desa'];
+			}
+			if(!empty($user['kecamatan'])){
+				$meta['_crb_kecamatan'] = $user['kecamatan'];
+			}
 		    foreach( $meta as $key => $val ) {
 		      	update_user_meta( $insert_user, $key, $val ); 
 		    }
 		}
+	}
+
+	function user_has_role($user_id, $role_name, $return=false){
+	    $user_meta = get_userdata($user_id);
+	    $user_roles = $user_meta->roles;
+	    if($return){
+	    	return $user_roles;
+	    }else{
+	    	return in_array($role_name, $user_roles);
+	    }
 	}
 }

@@ -125,6 +125,7 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
+		global $post;
 		global $wpdb;
 		$params = shortcode_atts( array(
 			'kd_lokasi' => '0.0.0.0.0.0.0.0',
@@ -345,5 +346,70 @@ class Wp_Aset_Bmd_Public {
 			'nama' => $nama_jenis_aset,
 			'table_simda' => $table_simda
 		);
+	}
+
+	function cek_edit_post($options){
+		$cek_edit = false;
+		if(is_user_logged_in()){
+		    $user_id = get_current_user_id();
+		    $cek_lokasi = true;
+		    if($this->functions->user_has_role($user_id, 'user_aset_skpd')){
+		    	$kd_lokasi_user = get_user_meta($user_id, '_crb_kd_lokasi', true);
+		    	$cek_lokasi = false;
+		    	if(!empty($kd_lokasi_user)){
+		    		$lok = explode('.', $kd_lokasi_user);
+		    		if(
+		    			(!empty($lok[0]) && $lok[0] == $options['Kd_Prov'])
+		    			&& (!empty($lok[1]) && $lok[1] == $options['Kd_Kab_Kota'])
+		    			&& (!empty($lok[2]) && $lok[2] == $options['Kd_Bidang'])
+		    			&& (!empty($lok[3]) && $lok[3] == $options['Kd_Unit'])
+		    			&& (!empty($lok[4]) && $lok[4] == $options['Kd_Sub'])
+		    			&& (!empty($lok[5]) && $lok[5] == $options['Kd_UPB'])
+		    			&& (!empty($lok[6]) && $lok[6] == $options['Kd_Kecamatan'])
+		    			&& (!empty($lok[7]) && $lok[7] == $options['Kd_Desa'])
+		    		){
+		    			$cek_lokasi = true;
+		    		}
+		    	}
+		    }
+		    if($this->functions->user_has_role($user_id, 'user_aset_unit_skpd')){
+		    	$kd_lokasi_user = get_user_meta($user_id, '_crb_kd_lokasi', true);
+		    	$cek_lokasi = false;
+		    	if(!empty($kd_lokasi_user)){
+		    		$lok = explode('.', $kd_lokasi_user);
+		    		if(
+		    			(!empty($lok[0]) && $lok[0] == $options['Kd_Prov'])
+		    			&& (!empty($lok[1]) && $lok[1] == $options['Kd_Kab_Kota'])
+		    			&& (!empty($lok[2]) && $lok[2] == $options['Kd_Bidang'])
+		    			&& (!empty($lok[3]) && $lok[3] == $options['Kd_Unit'])
+		    		){
+		    			$cek_lokasi = true;
+		    		}
+		    	}
+		    }
+		    if($this->functions->user_has_role($user_id, 'user_aset_sub_unit_skpd')){
+		    	$kd_lokasi_user = get_user_meta($user_id, '_crb_kd_lokasi', true);
+		    	$cek_lokasi = false;
+		    	if(!empty($kd_lokasi_user)){
+		    		$lok = explode('.', $kd_lokasi_user);
+		    		if(
+		    			(!empty($lok[0]) && $lok[0] == $options['Kd_Prov'])
+		    			&& (!empty($lok[1]) && $lok[1] == $options['Kd_Kab_Kota'])
+		    			&& (!empty($lok[2]) && $lok[2] == $options['Kd_Bidang'])
+		    			&& (!empty($lok[3]) && $lok[3] == $options['Kd_Unit'])
+		    			&& (!empty($lok[4]) && $lok[4] == $options['Kd_Sub'])
+		    		){
+		    			$cek_lokasi = true;
+		    		}
+		    	}
+		    }
+		    if(
+		        $cek_lokasi
+		        || $this->functions->user_has_role($user_id, 'administrator')
+		    ){
+		        $cek_edit = true;
+		    }
+		}
+		return $cek_edit;
 	}
 }
