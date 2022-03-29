@@ -153,15 +153,21 @@ $edit_post = $this->cek_edit_post(array(
                 <div class="col-md-10"><div style="height:600px; width: 100%;" id="map-canvas"></div></div>
             </div>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label">Sejarah</label>
+                <div class="col-md-10">
+                    <?php wp_editor('','sejarah',array('textarea_name' => 'sejarah', 'textarea_rows' => 20)); ?>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Foto</label>
                 <div class="col-md-10">
-                    <input type="text" disabled class="form-control" name="">
+                    <?php wp_editor('','foto',array('textarea_name' => 'foto', 'textarea_rows' => 10)); ?>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Video</label>
                 <div class="col-md-10">
-                    <input type="text" disabled class="form-control" name="">
+                    <?php wp_editor('','video',array('textarea_name' => 'video', 'textarea_rows' => 10)); ?>
                 </div>
             </div>
             <?php if(!empty($edit_post)): ?>

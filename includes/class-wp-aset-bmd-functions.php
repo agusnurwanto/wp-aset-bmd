@@ -351,6 +351,9 @@ class Wp_Aset_Bmd_Simda
 	}
 
 	function user_has_role($user_id, $role_name, $return=false){
+		if(empty($user_id)){
+			return false;
+		}
 	    $user_meta = get_userdata($user_id);
 	    $user_roles = $user_meta->roles;
 	    if($return){
