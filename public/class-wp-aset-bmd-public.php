@@ -131,8 +131,12 @@ class Wp_Aset_Bmd_Public {
 			'kd_lokasi' => '0.0.0.0.0.0.0.0',
 			'kd_barang' => '0.0.0.0.0.0.0',
 			'kd_register' => '0',
-			'jenis_aset' => ''
+			'jenis_aset' => '',
+			'key' => array()
 		), $atts );
+		if(!empty($_GET) && !empty($_GET['key'])){
+			$params['key'] = $this->functions->decode_key($_GET['key']);
+		}
 		$kd_lokasi = explode('.', $params['kd_lokasi']);
 		$Kd_Prov = (int) $kd_lokasi[1];
         $Kd_Kab_Kota = (int) $kd_lokasi[2];
@@ -153,20 +157,74 @@ class Wp_Aset_Bmd_Public {
 		$Kd_Aset85 = (int) $kd_barang[6];
 		$No_Reg8 = (int) $params['kd_register'];
 
+		$sql = "
+			SELECT 
+				u.Nm_UPB, 
+	            k.Nm_Kecamatan,
+	            d.Nm_Desa
+	        from ref_upb u
+	        LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
+	            AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
+	            AND k.Kd_Kecamatan = u.Kd_Kecamatan
+	        LEFT JOIN Ref_Desa d ON d.Kd_Prov=u.Kd_Prov
+	            AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
+	            AND d.Kd_Kecamatan = u.Kd_Kecamatan
+	            AND d.Kd_Desa = u.Kd_Desa
+			where u.Kd_Prov = $Kd_Prov
+            AND u.Kd_Kab_Kota = $Kd_Kab_Kota 
+            AND u.Kd_Bidang = $Kd_Bidang 
+            AND u.Kd_Unit = $Kd_Unit 
+            AND u.Kd_Sub = $Kd_Sub 
+            AND u.Kd_UPB = $Kd_UPB
+            AND (
+            	u.Kd_Kecamatan = $Kd_Kecamatan
+            	OR u.Kd_Kecamatan is null
+            ) 
+            AND (
+            	u.Kd_Desa = $Kd_Desa
+            	OR u.Kd_Desa is null
+            )
+		";
 		$nama_skpd = $this->functions->CurlSimda(array(
-    		'query' => "
-				SELECT Nm_UPB 
-				from ref_upb 
-				where Kd_Prov = $Kd_Prov
-	            AND Kd_Kab_Kota = $Kd_Kab_Kota 
-	            AND Kd_Bidang = $Kd_Bidang 
-	            AND Kd_Unit = $Kd_Unit 
-	            AND Kd_Sub = $Kd_Sub 
-	            AND Kd_UPB = $Kd_UPB
-			",
+    		'query' => $sql,
 			'no_debug' => 0
 		));
 		$params['nama_skpd'] = $nama_skpd[0]->Nm_UPB;
+		if(!empty($Kd_Kecamatan)){
+			$sql = "
+				SELECT 
+		            k.Nm_Kecamatan
+		        from Ref_Kecamatan k 
+				where k.Kd_Prov = $Kd_Prov
+	            AND k.Kd_Kab_Kota = $Kd_Kab_Kota 
+	            AND k.Kd_Kecamatan = $Kd_Kecamatan
+			";
+			$kecamatan = $this->functions->CurlSimda(array(
+	    		'query' => $sql,
+				'no_debug' => 0
+			));
+			$params['kecamatan'] = $kecamatan[0]->Nm_Kecamatan;
+		}else{
+			$params['kecamatan'] = '';
+		}
+		if(!empty($Kd_Kecamatan) && !empty($Kd_Desa)){
+			$sql = "
+				SELECT 
+		            d.Nm_Desa
+		        from Ref_Desa d 
+				where d.Kd_Prov = $Kd_Prov
+	            AND d.Kd_Kab_Kota = $Kd_Kab_Kota 
+	            AND d.Kd_Kecamatan = $Kd_Kecamatan
+	            AND d.Kd_Desa = $Kd_Desa
+			";
+			$desa = $this->functions->CurlSimda(array(
+	    		'query' => $sql,
+				'no_debug' => 0
+			));
+			$params['desa'] = $desa[0]->Nm_Desa;
+		}else{
+			$params['kecamatan'] = '';
+		}
 		$nama_pemda = get_option('_crb_bmd_nama_pemda');
 		$tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 		$api_key = get_option( '_crb_apikey_simda_bmd' );
@@ -411,5 +469,38 @@ class Wp_Aset_Bmd_Public {
 		    }
 		}
 		return $cek_edit;
+	}
+
+	function simpan_aset(){
+		global $wpdb;
+		$ret = array(
+			'status'	=> 'success',
+			'message'	=> 'Berhasil simpan aset!'
+		);
+		if (!empty($_POST)) {
+			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
+				if (!empty($_POST['id_post'])) {
+					$post = get_post($_POST['id_post']);
+					if(!empty($post->ID)){
+						update_post_meta($post->ID, 'latitude', $_POST['latitude']);
+						update_post_meta($post->ID, 'longitude', $_POST['longitude']);
+						update_post_meta($post->ID, 'polygon', $_POST['polygon']);
+						update_post_meta($post->ID, 'meta_sejarah', $_POST['sejarah']);
+						update_post_meta($post->ID, 'meta_foto', $_POST['foto']);
+						update_post_meta($post->ID, 'meta_video', $_POST['video']);
+					}else{
+						$ret['status'] = 'error';
+						$ret['message'] = 'ID post aset tidak ditemukan!';
+					}
+				} else {
+					$ret['status'] = 'error';
+					$ret['message'] = 'Format data salah!';
+				}
+			} else {
+				$ret['status'] = 'error';
+				$ret['message'] = 'APIKEY tidak sesuai!';
+			}
+		}
+		die(json_encode($ret));
 	}
 }

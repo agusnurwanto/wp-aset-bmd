@@ -164,7 +164,7 @@ class Wp_Aset_Bmd {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action('carbon_fields_register_fields', $plugin_admin, 'crb_attach_simda_options');
-		
+
 		$this->loader->add_filter('posts_where_request', $plugin_admin, 'posts_where_request');
 
 		$this->loader->add_action('wp_ajax_generate_user_aset',  $plugin_admin, 'generate_user_aset');	
@@ -186,6 +186,8 @@ class Wp_Aset_Bmd {
 
 		$this->loader->add_action('wp_ajax_get_total_skpd',  $plugin_public, 'get_total_skpd');
 		$this->loader->add_action('wp_ajax_nopriv_get_total_skpd',  $plugin_public, 'get_total_skpd');
+
+		$this->loader->add_action('wp_ajax_simpan_aset',  $plugin_public, 'simpan_aset');
 
 		add_shortcode('dashboard_aset',  array($plugin_public, 'dashboard_aset'));
 		add_shortcode('daftar_aset',  array($plugin_public, 'daftar_aset'));
