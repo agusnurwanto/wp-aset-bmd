@@ -383,7 +383,7 @@ class Wp_Aset_Bmd_Public {
 			'nama_page' => 'Daftar Aset Barang Milik Daerah',
 			'content' => '[daftar_aset]',
 			'post_status' => 'public',
-        	'show_header' => true,
+        	'show_header' => 1,
 			'custom_url' => $custom_url
 		));
 		return $link['url'];

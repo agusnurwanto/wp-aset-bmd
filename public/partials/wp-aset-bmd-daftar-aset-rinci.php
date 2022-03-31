@@ -66,8 +66,8 @@ foreach($aset as $k => $val){
         'content' => '[detail_aset kd_lokasi="'.$kd_lokasi.'" kd_barang="'.$kd_barang.'" kd_register="'.$kd_register.'" jenis_aset="'.$params['jenis_aset'].'"]',
         'post_status' => 'private',
         'post_type' => 'post',
-        'show_header' => true,
-        'no_key' => true
+        'show_header' => 1,
+        'no_key' => 1
     ));
     $keterangan = array($val->Keterangan);
     if($params['jenis_aset'] == 'mesin'){
