@@ -19,54 +19,40 @@ $skpd = $this->functions->CurlSimda(array(
             u.Kd_Kab_Kota, 
             u.Kd_Bidang, 
             u.Kd_Unit, 
-            u.Kd_Sub, 
-            u.Kd_UPB, 
-            u.Kd_Kecamatan, 
-            u.Kd_Desa, 
-            u.Nm_UPB,
-            k.Nm_Kecamatan,
-            d.Nm_Desa
+            n.Nm_Unit
         from ref_upb u
-        LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
-            AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
-            AND k.Kd_Kecamatan = u.Kd_Kecamatan
-        LEFT JOIN Ref_Desa d ON d.Kd_Prov=u.Kd_Prov
-            AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
-            AND d.Kd_Kecamatan = u.Kd_Kecamatan
-            AND d.Kd_Desa = u.Kd_Desa'
+        LEFT JOIN Ref_Unit n ON n.Kd_Prov=u.Kd_Prov
+            AND n.Kd_Kab_Kota=u.Kd_Kab_Kota
+            AND n.Kd_Bidang=u.Kd_Bidang
+            AND n.Kd_Unit=u.Kd_Unit
+        '
 ));
 $jml = 10;
 $skpd_all = array();
 $skpd_sementara = array();
 $no=0;
+$cek_skpd = array();
 foreach($skpd as $k => $val){
+    $kd_lokasi = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit);
+    if(empty($cek_skpd[$kd_lokasi])){
+        $cek_skpd[$kd_lokasi] = $kd_lokasi;
+    }else{
+        continue;
+    }
     $no++;
-    $kd_lokasi = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit).'.'.$this->functions->CekNull($val->Kd_Sub).'.'.$this->functions->CekNull($val->Kd_UPB).'.'.$this->functions->CekNull($val->Kd_Kecamatan).'.'.$this->functions->CekNull($val->Kd_Desa);
     $val->kd_lokasi = $kd_lokasi;
     $skpd_sementara[] = $val;
     if($no%$jml == 0){
         $skpd_all[] = $skpd_sementara;
         $skpd_sementara = array();
     }
-    $alamat = array();
-    if(!empty($val->Nm_Kecamatan)){
-        $alamat[] = 'Kec. '.$val->Nm_Kecamatan;
-    }
-    if(!empty($val->Nm_Desa)){
-        $alamat[] = 'Desa/Kel. '.$val->Nm_Desa;
-    }
-    if(!empty($alamat)){
-        $alamat = '('.implode(', ', $alamat).')';
-    }else{
-        $alamat = '';
-    }
     $body_skpd .= '
         <tr>
             <td class="text-center">'.$no.'</td>
             <td class="text-center">'.$kd_lokasi.'</td>
-            <td>'.$val->Nm_UPB.' '.$alamat.'</td>
+            <td>'.$val->Nm_Unit.'</td>
             <td class="text-right harga_total" data-kd_lokasi="'.$kd_lokasi.'">Menunggu... </td>
-            <td class="text-center"><a href="#" class="btn btn-primary">Detail</a></td>
+            <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('kd_lokasi' => $kd_lokasi, 'daftar_aset' => 1))).'" class="btn btn-primary">Detail</a></td>
         </tr>
     ';
 }
@@ -108,7 +94,7 @@ $body .= '
         <td class="text-right">'.number_format($tanah[0]->jml,2,",",".").'</td>
         <td class="text-center">Meter Persegi</td>
         <td class="text-right" rowspan="2">'.number_format($tanah[0]->harga,2,",",".").'</td>
-        <td class="text-center" rowspan="2"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('jenis_aset' => 'tanah'))).'" class="btn btn-primary">Detail</a></td>
+        <td class="text-center" rowspan="2"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('daftar_aset' => 1, 'jenis_aset' => 'tanah'))).'" class="btn btn-primary">Detail</a></td>
     </tr>
     <tr>
         <td class="text-right">'.number_format($tanah[0]->jml_bidang,2,",",".").'</td>
@@ -120,7 +106,7 @@ $body .= '
         <td class="text-right">'.number_format($mesin[0]->jml,2,",",".").'</td>
         <td class="text-center">Pcs</td>
         <td class="text-right">'.number_format($mesin[0]->harga,2,",",".").'</td>
-        <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('jenis_aset' => 'mesin'))).'" class="btn btn-primary">Detail</a></td>
+        <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('daftar_aset' => 1, 'jenis_aset' => 'mesin'))).'" class="btn btn-primary">Detail</a></td>
     </tr>
     <tr>
         <td class="text-center">3</td>
@@ -128,7 +114,7 @@ $body .= '
         <td class="text-right">'.number_format($gedung[0]->jml,2,",",".").'</td>
         <td class="text-center">Gedung</td>
         <td class="text-right">'.number_format($gedung[0]->harga,2,",",".").'</td>
-        <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('jenis_aset' => 'bangunan'))).'" class="btn btn-primary">Detail</a></td>
+        <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('daftar_aset' => 1, 'jenis_aset' => 'bangunan'))).'" class="btn btn-primary">Detail</a></td>
     </tr>
     <tr>
         <td class="text-center">4</td>
@@ -136,7 +122,7 @@ $body .= '
         <td class="text-right">'.number_format($jalan[0]->jml,2,",",".").'</td>
         <td class="text-center">Meter (Panjang)</td>
         <td class="text-right">'.number_format($jalan[0]->harga,2,",",".").'</td>
-        <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('jenis_aset' => 'jalan'))).'" class="btn btn-primary">Detail</a></td>
+        <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('daftar_aset' => 1, 'jenis_aset' => 'jalan'))).'" class="btn btn-primary">Detail</a></td>
     </tr>
     <tr>
         <td class="text-center">5</td>
@@ -144,7 +130,7 @@ $body .= '
         <td class="text-right">'.number_format($tetap_lainnya[0]->jml,2,",",".").'</td>
         <td class="text-center">Pcs</td>
         <td class="text-right">'.number_format($tetap_lainnya[0]->harga,2,",",".").'</td>
-        <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('jenis_aset' => 'aset_tetap'))).'" class="btn btn-primary">Detail</a></td>
+        <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('daftar_aset' => 1, 'jenis_aset' => 'aset_tetap'))).'" class="btn btn-primary">Detail</a></td>
     </tr>
     <tr>
         <td class="text-center">6</td>
@@ -152,7 +138,7 @@ $body .= '
         <td class="text-right">'.number_format($gedung_pengerjaan[0]->jml,2,",",".").'</td>
         <td class="text-center">Gedung</td>
         <td class="text-right">'.number_format($gedung_pengerjaan[0]->harga,2,",",".").'</td>
-        <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('jenis_aset' => 'bangunan_dalam_pengerjaan'))).'" class="btn btn-primary">Detail</a></td>
+        <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('daftar_aset' => 1, 'jenis_aset' => 'bangunan_dalam_pengerjaan'))).'" class="btn btn-primary">Detail</a></td>
     </tr>
 ';
 $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->harga+$tetap_lainnya[0]->harga+$gedung_pengerjaan[0]->harga;
@@ -216,7 +202,7 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
                 <tr>
                     <th class="text-center">No</th>
                     <th class="text-center">Kode Lokasi</th>
-                    <th class="text-center">Nama SKPD</th>
+                    <th class="text-center">Nama Unit</th>
                     <th class="text-center">Nilai (Rupiah)</th>
                     <th class="text-center">Aksi</th>
                 </tr>

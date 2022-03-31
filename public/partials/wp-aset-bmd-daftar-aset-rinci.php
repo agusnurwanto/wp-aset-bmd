@@ -12,16 +12,28 @@ if(empty($nama_jenis_aset)){
 $where = '';
 if(!empty($Kd_Kecamatan)){
     $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
+}else{
+    $where .= ' AND a.Kd_Kecamatan is null';
 }
 if(!empty($Kd_Desa)){
     $where .= $wpdb->prepare(' AND a.Kd_Desa=%d', $Kd_Desa);
+}else{
+    $where .= ' AND a.Kd_Desa is null';
 }
 
 $body_skpd = '';
 $sql = $wpdb->prepare('
     select 
-        a.*
+        a.*,
+        r.Nm_Aset5
     from '.$data_jenis['table_simda'].' a
+    LEFT JOIN Ref_Map5_17_108 r on r.kd_aset=a.Kd_Aset8 
+        and r.kd_aset0=a.Kd_Aset80 
+        and r.kd_aset1=a.Kd_Aset81 
+        and r.kd_aset2=a.Kd_Aset82 
+        and r.kd_aset3=a.Kd_Aset83 
+        and r.kd_aset4=a.Kd_Aset84 
+        and r.kd_aset5=a.Kd_Aset85
     where a.Kd_Prov=%d
         AND a.Kd_Kab_Kota=%d 
         AND a.Kd_Bidang=%d 
@@ -54,15 +66,35 @@ foreach($aset as $k => $val){
         'content' => '[detail_aset kd_lokasi="'.$kd_lokasi.'" kd_barang="'.$kd_barang.'" kd_register="'.$kd_register.'" jenis_aset="'.$params['jenis_aset'].'"]',
         'post_status' => 'private',
         'post_type' => 'post',
+        'show_header' => true,
         'no_key' => true
     ));
+    $keterangan = array($val->Keterangan);
+    if($params['jenis_aset'] == 'mesin'){
+        $keterangan = array();
+        if(!empty($val->Nomor_Polisi)){
+            $keterangan[] = $val->Nomor_Polisi;
+        }
+        if(!empty($val->Type)){
+            $keterangan[] = $val->Type;
+        }
+        if(!empty($val->Merk)){
+            $keterangan[] = $val->Merk;
+        }
+        if(!empty($val->CC)){
+            $keterangan[] = $val->CC;
+        }
+        if(!empty($val->Keterangan)){
+            $keterangan[] = $val->Keterangan;
+        }
+    }
     $body_skpd .= '
         <tr>
             <td class="text-center">'.$no.'</td>
             <td class="text-center">'.$kd_barang.'</td>
-            <td>'.$kd_register.'</td>
-            <td class="text-right">'.$val->Keterangan.'</td>
-            <td class="text-center">'.$val->Penggunaan.'</td>
+            <td class="text-center">'.$kd_register.'</td>
+            <td>'.$val->Nm_Aset5.'</td>
+            <td>'.implode(' | ', $keterangan).'</td>
             <td class="text-right" data-sort="'.$val->Harga.'">'.number_format($val->Harga,2,",",".").'</td>
             <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a></td>
         </tr>
@@ -86,8 +118,8 @@ foreach($aset as $k => $val){
                     <th class="text-center">No</th>
                     <th class="text-center">Kode Barang</th>
                     <th class="text-center">Register</th>
+                    <th class="text-center">Nama Aset</th>
                     <th class="text-center">Keterangan</th>
-                    <th class="text-center">Penggunaan</th>
                     <th class="text-center">Nilai (Rupiah)</th>
                     <th class="text-center">Aksi</th>
                 </tr>
@@ -107,7 +139,7 @@ foreach($aset as $k => $val){
 jQuery(document).on('ready', function(){
     jQuery('#table-aset-skpd').dataTable({
         columnDefs: [
-            { "width": "100px", "targets": 4 }
+            { "width": "500px", "targets": 4 }
         ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {

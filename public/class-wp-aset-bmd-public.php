@@ -224,12 +224,114 @@ class Wp_Aset_Bmd_Public {
 			$params['desa'] = $desa[0]->Nm_Desa;
 		}else{
 			$params['kecamatan'] = '';
+			$params['desa'] = '';
 		}
 		$nama_pemda = get_option('_crb_bmd_nama_pemda');
 		$tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 		$api_key = get_option( '_crb_apikey_simda_bmd' );
+		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
+		$nama_jenis_aset = $data_jenis['nama'];
+		$table_simda = $data_jenis['table_simda'];
+
+		if(empty($nama_jenis_aset)){
+		    die('Jenis Aset tidak ditemukan!');
+		}
+
+		$alamat = array();
+		if(!empty($params['kecamatan'])){
+		    $alamat[] = 'Kec. '.$params['kecamatan'];
+		}
+		if(!empty($params['desa'])){
+		    $alamat[] = 'Desa/Kel. '.$params['desa'];
+		}
+		if(!empty($alamat)){
+		    $alamat = '('.implode(', ', $alamat).')';
+		}else{
+		    $alamat = '';
+		}
+
+		$where = '';
+		if(!empty($Kd_Kecamatan)){
+		    $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
+		}
+		if(!empty($Kd_Desa)){
+		    $where .= $wpdb->prepare(' AND a.Kd_Desa=%d', $Kd_Desa);
+		}
+
+		$sql = $wpdb->prepare('
+		    select 
+		        a.*,
+		        r.Nm_Aset5
+		    from '.$data_jenis['table_simda'].' a
+	        LEFT JOIN Ref_Map5_17_108 r on r.kd_aset=a.Kd_Aset8 
+	            and r.kd_aset0=a.Kd_Aset80 
+	            and r.kd_aset1=a.Kd_Aset81 
+	            and r.kd_aset2=a.Kd_Aset82 
+	            and r.kd_aset3=a.Kd_Aset83 
+	            and r.kd_aset4=a.Kd_Aset84 
+	            and r.kd_aset5=a.Kd_Aset85
+		    where a.Kd_Prov=%d
+		        AND a.Kd_Kab_Kota=%d 
+		        AND a.Kd_Bidang=%d 
+		        AND a.Kd_Unit=%d 
+		        AND a.Kd_Sub=%d 
+		        AND a.Kd_UPB=%d
+		        '.$where.'
+		    ', $Kd_Prov, $Kd_Kab_Kota, $Kd_Bidang, $Kd_Unit, $Kd_Sub, $Kd_UPB);
+		$aset = $this->functions->CurlSimda(array(
+		    'query' => $sql 
+		));
+		$koordinatX = get_post_meta($post->ID, 'latitude', true);
+		if(empty($koordinatX)){
+		    $koordinatX = '0';
+		}
+		$koordinatY = get_post_meta($post->ID, 'longitude', true);
+		if(empty($koordinatY)){
+		    $koordinatY = '0';
+		}
+		$polygon = get_post_meta($post->ID, 'polygon', true);
+		if(empty($polygon)){
+		    $polygon = '[]';
+		}
+		$meta_sejarah = get_post_meta($post->ID, 'meta_sejarah', true);
+		$meta_foto = get_post_meta($post->ID, 'meta_foto', true);
+		$meta_video = get_post_meta($post->ID, 'meta_video', true);
+		$allow_edit_post = $this->cek_edit_post(array(
+		    'Kd_Prov' => $Kd_Prov,
+		    'Kd_Kab_Kota' => $Kd_Kab_Kota,
+		    'Kd_Bidang' => $Kd_Bidang,
+		    'Kd_Unit' => $Kd_Unit,
+		    'Kd_Sub' => $Kd_Sub,
+		    'Kd_UPB' => $Kd_UPB,
+		    'Kd_Kecamatan' => $Kd_Kecamatan,
+		    'Kd_Desa' => $Kd_Desa
+		));
+		$disabled = 'disabled';
+		if($allow_edit_post){
+		    $post->custom_url = array(
+		        array(
+		            'key' =>'edit',
+		            'value' => 1
+		        )
+		    );
+		    $link_post = get_permalink($post);
+		    $link_edit = $this->functions->get_link_post($post);
+		    if(!empty($params['key']['edit'])){
+		        $disabled = '';
+		    }
+		}
         if($params['jenis_aset'] == 'tanah'){
 			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-tanah.php';
+        }else if($params['jenis_aset'] == 'mesin'){
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-mesin.php';
+        }else if($params['jenis_aset'] == 'bangunan'){
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-bangunan.php';
+        }else if($params['jenis_aset'] == 'jalan'){
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-jalan.php';
+        }else if($params['jenis_aset'] == 'aset_tetap'){
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-aset_tetap.php';
+        }else if($params['jenis_aset'] == 'bangunan_dalam_pengerjaan'){
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-bangunan_dalam_pengerjaan.php';
         }
 	}
 
@@ -255,7 +357,9 @@ class Wp_Aset_Bmd_Public {
 		){
 		    $limit = 'top '.$_GET['limit'];
 		}
-		if(!empty($params['kd_lokasi'])){
+		if(!empty($params['daftar_aset'])){
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset.php';
+		}else{
 			$kd_lokasi = explode('.', $params['kd_lokasi']);
 			$Kd_Prov = (int) $kd_lokasi[1];
             $Kd_Kab_Kota = (int) $kd_lokasi[2];
@@ -266,8 +370,6 @@ class Wp_Aset_Bmd_Public {
             $Kd_Kecamatan = (int) $kd_lokasi[7];
             $Kd_Desa = (int) $kd_lokasi[8];
 			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset-rinci.php';
-		}else{
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset.php';
 		}
 	}
 
@@ -280,6 +382,7 @@ class Wp_Aset_Bmd_Public {
 			'nama_page' => 'Daftar Aset Barang Milik Daerah',
 			'content' => '[daftar_aset]',
 			'post_status' => 'public',
+        	'show_header' => true,
 			'custom_url' => $custom_url
 		));
 		return $link['url'];
@@ -294,17 +397,23 @@ class Wp_Aset_Bmd_Public {
 		if (!empty($_POST)) {
 			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
 				if (!empty($_POST['data'])) {
-					$where = ' where Kd_Prov=\''.$_POST['data']['Kd_Prov'].'\' and Kd_Kab_Kota=\''.$_POST['data']['Kd_Kab_Kota'].'\' and Kd_Bidang=\''.$_POST['data']['Kd_Bidang'].'\' and Kd_Unit=\''.$_POST['data']['Kd_Unit'].'\' and Kd_Sub=\''.$_POST['data']['Kd_Sub'].'\' and Kd_UPB=\''.$_POST['data']['Kd_UPB'].'\'';
-				    if(!empty($_POST['data']['Kd_Kecamatan'])){
-				        $where .= ' and Kd_Kecamatan=\''.$_POST['data']['Kd_Kecamatan'].'\'';
-				    }else{
-				        $where .= ' and Kd_Kecamatan is null';
+					$where = ' where Kd_Prov=\''.$_POST['data']['Kd_Prov'].'\' and Kd_Kab_Kota=\''.$_POST['data']['Kd_Kab_Kota'].'\' and Kd_Bidang=\''.$_POST['data']['Kd_Bidang'].'\' and Kd_Unit=\''.$_POST['data']['Kd_Unit'].'\'';
+				    if(!empty($_POST['data']['Kd_Sub'])){
+				    	$where .= ' and Kd_Sub=\''.$_POST['data']['Kd_Sub'].'\'';
 				    }
-				    if(!empty($_POST['data']['Kd_Desa'])){
-				        $where .= ' and Kd_Desa=\''.$_POST['data']['Kd_Desa'].'\'';
-				    }else{
-				        $where .= ' and Kd_Desa is null';
-				    }
+				    if(!empty($_POST['data']['Kd_UPB'])){
+					    $where .= ' and Kd_UPB=\''.$_POST['data']['Kd_UPB'].'\'';
+					    if(!empty($_POST['data']['Kd_Kecamatan'])){
+					        $where .= ' and Kd_Kecamatan=\''.$_POST['data']['Kd_Kecamatan'].'\'';
+					    }else{
+					        $where .= ' and Kd_Kecamatan is null';
+					    }
+					    if(!empty($_POST['data']['Kd_Desa'])){
+					        $where .= ' and Kd_Desa=\''.$_POST['data']['Kd_Desa'].'\'';
+					    }else{
+					        $where .= ' and Kd_Desa is null';
+					    }
+					}
 
 				    $harga = 0;
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'tanah'){
@@ -502,5 +611,75 @@ class Wp_Aset_Bmd_Public {
 			}
 		}
 		die(json_encode($ret));
+	}
+
+	function get_total_aset_upb($table_simda, $params = array()){
+		global $wpdb;
+		$select_custom = '';
+        if($table_simda == 'Ta_KIB_A'){
+            $select_custom .= 'sum(a.Luas_M2) as luas, ';
+        }
+        $where = '';
+        if(!empty($params['kd_lokasi'])){
+        	$kode = explode('.', $params['kd_lokasi']);
+        	$Kd_Prov = (int) $kode[1];
+            $Kd_Kab_Kota = (int) $kode[2];
+            $Kd_Bidang = (int) $kode[3];
+            $Kd_Unit = (int) $kode[4];
+            $where .= $wpdb->prepare(' WHERE a.Kd_Prov=%d', $Kd_Prov);
+            $where .= $wpdb->prepare(' AND a.Kd_Kab_Kota=%d', $Kd_Kab_Kota);
+            $where .= $wpdb->prepare(' AND a.Kd_Bidang=%d', $Kd_Bidang);
+            $where .= $wpdb->prepare(' AND a.Kd_Unit=%d', $Kd_Unit);
+        }
+        if(!empty($params['jenis_aset'])){
+        	$select_custom .= '\''.$params['jenis_aset'].'\' as jenis_aset, ';
+        	$select_custom .= '\''.$params['nama_aset'].'\' as nama_aset, ';
+        }
+        $skpd = $this->functions->CurlSimda(array(
+            'query' => '
+                select 
+                    '.$select_custom.'
+                    a.Kd_Prov, 
+                    a.Kd_Kab_Kota, 
+                    a.Kd_Bidang, 
+                    a.Kd_Unit, 
+                    a.Kd_Sub, 
+                    a.Kd_UPB, 
+                    a.Kd_Kecamatan, 
+                    a.Kd_Desa, 
+                    COUNT(a.Harga) as jml, 
+                    sum(a.Harga) as harga,
+                    u.Nm_UPB,
+                    k.Nm_Kecamatan,
+                    d.Nm_Desa,
+                    \''.$table_simda.'\' as table_simda
+                from '.$table_simda.' a
+                LEFT JOIN ref_upb u ON a.Kd_Prov=u.Kd_Prov
+                    AND a.Kd_Kab_Kota = u.Kd_Kab_Kota 
+                    AND a.Kd_Bidang = u.Kd_Bidang 
+                    AND a.Kd_Unit = u.Kd_Unit 
+                    AND a.Kd_Sub = u.Kd_Sub 
+                    AND a.Kd_UPB = u.Kd_UPB 
+                LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=a.Kd_Prov
+                    AND k.Kd_Kab_Kota = a.Kd_Kab_Kota 
+                    AND k.Kd_Kecamatan = a.Kd_Kecamatan
+                LEFT JOIN Ref_Desa d ON d.Kd_Prov=a.Kd_Prov
+                    AND d.Kd_Kab_Kota = a.Kd_Kab_Kota 
+                    AND d.Kd_Kecamatan = a.Kd_Kecamatan
+                    AND d.Kd_Desa = a.Kd_Desa
+                '.$where.'
+                group by a.Kd_Prov, 
+                    a.Kd_Kab_Kota, 
+                    a.Kd_Bidang, 
+                    a.Kd_Unit, 
+                    a.Kd_Sub, 
+                    a.Kd_UPB, 
+                    a.Kd_Kecamatan, 
+                    a.Kd_Desa,
+                    u.Nm_UPB,
+                    k.Nm_Kecamatan,
+                    d.Nm_Desa'
+        ));
+        return $skpd;
 	}
 }
