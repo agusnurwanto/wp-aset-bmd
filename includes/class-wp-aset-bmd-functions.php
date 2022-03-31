@@ -250,7 +250,7 @@ class Wp_Aset_Bmd_Simda
 			$_post['insert'] = 1;
 			$_post['ID'] = $id;
 			$custom_post = get_page_by_title($options['nama_page'], OBJECT, $post_type);
-			if(empty($option['show_header'])){
+			if(empty($options['show_header'])){
 				update_post_meta($custom_post->ID, 'ast-main-header-display', 'disabled');
 				update_post_meta($custom_post->ID, 'footer-sml-layout', 'disabled');
 			}
