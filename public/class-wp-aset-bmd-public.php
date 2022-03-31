@@ -263,7 +263,7 @@ class Wp_Aset_Bmd_Public {
 		        a.*,
 		        r.Nm_Aset5
 		    from '.$data_jenis['table_simda'].' a
-	        LEFT JOIN Ref_Map5_17_108 r on r.kd_aset=a.Kd_Aset8 
+	        LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
 	            and r.kd_aset0=a.Kd_Aset80 
 	            and r.kd_aset1=a.Kd_Aset81 
 	            and r.kd_aset2=a.Kd_Aset82 
@@ -281,6 +281,7 @@ class Wp_Aset_Bmd_Public {
 		$aset = $this->functions->CurlSimda(array(
 		    'query' => $sql 
 		));
+		$aset[0]->Keterangan = trim(preg_replace('/\s\s+/', ' ', $aset[0]->Keterangan));
 		$koordinatX = get_post_meta($post->ID, 'latitude', true);
 		if(empty($koordinatX)){
 		    $koordinatX = '0';

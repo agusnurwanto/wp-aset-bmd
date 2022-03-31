@@ -301,6 +301,7 @@
             fillOpacity: 0.45,
         <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
             editable: true,
+            draggable: true,
         <?php endif; ?>
             html: contentString
         });

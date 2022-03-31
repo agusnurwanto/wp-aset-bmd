@@ -47,39 +47,29 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Penggunaan</label>
+                <label class="col-md-2 col-form-label">Status Tanah</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Penggunaan; ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Status_Tanah; ?>">
                 </div>
-                <label class="col-md-2 col-form-label">Luas (M2)</label>
+                <label class="col-md-2 col-form-label">Bertingkat / Tidak</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo number_format($aset[0]->Luas_M2,2,",","."); ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Bertingkat_Tidak; ?>">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Letak / Alamat</label>
+                <label class="col-md-2 col-form-label">Lokasi</label>
                 <div class="col-md-10">
-                    <input type="text" disabled class="form-control" name="<?php echo $aset[0]->Alamat; ?>">
+                    <input type="text" disabled class="form-control" name="<?php echo $aset[0]->Lokasi; ?>">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Tahun Pengadaan</label>
+                <label class="col-md-2 col-form-label">Tanggal Perolehan</label>
                 <div class="col-md-4">
                     <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Tgl_Perolehan; ?>">
                 </div>
-                <label class="col-md-2 col-form-label">Hak</label>
+                <label class="col-md-2 col-form-label">Luas Lantai</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Hak_Tanah; ?>">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label">Tanggal Sertifikat</label>
-                <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Sertifikat_Tanggal; ?>">
-                </div>
-                <label class="col-md-2 col-form-label">Nomor Sertifikat</label>
-                <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Sertifikat_Nomor; ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo number_format($aset[0]->Luas_Lantai,2,",","."); ?>">
                 </div>
             </div>
             <div class="form-group row">
@@ -248,12 +238,9 @@
         nama_aset      = '<?php echo $aset[0]->Nm_Aset5; ?>';
         kode_aset      = '<?php echo $params['kd_barang']; ?>';
         status_aset    = '<?php if(!empty($aset[0]->Sertifikat_Nomor)){ echo 'Bersertipikat'; }else{ echo 'Belum sertifikat'; } ?>';
-        luas           = '<?php echo number_format($aset[0]->Luas_M2,2,",","."); ?>';
-        alamat         = '<?php echo $aset[0]->Alamat; ?>';
-        hak_tanah      = '<?php echo $aset[0]->Hak_Tanah; ?>';
-        tgl_sertipikat = '<?php echo $aset[0]->Sertifikat_Tanggal; ?>';
-        no_sertipikat  = '<?php echo $aset[0]->Sertifikat_Nomor; ?>';
-        penggunaan     = '<?php echo $aset[0]->Penggunaan; ?>';
+        luas           = '<?php echo number_format($aset[0]->Luas_Lantai,2,",","."); ?>';
+        alamat         = '<?php echo $aset[0]->Lokasi; ?>';
+        bertingkat      = '<?php echo $aset[0]->Bertingkat_Tidak; ?>';
         keterangan     = '<?php echo $aset[0]->Keterangan; ?>';
 
         // Menampilkan Informasi Data
@@ -275,16 +262,8 @@
             '<td valign="top" height="25">Alamat</td><td valign="top"><center>:</center></td><td valign="top">' + alamat + '</td>' +
             '</tr>' +
             '<tr>' +
-            '<td valign="top" height="25">Hak Tanah</td><td valign="top"><center>:</center></td><td valign="top">' + hak_tanah + '</td>' +
-            '</tr>' +
             '<tr>' +
-            '<td valign="top" height="25">Tgl Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + tgl_sertipikat + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">No Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + no_sertipikat + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Penggunaan</td><td valign="top"><center>:</center></td><td valign="top">' + penggunaan + '</td>' +
+            '<td valign="top" height="25">Bertingkat / Tidak</td><td valign="top"><center>:</center></td><td valign="top">' + bertingkat + '</td>' +
             '</tr>' +
             '<tr>' +
             '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
@@ -301,6 +280,7 @@
             fillOpacity: 0.45,
         <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
             editable: true,
+            draggable: true,
         <?php endif; ?>
             html: contentString
         });
@@ -334,7 +314,7 @@
             || '<?php echo $polygon; ?>' == '[]'
         ){
             geocoder = new google.maps.Geocoder();
-            geocoder.geocode( { 'address': '<?php echo $nama_pemda.' '.$params['nama_skpd'].' '.$alamat.' '.$aset[0]->Keterangan; ?>'}, function(results, status) {
+            geocoder.geocode( { 'address': '<?php echo $nama_pemda.' '.$params['nama_skpd'].' '.$alamat.' '.$aset[0]->Keterangan.' '.$aset[0]->Lokasi; ?>'}, function(results, status) {
                 if (status == 'OK') {
                     if(
                         <?php echo $koordinatX; ?> == 0 

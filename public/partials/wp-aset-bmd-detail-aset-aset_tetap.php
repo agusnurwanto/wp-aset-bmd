@@ -47,53 +47,29 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Nomor Polisi</label>
+                <label class="col-md-2 col-form-label">Judul</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Nomor_Polisi; ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Judul; ?>">
                 </div>
-                <label class="col-md-2 col-form-label">Merk</label>
+                <label class="col-md-2 col-form-label">Pencipta</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Merk; ?>">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label">Type</label>
-                <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="<?php echo $aset[0]->Type; ?>">
-                </div>
-                <label class="col-md-2 col-form-label">CC</label>
-                <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="<?php echo $aset[0]->CC; ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Pencipta; ?>">
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Bahan</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Bahan; ?>">
+                    <input type="text" disabled class="form-control" name="<?php echo $aset[0]->Bahan; ?>">
                 </div>
+                <label class="col-md-2 col-form-label">Ukuran</label>
+                <div class="col-md-4">
+                    <input type="text" disabled class="form-control" name="<?php echo $aset[0]->Ukuran; ?>">
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Tanggal Perolehan</label>
-                <div class="col-md-4">
+                <div class="col-md-10">
                     <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Tgl_Perolehan; ?>">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label">Nomor Rangka</label>
-                <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Nomor_Rangka; ?>">
-                </div>
-                <label class="col-md-2 col-form-label">Nomor Mesin</label>
-                <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Nomor_Mesin; ?>">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label">Nomor Pabrik</label>
-                <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Nomor_Pabrik; ?>">
-                </div>
-                <label class="col-md-2 col-form-label">Nomor BPKB</label>
-                <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Nomor_BPKB; ?>">
                 </div>
             </div>
             <div class="form-group row">

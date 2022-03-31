@@ -47,39 +47,49 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Penggunaan</label>
+                <label class="col-md-2 col-form-label">Lokasi</label>
+                <div class="col-md-10">
+                    <input type="text" disabled class="form-control" name="<?php echo $aset[0]->Lokasi; ?>">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Konstruksi</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Penggunaan; ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Konstruksi; ?>">
                 </div>
                 <label class="col-md-2 col-form-label">Luas (M2)</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo number_format($aset[0]->Luas_M2,2,",","."); ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo number_format($aset[0]->Luas,2,",","."); ?>">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Letak / Alamat</label>
-                <div class="col-md-10">
-                    <input type="text" disabled class="form-control" name="<?php echo $aset[0]->Alamat; ?>">
+                <label class="col-md-2 col-form-label">Panjang</label>
+                <div class="col-md-4">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Panjang; ?>">
+                </div>
+                <label class="col-md-2 col-form-label">Lebar</label>
+                <div class="col-md-4">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Lebar; ?>">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Tahun Pengadaan</label>
+                <label class="col-md-2 col-form-label">Tanggal Perolehan</label>
                 <div class="col-md-4">
                     <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Tgl_Perolehan; ?>">
                 </div>
-                <label class="col-md-2 col-form-label">Hak</label>
+                <label class="col-md-2 col-form-label">Status Tanah</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Hak_Tanah; ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Status_Tanah; ?>">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Tanggal Sertifikat</label>
+                <label class="col-md-2 col-form-label">Dokumen Tanggal</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Sertifikat_Tanggal; ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Dokumen_Tanggal; ?>">
                 </div>
-                <label class="col-md-2 col-form-label">Nomor Sertifikat</label>
+                <label class="col-md-2 col-form-label">Dokumen Nomor</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Sertifikat_Nomor; ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo $aset[0]->Dokumen_Nomor; ?>">
                 </div>
             </div>
             <div class="form-group row">
@@ -248,12 +258,8 @@
         nama_aset      = '<?php echo $aset[0]->Nm_Aset5; ?>';
         kode_aset      = '<?php echo $params['kd_barang']; ?>';
         status_aset    = '<?php if(!empty($aset[0]->Sertifikat_Nomor)){ echo 'Bersertipikat'; }else{ echo 'Belum sertifikat'; } ?>';
-        luas           = '<?php echo number_format($aset[0]->Luas_M2,2,",","."); ?>';
-        alamat         = '<?php echo $aset[0]->Alamat; ?>';
-        hak_tanah      = '<?php echo $aset[0]->Hak_Tanah; ?>';
-        tgl_sertipikat = '<?php echo $aset[0]->Sertifikat_Tanggal; ?>';
-        no_sertipikat  = '<?php echo $aset[0]->Sertifikat_Nomor; ?>';
-        penggunaan     = '<?php echo $aset[0]->Penggunaan; ?>';
+        luas           = '<?php echo number_format($aset[0]->Luas,2,",","."); ?>';
+        alamat         = '<?php echo $aset[0]->Lokasi; ?>';
         keterangan     = '<?php echo $aset[0]->Keterangan; ?>';
 
         // Menampilkan Informasi Data
@@ -275,18 +281,6 @@
             '<td valign="top" height="25">Alamat</td><td valign="top"><center>:</center></td><td valign="top">' + alamat + '</td>' +
             '</tr>' +
             '<tr>' +
-            '<td valign="top" height="25">Hak Tanah</td><td valign="top"><center>:</center></td><td valign="top">' + hak_tanah + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Tgl Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + tgl_sertipikat + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">No Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + no_sertipikat + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Penggunaan</td><td valign="top"><center>:</center></td><td valign="top">' + penggunaan + '</td>' +
-            '</tr>' +
-            '<tr>' +
             '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
             '</tr>' +
             '</table>';
@@ -301,6 +295,7 @@
             fillOpacity: 0.45,
         <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
             editable: true,
+            draggable: true,
         <?php endif; ?>
             html: contentString
         });
