@@ -52,7 +52,7 @@ foreach($skpd as $k => $val){
             <td class="text-center">'.$kd_lokasi.'</td>
             <td>'.$val->Nm_Unit.'</td>
             <td class="text-right harga_total" data-kd_lokasi="'.$kd_lokasi.'">Menunggu... </td>
-            <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('kd_lokasi' => $kd_lokasi, 'daftar_aset' => 1))).'" class="btn btn-primary">Detail</a></td>
+            <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('kd_lokasi' => $kd_lokasi, 'nama_skpd' => $val->Nm_Unit, 'daftar_aset' => 1))).'" class="btn btn-primary">Detail</a></td>
         </tr>
     ';
 }

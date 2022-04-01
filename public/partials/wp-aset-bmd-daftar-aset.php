@@ -2,6 +2,7 @@
 $body = '';
 $total_nilai = 0;
 $nama_jenis_aset_all = array();
+$nama_skpd = '';
 if(!empty($params['jenis_aset'])){
     $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
     $nama_jenis_aset = $data_jenis['nama'];
@@ -14,6 +15,7 @@ if(!empty($params['jenis_aset'])){
         $skpd = $this->get_total_aset_upb($table_simda, $params);
     }
 }else if(!empty($params['kd_lokasi'])){
+    $nama_skpd = '<br>'.$params['kd_lokasi'].' '.$params['nama_skpd'];
     $skpd = array();
     $params['jenis_aset'] = 'tanah';
     $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
@@ -152,7 +154,7 @@ if(!empty($skpd_sementara)){
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Aset Barang Milik Daerah Per SKPD<br><?php echo implode(', ', $nama_jenis_aset_all); ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Aset Barang Milik Daerah Per Unit SKPD<?php echo $nama_skpd; ?><br><?php echo implode(', ', $nama_jenis_aset_all); ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <table class="table table-bordered" id="table-aset-skpd">
             <thead id="data_header">
                 <tr>

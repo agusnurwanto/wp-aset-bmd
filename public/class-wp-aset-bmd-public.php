@@ -297,6 +297,18 @@ class Wp_Aset_Bmd_Public {
 		$meta_sejarah = get_post_meta($post->ID, 'meta_sejarah', true);
 		$meta_foto = get_post_meta($post->ID, 'meta_foto', true);
 		$meta_video = get_post_meta($post->ID, 'meta_video', true);
+		$meta_disewakan = get_post_meta($post->ID, 'meta_disewakan', true);
+		$checked_sewa = '';
+		$checked_tidak_sewa = 'checked';
+		if($meta_disewakan == '1'){
+			$checked_sewa = 'checked';
+			$checked_tidak_sewa = '';
+		}
+		$nilai_sewa = get_post_meta($post->ID, 'meta_nilai_sewa', true);
+		$nama_sewa = get_post_meta($post->ID, 'meta_nama_sewa', true);
+		$alamat_sewa = get_post_meta($post->ID, 'meta_alamat_sewa', true);
+		$waktu_sewa_awal = get_post_meta($post->ID, 'meta_waktu_sewa_awal', true);
+		$waktu_sewa_akhir = get_post_meta($post->ID, 'meta_waktu_sewa_akhir', true);
 		$allow_edit_post = $this->cek_edit_post(array(
 		    'Kd_Prov' => $Kd_Prov,
 		    'Kd_Kab_Kota' => $Kd_Kab_Kota,
@@ -598,6 +610,12 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_sejarah', $_POST['sejarah']);
 						update_post_meta($post->ID, 'meta_foto', $_POST['foto']);
 						update_post_meta($post->ID, 'meta_video', $_POST['video']);
+						update_post_meta($post->ID, 'meta_disewakan', $_POST['disewakan']);
+						update_post_meta($post->ID, 'meta_nilai_sewa', $_POST['nilai_sewa']);
+						update_post_meta($post->ID, 'meta_nama_sewa', $_POST['nama_sewa']);
+						update_post_meta($post->ID, 'meta_alamat_sewa', $_POST['alamat_sewa']);
+						update_post_meta($post->ID, 'meta_waktu_sewa_awal', $_POST['waktu_sewa_awal']);
+						update_post_meta($post->ID, 'meta_waktu_sewa_akhir', $_POST['waktu_sewa_akhir']);
 					}else{
 						$ret['status'] = 'error';
 						$ret['message'] = 'ID post aset tidak ditemukan!';
