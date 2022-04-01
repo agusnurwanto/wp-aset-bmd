@@ -17,6 +17,7 @@ $args = array(
 );
 $query = new WP_Query($args);
 $no = 0;
+$data_aset = array();
 foreach($query->posts as $post){
     $params = shortcode_parse_atts(str_replace('[detail_aset', '', str_replace(']', '', $post->post_content)));
     $kd_lokasi = explode('.', $params['kd_lokasi']);
@@ -213,9 +214,23 @@ foreach($query->posts as $post){
             <td>'.implode(' | ', $keterangan).'</td>
             <td class="text-right" data-sort="'.$aset[0]->Harga.'">'.number_format($aset[0]->Harga,2,",",".").'</td>
             <td class="text-right" data-sort="'.$nilai_sewa.'">'.number_format($nilai_sewa,2,",",".").'</td>
-            <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a></td>
+            <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
         </tr>
     ';
+    $data_aset[] = array(
+        'aset' => $aset[0],
+        'lng' => $koordinatX,
+        'ltd' => $koordinatY,
+        'polygon' => $polygon,
+        'nilai_sewa' => number_format($nilai_sewa,2,",","."),
+        'nama_sewa' => $nama_sewa,
+        'alamat_sewa' => $alamat_sewa,
+        'waktu_sewa_awal' => $waktu_sewa_awal,
+        'waktu_sewa_akhir' => $waktu_sewa_akhir,
+        'nama_skpd' => $params['nama_skpd'].' '.$alamat,
+        'kd_barang' => $params['kd_barang'],
+        'kd_lokasi' => $params['kd_lokasi']
+    );
 }
 ?>
 <style type="text/css">
@@ -229,6 +244,7 @@ foreach($query->posts as $post){
 <div class="cetak">
     <div style="padding: 10px;">
         <h2 class="text-center">Data Aset Barang Milik Daerah Yang Disewakan<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div>
         <table class="table table-bordered" id="data_aset_sewa">
             <thead>
                 <tr>
@@ -254,11 +270,21 @@ foreach($query->posts as $post){
         </table>
     </div>
 </div>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBrDSUIMFDIleLOFUUXf1wFVum9ae3lJ0&callback=initMap&libraries=places"></script>
 <script type="text/javascript">
+function setCenter(lng, ltd){
+    var lokasi_aset = new google.maps.LatLng(lng, ltd);
+    map.setCenter(lokasi_aset);
+    map.setZoom(18);
+    jQuery([document.documentElement, document.body]).animate({
+        scrollTop: jQuery("#map-canvas").offset().top
+    }, 500);
+}
 jQuery(document).on('ready', function(){
     jQuery('#data_aset_sewa').dataTable({
         columnDefs: [
-            { "width": "500px", "targets": 4 }
+            { "width": "400px", "targets": 4 },
+            { "width": "110px", "targets": 7 }
         ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
@@ -278,4 +304,89 @@ jQuery(document).on('ready', function(){
         }
     });
 });
+
+window.data_aset = <?php echo json_encode($data_aset); ?>;
+var map;
+var nama_aset;
+var kode_aset;
+var status_aset;
+var luas;
+var alamat;
+var hak_tanah;
+var tgl_sertipikat;
+var no_sertipikat;
+var penggunaan;
+var keterangan;
+
+function initMap() {
+    geocoder = new google.maps.Geocoder();
+    geocoder.geocode( { 'address': '<?php echo $nama_pemda; ?>'}, function(results, status) {
+        var mapOptions = {
+            zoom: 13,
+            center: results[0].geometry.location,
+            mapTypeId: google.maps.MapTypeId.HYBRID
+        };
+        // Membuat Map
+        window.map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        data_aset.map(function(aset, i){
+            console.log('aset', aset);
+            var lokasi_aset = new google.maps.LatLng(aset.lng, aset.ltd);
+            // Menampilkan Marker
+            var marker1 = new google.maps.Marker({
+                position: lokasi_aset,
+                map: map,
+                title: 'Lokasi Aset'
+            });
+            
+            // Variabel Informasi Data
+            nama_aset      = aset.aset.Nm_Aset5;
+            kode_aset      = aset.kd_barang;
+            keterangan     = aset.aset.Keterangan;
+
+            // Menampilkan Informasi Data
+            var contentString = '<br>' +
+                '<table width="100%" border="0">' +
+                '<tr>' +
+                '<td width="33%" valign="top" height="25">Nama Aset</td><td valign="top"><center>:</center></td><td valign="top"><b>' + nama_aset + '</b></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td valign="top" height="25">Nilai Sewa</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">Rp ' + aset.nilai_sewa + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
+                '</tr>' +
+                '</table>';
+
+            // Define the LatLng coordinates for the shape.
+            var Coords1 = JSON.parse(aset.polygon);
+
+            // Membuat Shape
+            var bentuk_bidang1 = new google.maps.Polygon({
+                paths: Coords1,
+                strokeColor: '#00cc00',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#00cc00',
+                fillOpacity: 0.45,
+                html: contentString
+            });
+
+            bentuk_bidang1.setMap(map);
+            infoWindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            google.maps.event.addListener(bentuk_bidang1, 'click', function(event) {
+                infoWindow.setPosition(event.latLng);
+                infoWindow.open(map);
+            });
+            google.maps.event.addListener(marker1, 'click', function(event) {
+                infoWindow.setPosition(event.latLng);
+                infoWindow.open(map);
+            });
+        });
+    });
+}
 </script>

@@ -169,12 +169,14 @@ class Wp_Aset_Bmd_Admin {
 		$link_dashboard = $this->functions->generatePage(array(
 			'nama_page' => 'Dasboard Aset Barang Milik Daerah',
 			'content' => '[dashboard_aset]',
+        	'show_header' => 1,
 			'post_status' => 'public'
 		));
 
 		$link_dashboard_sewa = $this->functions->generatePage(array(
 			'nama_page' => 'Data Aset Yang Disewakan',
 			'content' => '[dashboard_aset_disewakan]',
+        	'show_header' => 1,
 			'post_status' => 'public'
 		));
 
