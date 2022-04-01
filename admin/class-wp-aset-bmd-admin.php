@@ -172,6 +172,12 @@ class Wp_Aset_Bmd_Admin {
 			'post_status' => 'public'
 		));
 
+		$link_dashboard_sewa = $this->functions->generatePage(array(
+			'nama_page' => 'Data Aset Yang Disewakan',
+			'content' => '[dashboard_aset_disewakan]',
+			'post_status' => 'public'
+		));
+
         $status = $this->get_status_simda();
         $nama_pemda = $status['data']['nama_pemda'];
         $alamat_pemda = $status['data']['alamat_pemda'];
@@ -190,6 +196,8 @@ class Wp_Aset_Bmd_Admin {
 	        ->add_fields( array(
 	        	Field::make( 'html', 'crb_simda_bmd_dasboard' )
 	            	->set_html( '<b>Halaman Dasboard: <a target="_blank" href="'.$link_dashboard['url'].'">'.$link_dashboard['title'].'</a></b>' ),
+	        	Field::make( 'html', 'crb_simda_bmd_dasboard_sewa' )
+	            	->set_html( '<b>Halaman Data Aset Yang Disewakan: <a target="_blank" href="'.$link_dashboard_sewa['url'].'">'.$link_dashboard_sewa['title'].'</a></b>' ),
 	        	Field::make( 'html', 'crb_simda_bmd_referensi_html' )
 	            	->set_html( 'Referensi: <a target="_blank" href="https://github.com/agusnurwanto/wp-aset-bmd">https://github.com/agusnurwanto/wp-aset-bmd</a>' ),
 	        	Field::make( 'html', 'crb_simda_bmd_koneksi_html' )
