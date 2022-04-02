@@ -170,6 +170,7 @@ class Wp_Aset_Bmd_Admin {
 			'nama_page' => 'Dasboard Aset Barang Milik Daerah',
 			'content' => '[dashboard_aset]',
         	'show_header' => 1,
+        	'no_key' => 1,
 			'post_status' => 'public'
 		));
 
@@ -177,6 +178,7 @@ class Wp_Aset_Bmd_Admin {
 			'nama_page' => 'Data Aset Yang Disewakan',
 			'content' => '[dashboard_aset_disewakan]',
         	'show_header' => 1,
+        	'no_key' => 1,
 			'post_status' => 'public'
 		));
 
