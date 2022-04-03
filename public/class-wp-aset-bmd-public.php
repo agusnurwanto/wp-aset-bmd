@@ -312,6 +312,12 @@ class Wp_Aset_Bmd_Public {
 			$checked_sewa = 'checked';
 			$checked_tidak_sewa = '';
 		}
+		$checked_private = '';
+		$checked_publish = 'checked';
+		if($post->post_status == 'private'){
+			$checked_private = 'checked';
+			$checked_publish = '';
+		}
 		$nilai_sewa = get_post_meta($post->ID, 'meta_nilai_sewa', true);
 		$nama_sewa = get_post_meta($post->ID, 'meta_nama_sewa', true);
 		$alamat_sewa = get_post_meta($post->ID, 'meta_alamat_sewa', true);
@@ -624,6 +630,17 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_alamat_sewa', $_POST['alamat_sewa']);
 						update_post_meta($post->ID, 'meta_waktu_sewa_awal', $_POST['waktu_sewa_awal']);
 						update_post_meta($post->ID, 'meta_waktu_sewa_akhir', $_POST['waktu_sewa_akhir']);
+						$post_status = 'private';
+						if(
+							!empty($_POST['status_informasi'])
+							&& $_POST['status_informasi'] == 2
+						){
+							$post_status = 'publish';
+						}
+						wp_update_post(array(
+					        'ID'    =>  $post->ID,
+					        'post_status'   =>  $post_status
+				        ));
 					}else{
 						$ret['status'] = 'error';
 						$ret['message'] = 'ID post aset tidak ditemukan!';

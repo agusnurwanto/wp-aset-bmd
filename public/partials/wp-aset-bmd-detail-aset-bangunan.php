@@ -144,6 +144,44 @@
                 ?>
                 </div>
             </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Disewakan / Tidak</label>
+                <div class="col-md-4">
+                    <label><input type="radio" <?php echo $disabled.' '.$checked_sewa; ?> name="disewakan" value="1"> Disewakan</label>
+                    <label style="margin-left: 15px;"><input type="radio" <?php echo $disabled.' '.$checked_tidak_sewa; ?> name="disewakan" value="2"> Tidak Disewakan</label>
+                </div>
+                <label class="col-md-2 col-form-label">Nilai Sewa</label>
+                <div class="col-md-4">
+                    <input type="number" <?php echo $disabled; ?> class="form-control" name="nilai_sewa" value="<?php echo $nilai_sewa; ?>">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Nama Penyewa</label>
+                <div class="col-md-4">
+                    <input type="text" <?php echo $disabled; ?> class="form-control" name="nama_sewa" value="<?php echo $nama_sewa; ?>">
+                </div>
+                <label class="col-md-2 col-form-label">Alamat Penyewa</label>
+                <div class="col-md-4">
+                    <input type="text" <?php echo $disabled; ?> class="form-control" name="alamat_sewa" value="<?php echo $alamat_sewa; ?>">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Waktu Awal Sewa</label>
+                <div class="col-md-4">
+                    <input type="date" <?php echo $disabled; ?> class="form-control" name="waktu_sewa_awal" value="<?php echo $waktu_sewa_awal; ?>">
+                </div>
+                <label class="col-md-2 col-form-label">Waktu Akhir Sewa</label>
+                <div class="col-md-4">
+                    <input type="date" <?php echo $disabled; ?> class="form-control" name="waktu_sewa_akhir" value="<?php echo $waktu_sewa_akhir; ?>">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Status informasi aset</label>
+                <div class="col-md-10">
+                    <label><input type="radio" <?php echo $disabled.' '.$checked_private; ?> name="status_informasi" value="1"> Privasi / rahasia</label>
+                    <label style="margin-left: 15px;"><input type="radio" <?php echo $disabled.' '.$checked_publish; ?> name="status_informasi" value="2"> Informasi untuk masyarakat umum</label>
+                </div>
+            </div>
         <?php if(!empty($allow_edit_post) && empty($params['key']['edit'])): ?>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
@@ -180,7 +218,14 @@
                     "video": tinyMCE.get('video').getContent(),
                     "latitude": jQuery('input[name="latitude"]').val(),
                     "longitude": jQuery('input[name="longitude"]').val(),
-                    "polygon": jQuery('textarea[name="polygon"]').val()
+                    "polygon": jQuery('textarea[name="polygon"]').val(),
+                    "disewakan": jQuery('input[name="disewakan"]:checked').val(),
+                    "nilai_sewa": jQuery('input[name="nilai_sewa"]').val(),
+                    "nama_sewa": jQuery('input[name="nama_sewa"]').val(),
+                    "alamat_sewa": jQuery('input[name="alamat_sewa"]').val(),
+                    "waktu_sewa_awal": jQuery('input[name="waktu_sewa_awal"]').val(),
+                    "waktu_sewa_akhir": jQuery('input[name="waktu_sewa_akhir"]').val(),
+                    "status_informasi": jQuery('input[name="status_informasi"]:checked').val()
                 },
                 dataType: "json",
                 success: function(data){
