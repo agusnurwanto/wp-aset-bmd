@@ -102,6 +102,8 @@ class Wp_Aset_Bmd_Admin {
 		 * class.
 		 */
 
+		wp_enqueue_script( $this->plugin_name.'jszip', plugin_dir_url( __FILE__ ) . 'js/jszip.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name.'xlsx', plugin_dir_url( __FILE__ ) . 'js/xlsx.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-aset-bmd-admin.js', array( 'jquery' ), $this->version, false );
 		wp_localize_script( $this->plugin_name, 'wp_aset_bmd', array(
 		    'api_key' => get_option( '_crb_apikey_simda_bmd' )
@@ -234,8 +236,14 @@ class Wp_Aset_Bmd_Admin {
 	            Field::make( 'text', 'crb_bmd_kepala_umum_jabatan', 'Jabatan Kepala Umum' )
 	            	->set_default_value($kepala_umum_jabatan),
 	            Field::make( 'html', 'crb_generate_user_aset' )
-	            	->set_html( '<a id="generate_user_aset" onclick="return false;" href="#" class="button button-primary button-large">Generate User SKPD Aset BMD</a>' )
+	            	->set_html( '<a id="generate_user_aset" onclick="return false;" href="#" class="button button-primary button-large">Generate User SKPD Unit, Sub Unit dan UPB dari database SIMDA BMD</a>' )
 	            	->set_help_text('Username SKPD adalah kode lokasi dengan format (<b>Kd_Prov.Kd_Kab_Kota.Kd_Bidang.Kd_Unit.Kd_Sub.Kd_UPB.Kd_Kecamatan.Kd_Desa</b>). Contoh <b>13.5.1.1.1.1.9.5</b> dengan password default yang bisa dirubah sendiri oleh user.'),
+		        Field::make( 'html', 'crb_upload_html' )
+	            	->set_html( 'Upload file excel .xlsx untuk custom username sub unit : <input type="file" id="file-excel" onchange="filePicked(event);"><br>Contoh format file excel bisa <a target="_blank" href="'.plugin_dir_url( __FILE__ ) . 'excel/contoh.xlsx">download di sini</a>. Sheet file excel yang akan diimport harus diberi nama <b>data</b>.' ),
+		        Field::make( 'html', 'crb_textarea_html' )
+	            	->set_html( 'Data JSON : <textarea id="data-excel" class="cf-select__input"></textarea>' ),
+		        Field::make( 'html', 'crb_save_button' )
+	            	->set_html( '<a onclick="import_excel(); return false" href="javascript:void(0);" class="button button-primary">Import Excel Custom username Sub Unit</a>' )
 	        ) );
 	}
 
@@ -246,80 +254,119 @@ class Wp_Aset_Bmd_Admin {
 		$ret['message'] = 'Berhasil Generate User Wordpress dari DB SIMDA BMD';
 		if (!empty($_POST)) {
 			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
-				$skpd = $this->functions->CurlSimda(array(
-				    'query' => '
-				        select  
-				            u.Kd_Prov, 
-				            u.Kd_Kab_Kota, 
-				            u.Kd_Bidang, 
-				            u.Kd_Unit, 
-				            u.Kd_Sub, 
-				            u.Kd_UPB, 
-				            u.Kd_Kecamatan, 
-				            u.Kd_Desa, 
-				            u.Nm_UPB,
-				            k.Nm_Kecamatan,
-				            d.Nm_Desa
-				        from ref_upb u
-				        LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
-				            AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
-				            AND k.Kd_Kecamatan = u.Kd_Kecamatan
-				        LEFT JOIN Ref_Desa d ON d.Kd_Prov=u.Kd_Prov
-				            AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
-				            AND d.Kd_Kecamatan = u.Kd_Kecamatan
-				            AND d.Kd_Desa = u.Kd_Desa'
-				));
-				if(!empty($skpd)){
-					foreach ($skpd as $k => $user) {
-						$user->pass = $_POST['pass'];
-						$user->loginname = $user->Kd_Prov.'.'.$user->Kd_Kab_Kota.'.'.$user->Kd_Bidang.'.'.$user->Kd_Unit.'.'.$user->Kd_Sub.'.'.$user->Kd_UPB.'.'.$user->Kd_Kecamatan.'.'.$user->Kd_Desa;
-						$user->nama = $user->Nm_UPB;
-						$user->kecamatan = $user->Nm_Kecamatan;
-						$user->desa = $user->Nm_Desa;
-						$user->role = 'user_aset_skpd';
-						$user->nama_role = 'User Aset UPB';
-						$this->functions->gen_user_aset((array) $user);
+				if(!empty($_POST['data'])){
+					$skpd = $this->functions->CurlSimda(array(
+					    'query' => '
+					        select  
+					            u.Kd_Prov, 
+					            u.Kd_Kab_Kota, 
+					            u.Kd_Bidang, 
+					            u.Kd_Unit, 
+					            u.Kd_Sub, 
+					            u.Nm_Sub_Unit
+					        from Ref_Sub_Unit u'
+					));
+					if(!empty($skpd)){
+						$cek_sub = array();
+						foreach($_POST['data'] as $user){
+							if(
+								!empty($user['kode_sub_unit']) 
+								&& !empty($user['username'])
+							){
+								$cek_sub[$user['kode_sub_unit']] = $user;
+							}
+						}
+						foreach ($skpd as $k => $user) {
+							$user->pass = $_POST['pass'];
+							$kd_sub = $user->Kd_Prov.'.'.$user->Kd_Kab_Kota.'.'.$user->Kd_Bidang.'.'.$user->Kd_Unit.'.'.$user->Kd_Sub;
+							$user->nama = $user->Nm_Sub_Unit;
+							$user->role = 'user_aset_sub_unit_skpd';
+							$user->nama_role = 'User Aset Sub Unit';
+							if(!empty($cek_sub[$kd_sub])){
+								$user->loginname = $cek_sub[$kd_sub]['username'];
+								$this->functions->gen_user_aset((array) $user);
+							}
+						}
 					}
-				}
-				$skpd = $this->functions->CurlSimda(array(
-				    'query' => '
-				        select  
-				            u.Kd_Prov, 
-				            u.Kd_Kab_Kota, 
-				            u.Kd_Bidang, 
-				            u.Kd_Unit, 
-				            u.Kd_Sub, 
-				            u.Nm_Sub_Unit
-				        from Ref_Sub_Unit u'
-				));
-				if(!empty($skpd)){
-					foreach ($skpd as $k => $user) {
-						$user->pass = $_POST['pass'];
-						$user->loginname = $user->Kd_Prov.'.'.$user->Kd_Kab_Kota.'.'.$user->Kd_Bidang.'.'.$user->Kd_Unit.'.'.$user->Kd_Sub;
-						$user->nama = $user->Nm_Sub_Unit;
-						$user->role = 'user_aset_sub_unit_skpd';
-						$user->nama_role = 'User Aset Sub Unit';
-						$this->functions->gen_user_aset((array) $user);
+				}else{
+					// generate user ref_upb
+					$skpd = $this->functions->CurlSimda(array(
+					    'query' => '
+					        select  
+					            u.Kd_Prov, 
+					            u.Kd_Kab_Kota, 
+					            u.Kd_Bidang, 
+					            u.Kd_Unit, 
+					            u.Kd_Sub, 
+					            u.Kd_UPB, 
+					            u.Kd_Kecamatan, 
+					            u.Kd_Desa, 
+					            u.Nm_UPB,
+					            k.Nm_Kecamatan,
+					            d.Nm_Desa
+					        from ref_upb u
+					        LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
+					            AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
+					            AND k.Kd_Kecamatan = u.Kd_Kecamatan
+					        LEFT JOIN Ref_Desa d ON d.Kd_Prov=u.Kd_Prov
+					            AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
+					            AND d.Kd_Kecamatan = u.Kd_Kecamatan
+					            AND d.Kd_Desa = u.Kd_Desa'
+					));
+					if(!empty($skpd)){
+						foreach ($skpd as $k => $user) {
+							$user->pass = $_POST['pass'];
+							$user->loginname = $user->Kd_Prov.'.'.$user->Kd_Kab_Kota.'.'.$user->Kd_Bidang.'.'.$user->Kd_Unit.'.'.$user->Kd_Sub.'.'.$user->Kd_UPB.'.'.$user->Kd_Kecamatan.'.'.$user->Kd_Desa;
+							$user->nama = $user->Nm_UPB;
+							$user->kecamatan = $user->Nm_Kecamatan;
+							$user->desa = $user->Nm_Desa;
+							$user->role = 'user_aset_skpd';
+							$user->nama_role = 'User Aset UPB';
+							$this->functions->gen_user_aset((array) $user);
+						}
 					}
-				}
-				$skpd = $this->functions->CurlSimda(array(
-				    'query' => '
-				        select  
-				            u.Kd_Prov, 
-				            u.Kd_Kab_Kota, 
-				            u.Kd_Bidang, 
-				            u.Kd_Unit,
-				            u.Nm_Unit
-				        from Ref_Unit u'
-				));
-				if(!empty($skpd)){
-					foreach ($skpd as $k => $user) {
-						$user->pass = $_POST['pass'];
-						$user->loginname = $user->Kd_Prov.'.'.$user->Kd_Kab_Kota.'.'.$user->Kd_Bidang.'.'.$user->Kd_Unit;
-						$user->nama = $user->Nm_Unit;
-						$user->role = 'user_aset_unit_skpd';
-						$user->nama_role = 'User Aset Unit';
-						$this->functions->gen_user_aset((array) $user);
+					// generate user ref_sub_unit
+					$skpd = $this->functions->CurlSimda(array(
+					    'query' => '
+					        select  
+					            u.Kd_Prov, 
+					            u.Kd_Kab_Kota, 
+					            u.Kd_Bidang, 
+					            u.Kd_Unit, 
+					            u.Kd_Sub, 
+					            u.Nm_Sub_Unit
+					        from Ref_Sub_Unit u'
+					));
+					if(!empty($skpd)){
+						foreach ($skpd as $k => $user) {
+							$user->pass = $_POST['pass'];
+							$user->loginname = $user->Kd_Prov.'.'.$user->Kd_Kab_Kota.'.'.$user->Kd_Bidang.'.'.$user->Kd_Unit.'.'.$user->Kd_Sub;
+							$user->nama = $user->Nm_Sub_Unit;
+							$user->role = 'user_aset_sub_unit_skpd';
+							$user->nama_role = 'User Aset Sub Unit';
+							$this->functions->gen_user_aset((array) $user);
+						}
+					}
+					// generate user ref_unit
+					$skpd = $this->functions->CurlSimda(array(
+					    'query' => '
+					        select  
+					            u.Kd_Prov, 
+					            u.Kd_Kab_Kota, 
+					            u.Kd_Bidang, 
+					            u.Kd_Unit,
+					            u.Nm_Unit
+					        from Ref_Unit u'
+					));
+					if(!empty($skpd)){
+						foreach ($skpd as $k => $user) {
+							$user->pass = $_POST['pass'];
+							$user->loginname = $user->Kd_Prov.'.'.$user->Kd_Kab_Kota.'.'.$user->Kd_Bidang.'.'.$user->Kd_Unit;
+							$user->nama = $user->Nm_Unit;
+							$user->role = 'user_aset_unit_skpd';
+							$user->nama_role = 'User Aset Unit';
+							$this->functions->gen_user_aset((array) $user);
+						}
 					}
 				}
 			} else {

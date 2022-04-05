@@ -132,6 +132,7 @@ foreach($skpd as $k => $val){
             <td class="text-center">'.$no.'</td>
             <td class="text-center">'.$val->nama_aset.'</td>
             <td class="text-center">'.$kd_lokasi.'</td>
+            <td>'.$val->Nm_Sub_Unit.'</td>
             <td>'.$val->Nm_UPB.' '.$alamat.'</td>
             <td class="text-right" data-sort="'.$val->jml.'">'.$jumlah.'</td>
             <td class="text-center">'.$satuan.'</td>
@@ -161,7 +162,8 @@ if(!empty($skpd_sementara)){
                     <th class="text-center">No</th>
                     <th class="text-center">Jenis Aset</th>
                     <th class="text-center">Kode Lokasi</th>
-                    <th class="text-center">Nama SKPD</th>
+                    <th class="text-center">Nama Sub Unit</th>
+                    <th class="text-center">Nama UPB</th>
                     <th class="text-center">Jumlah</th>
                     <th class="text-center">Satuan</th>
                     <th class="text-center">Nilai (Rupiah)</th>
@@ -172,7 +174,7 @@ if(!empty($skpd_sementara)){
                 <?php echo $body_skpd; ?>
             </tbody>
             <tfoot>
-                <th colspan="6" class="text-center">Total Nilai</th>
+                <th colspan="7" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_all_skpd"><?php echo number_format($total_nilai,2,",","."); ?></th>
                 <th></th>
             <tfoot>
@@ -183,12 +185,14 @@ if(!empty($skpd_sementara)){
 jQuery(document).on('ready', function(){
     jQuery('#table-aset-skpd').dataTable({
         columnDefs: [
-            { "width": "100px", "targets": 5 }
+            { "width": "110px", "targets": 1 },
+            { "width": "50px", "targets": 6 },
+            { "width": "130px", "targets": 7 }
         ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
             var api = this.api();
-            var total_page = api.column( 6, { page: 'current'} )
+            var total_page = api.column( 7, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);

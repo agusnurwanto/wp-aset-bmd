@@ -696,8 +696,14 @@ class Wp_Aset_Bmd_Public {
                     u.Nm_UPB,
                     k.Nm_Kecamatan,
                     d.Nm_Desa,
+                    s.Nm_Sub_Unit,
                     \''.$table_simda.'\' as table_simda
                 from '.$table_simda.' a
+                INNER JOIN ref_sub_unit s ON a.Kd_Prov=s.Kd_Prov
+                    AND a.Kd_Kab_Kota = s.Kd_Kab_Kota 
+                    AND a.Kd_Bidang = s.Kd_Bidang 
+                    AND a.Kd_Unit = s.Kd_Unit 
+                    AND a.Kd_Sub = s.Kd_Sub 
                 LEFT JOIN ref_upb u ON a.Kd_Prov=u.Kd_Prov
                     AND a.Kd_Kab_Kota = u.Kd_Kab_Kota 
                     AND a.Kd_Bidang = u.Kd_Bidang 
@@ -720,6 +726,7 @@ class Wp_Aset_Bmd_Public {
                     a.Kd_UPB, 
                     a.Kd_Kecamatan, 
                     a.Kd_Desa,
+                    s.Nm_Sub_Unit,
                     u.Nm_UPB,
                     k.Nm_Kecamatan,
                     d.Nm_Desa'
