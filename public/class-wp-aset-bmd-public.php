@@ -347,6 +347,7 @@ class Wp_Aset_Bmd_Public {
 		        $disabled = '';
 		    }
 		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-header.php';
         if($params['jenis_aset'] == 'tanah'){
 			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-tanah.php';
         }else if($params['jenis_aset'] == 'mesin'){

@@ -169,8 +169,9 @@ foreach($query->posts as $post){
             AND a.Kd_Unit=%d 
             AND a.Kd_Sub=%d 
             AND a.Kd_UPB=%d
+            AND a.No_Reg8=%d
             '.$where.'
-        ', $Kd_Prov, $Kd_Kab_Kota, $Kd_Bidang, $Kd_Unit, $Kd_Sub, $Kd_UPB);
+        ', $Kd_Prov, $Kd_Kab_Kota, $Kd_Bidang, $Kd_Unit, $Kd_Sub, $Kd_UPB, $No_Reg8);
     $aset = $this->functions->CurlSimda(array(
         'query' => $sql 
     ));

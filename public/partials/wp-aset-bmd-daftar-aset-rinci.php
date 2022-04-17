@@ -9,6 +9,18 @@ if(empty($nama_jenis_aset)){
     die('Jenis Aset tidak ditemukan!');
 }
 
+$kd_lokasi_unit = '12.'.$this->functions->CekNull($Kd_Prov).'.'.$this->functions->CekNull($Kd_Kab_Kota).'.'.$this->functions->CekNull($Kd_Bidang).'.'.$this->functions->CekNull($Kd_Unit);
+$kd_lokasi_upb = '.'.$this->functions->CekNull($Kd_Sub).'.'.$this->functions->CekNull($Kd_UPB).'.'.$this->functions->CekNull($Kd_Kecamatan).'.'.$this->functions->CekNull($Kd_Desa);
+$link_detail_unit = $this->get_link_daftar_aset(
+    array('get' => 
+        array(
+            'kd_lokasi' => $kd_lokasi_unit, 
+            'nama_skpd' => $params['nama_skpd'], 
+            'daftar_aset' => 1
+        )
+    )
+);
+
 $where = '';
 if(!empty($Kd_Kecamatan)){
     $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
@@ -111,7 +123,7 @@ foreach($aset as $k => $val){
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Aset Barang Milik Daerah<br><?php echo $params['nama_skpd']; ?><br><?php echo $nama_jenis_aset; ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Aset Barang Milik Daerah<br><a href="<?php echo $link_detail_unit; ?>" target="_blank"><?php echo $kd_lokasi_unit; ?></a><?php echo $kd_lokasi_upb.'<br>'; ?><?php echo $params['nama_skpd']; ?><br><?php echo $nama_jenis_aset; ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <table class="table table-bordered" id="table-aset-skpd">
             <thead id="data_header">
                 <tr>

@@ -201,7 +201,7 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
             <thead id="data_header">
                 <tr>
                     <th class="text-center">No</th>
-                    <th class="text-center">Kode Lokasi</th>
+                    <th class="text-center">Kode Unit</th>
                     <th class="text-center">Nama Unit</th>
                     <th class="text-center">Nilai (Rupiah)</th>
                     <th class="text-center">Aksi</th>
