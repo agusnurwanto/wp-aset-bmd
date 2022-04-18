@@ -128,6 +128,33 @@ class Wp_Aset_Bmd_Public {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset-disewakan.php';
 	}
 
+	function dashboard_aset_user(){
+		// untuk disable render shortcode di halaman edit page/post
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		if(is_user_logged_in()){
+			$user_id = um_user( 'ID' );
+			$kd_lokasi_user = get_user_meta($user_id, '_crb_kd_lokasi', true);
+			if(!empty($kd_lokasi_user)){
+				$nama_skpd = get_user_meta($user_id, '_crb_nama_skpd', true);
+		    	$link_detail_unit = $this->get_link_daftar_aset(
+				    array('get' => 
+				        array(
+				            'kd_lokasi' => '12.'.$kd_lokasi_user, 
+				            'nama_skpd' => $nama_skpd, 
+				            'daftar_aset' => 1
+				        )
+				    )
+				);
+				echo '
+				<ul style="text-align: center; margin: 20px 0;">
+					<li style="list-style: none;"><a class="button button-primary" href="'.$link_detail_unit.'" target="_blank">Data Barang Milik Daerah '.$nama_skpd.'</a></li>
+				</ul>';
+		    }
+		}
+	}
+
 	function detail_aset($atts){
 		// untuk disable render shortcode di halaman edit page/post
 		if(!empty($_GET) && !empty($_GET['post'])){
