@@ -340,6 +340,9 @@ class Wp_Aset_Bmd_Simda
 			    '_crb_nama_skpd' => $user['nama'],
 			    '_crb_kd_lokasi' => $user['loginname']
 			);
+			if(!empty($user['kd_sub'])){
+				$meta['_crb_kd_lokasi'] = $user['kd_sub'];
+			}
 			if(!empty($user['desa'])){
 				$meta['_crb_desa'] = $user['desa'];
 			}

@@ -90,7 +90,7 @@ $gedung_pengerjaan = $this->functions->CurlSimda(array(
 $body .= '
     <tr>
         <td class="text-center" rowspan="2">1</td>
-        <td rowspan="2">Aset Tanah</td>
+        <td rowspan="2">Tanah</td>
         <td class="text-right">'.number_format($tanah[0]->jml,2,",",".").'</td>
         <td class="text-center">Meter Persegi</td>
         <td class="text-right" rowspan="2">'.number_format($tanah[0]->harga,2,",",".").'</td>
@@ -102,7 +102,7 @@ $body .= '
     </tr>
     <tr>
         <td class="text-center">2</td>
-        <td>Aset Mesin</td>
+        <td>Peralatan dan Mesin</td>
         <td class="text-right">'.number_format($mesin[0]->jml,2,",",".").'</td>
         <td class="text-center">Pcs</td>
         <td class="text-right">'.number_format($mesin[0]->harga,2,",",".").'</td>
@@ -110,7 +110,7 @@ $body .= '
     </tr>
     <tr>
         <td class="text-center">3</td>
-        <td>Aset Bangunan</td>
+        <td>Gedung dan Bangunan</td>
         <td class="text-right">'.number_format($gedung[0]->jml,2,",",".").'</td>
         <td class="text-center">Gedung</td>
         <td class="text-right">'.number_format($gedung[0]->harga,2,",",".").'</td>
@@ -118,7 +118,7 @@ $body .= '
     </tr>
     <tr>
         <td class="text-center">4</td>
-        <td>Aset Jalan Irigrasi</td>
+        <td>Jalan, Jaringan dan Irigrasi</td>
         <td class="text-right">'.number_format($jalan[0]->jml,2,",",".").'</td>
         <td class="text-center">Meter (Panjang)</td>
         <td class="text-right">'.number_format($jalan[0]->harga,2,",",".").'</td>
@@ -126,7 +126,7 @@ $body .= '
     </tr>
     <tr>
         <td class="text-center">5</td>
-        <td>Aset Tetap seperti buku, tanaman, hewan</td>
+        <td>Aset Tetap Lainnya</td>
         <td class="text-right">'.number_format($tetap_lainnya[0]->jml,2,",",".").'</td>
         <td class="text-center">Pcs</td>
         <td class="text-right">'.number_format($tetap_lainnya[0]->harga,2,",",".").'</td>
@@ -134,7 +134,7 @@ $body .= '
     </tr>
     <tr>
         <td class="text-center">6</td>
-        <td>Aset Kontruksi Dalam Pengerjaan</td>
+        <td>Kontruksi Dalam Pengerjaan</td>
         <td class="text-right">'.number_format($gedung_pengerjaan[0]->jml,2,",",".").'</td>
         <td class="text-center">Gedung</td>
         <td class="text-right">'.number_format($gedung_pengerjaan[0]->harga,2,",",".").'</td>
@@ -175,7 +175,7 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Aset Barang Milik Daerah Per Jenis Aset<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Barang Milik Daerah Per Jenis Aset<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <table class="table table-bordered">
             <thead id="data_header">
                 <tr>
@@ -196,7 +196,7 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
                 <th></th>
             <tfoot>
         </table>
-        <h2 class="text-center">Data Aset Barang Milik Daerah Per SKPD<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Barang Milik Daerah Per SKPD<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <table class="table table-bordered" id="table-aset-skpd">
             <thead id="data_header">
                 <tr>

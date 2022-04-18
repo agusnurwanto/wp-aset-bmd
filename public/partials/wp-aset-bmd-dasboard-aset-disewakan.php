@@ -244,7 +244,7 @@ foreach($query->posts as $post){
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Aset Barang Milik Daerah Yang Disewakan<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Barang Milik Daerah Yang Disewakan<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div>
         <table class="table table-bordered" id="data_aset_sewa">
             <thead>

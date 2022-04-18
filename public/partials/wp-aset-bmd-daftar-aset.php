@@ -155,7 +155,7 @@ if(!empty($skpd_sementara)){
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Aset Barang Milik Daerah Per Unit SKPD<?php echo $nama_skpd; ?><br><?php echo implode(', ', $nama_jenis_aset_all); ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Barang Milik Daerah Per Unit SKPD<?php echo $nama_skpd; ?><br><?php echo implode(', ', $nama_jenis_aset_all); ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <table class="table table-bordered" id="table-aset-skpd">
             <thead id="data_header">
                 <tr>

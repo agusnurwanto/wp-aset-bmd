@@ -279,6 +279,7 @@ class Wp_Aset_Bmd_Admin {
 						foreach ($skpd as $k => $user) {
 							$user->pass = $_POST['pass'];
 							$kd_sub = $user->Kd_Prov.'.'.$user->Kd_Kab_Kota.'.'.$user->Kd_Bidang.'.'.$user->Kd_Unit.'.'.$user->Kd_Sub;
+							$user->kd_sub = $kd_sub;
 							$user->nama = $user->Nm_Sub_Unit;
 							$user->role = 'user_aset_sub_unit_skpd';
 							$user->nama_role = 'User Aset Sub Unit';
