@@ -48,7 +48,7 @@ body {
 	font-weight:300;
 	padding:0;
 	line-height:1.5;
-	font-family:'Roboto',sans-serif;
+	font-family:inherit,sans-serif;
 	-webkit-font-smoothing:antialiased !important;
 	background:#ffffff;
 	overflow-x:hidden;
@@ -365,7 +365,7 @@ a.expand {
 }
 /* ------------- Logo Styles ------------- */
 a.navbar-brand {
-	font-family:'Roboto';
+	font-family:inherit;
 	font-size:26px;
 	font-style:normal;
 	font-weight:300;
@@ -398,7 +398,7 @@ header .navbar-fixed-top {
 	border:none;
 }
 .navbar ul.nav a {
-	font-family:'Roboto';
+	font-family:inherit;
 	font-size:14px;
 	font-weight:700;
 	font-style:normal;
@@ -446,7 +446,7 @@ header .navbar-nav>li>a {
 	font-size:18px;
 }
 .slide-btn {
-	font-family:'Roboto';
+	font-family:inherit;
 	font-size:18px;
 	color:#FFFFFF;
 	padding:12px 34px;

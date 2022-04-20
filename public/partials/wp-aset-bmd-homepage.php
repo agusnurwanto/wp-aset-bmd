@@ -6,7 +6,7 @@
     }
     function progressLoading( $onlyload = false ) {
         $.LoadingOverlay('show', { 
-            image : '<?php echo get_option('_crb_menu_logo'); ?>', 
+            image : '<?php echo get_option('_crb_menu_logo_loading'); ?>', 
             imageAnimation : false,
             background : "rgba(255, 255, 255, 1)" 
         });
@@ -243,6 +243,34 @@
     <div class="stars2"></div>
     <div class="stars3"></div>
     <div class="bg-overlay pattern "></div>
+    <div id="navigation-sticky-wrapper" class="sticky-wrapper" style="height: 110px;">
+        <div class="navbar navbar-fixed-top" id="navigation">
+            <div class="container" style="flex-wrap: nowrap;">
+                <!-- Navigation Bar -->
+                <div class="navbar-header">
+                    <!-- Responsive Menu Button -->
+                    <button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button"
+                        class="navbar-toggle">
+                        <span class="sr-only">Navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- Logo Image -->
+                    <a href="<?php echo site_url(); ?>" class="navbar-brand" style="height: 70px;">
+                        <img class="site-logo" src="<?php echo get_option('_crb_menu_logo'); ?>" alt="SIMATA" />
+                    </a>
+                </div>
+                <nav id="topnav" role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+                    <ul class="nav navbar-right">
+                        <?php echo get_option('_crb_menu_kanan'); ?>
+                    </ul>
+                </nav>
+                <!-- End Navigation Menu -->
+            </div>
+            <!-- End container -->
+        </div>
+    </div>
     <div class="container intro">
         <div class="row">
             <div class="col-md-7 intro-text">
@@ -266,7 +294,7 @@
 </header>
 
 <!-- Testimonials Section Begins -->
-<section class="testimonials">
+<section id="testimoni" class="testimonials">
     <div class="container testimonials-inner">
         <div id="feedback">
         <?php
@@ -449,7 +477,7 @@
                 <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
                 	data-animation-delay="100">
                     <!-- Icon -->
-                    <i class="fa fa-vcard fa-3x" style="background-color: #34b677"></i>
+                    <i class="fa fa-money fa-3x" style="background-color: #34b677"></i>
                     <!-- Title -->
                     <h3 class="normal">Total Nilai Barang Milik Daerah</h3>
                     <!-- Count Number -->
@@ -468,8 +496,8 @@
                     <!-- Title -->
                     <h3 class="normal">Jumlah Sub Unit Pengelola Aset</h3>
                     <!-- Count Number -->
-                    <div id="statUser">
-                        <div class="factor" style="color: #5e3aa9"><?php echo number_format(get_option('_crb_jumlah_sub_unit'), 2, ',', '.'); ?></div>
+                    <div class="fact-number" id="statUser" data-perc="<?php echo get_option('_crb_jumlah_sub_unit'); ?>">
+                        <div class="factor" style="color: #5e3aa9"></div>
                     </div>
                 </div>
             </div>
@@ -608,4 +636,8 @@
             +'</div>'
         +'');
     }, 1000);
+    $('#topnav ul li a').on('click', function(){
+        $(this).closest('ul').find('li').removeClass('active');
+        $(this).closest('li').addClass('active');
+    });
 </script>

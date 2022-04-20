@@ -266,7 +266,7 @@ Carousel-slider
 
                                 from: 10,
 
-                                decimals: 2,
+                                decimals: 0,
 
                                 to: dataperc,
 

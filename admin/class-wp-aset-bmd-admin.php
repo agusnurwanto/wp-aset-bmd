@@ -268,8 +268,18 @@ class Wp_Aset_Bmd_Admin {
 		    ->add_tab( __( 'Logo & Menu' ), array(
 		        Field::make( 'image', 'crb_menu_logo', __( 'Gambar Logo' ) )
 		        	->set_value_type('url')
+        			->set_default_value('https://via.placeholder.com/135x25'),
+		        Field::make( 'image', 'crb_menu_logo_loading', __( 'Gambar Loading' ) )
+		        	->set_value_type('url')
         			->set_default_value(plugin_dir_url(dirname(__FILE__)).'public/images/logo.png'),
 		    	Field::make( 'textarea', 'crb_menu_kanan', __( 'Menu Kanan' ) )
+        			->set_default_value(''
+						.'<li class="active"><a href="#header" class="scroll">Beranda</a></li>'
+						.'<li class=""><a href="#testimoni" class="scroll">Testimoni</a></li>'
+						.'<li class=""><a href="#fitur" class="scroll">Fitur</a></li>'
+						.'<li class=""><a href="#pratinjau" class="scroll">Pratinjau</a></li>'
+						.'<li class=""><a href="#demo-video" class="scroll">Video</i></a></li>'
+						.'<li class=""><a href="#monitoring" class="scroll">Monitoring</a></li>'),
 		    ) )
 		    ->add_tab( __( 'Header Utama' ), array(
 		        Field::make( 'textarea', 'crb_judul_header_1', __( 'Judul' ) )
@@ -277,7 +287,7 @@ class Wp_Aset_Bmd_Admin {
 		        Field::make( 'textarea', 'crb_text_header_1', __( 'Text' ) )
 		        	->set_default_value('Sistem Informasi Manajemen Data Aset atau bisa disingkat dengan SIMATA adalah aplikasi yang dikembangkan oleh Badan Pengelola Keuangan dan Aset Daerah Kabupaten Madiun (BPKAD) untuk menampilkan data aset pemerintah kabupaten Madiun secara daring. SIMATA terintegrasi dengan data aset di Sistem Informasi Manajemen Daerah Barang Milik Daerah (SIMDA BMD) dan dilengkapi dengan data meta lain seperti lokasi koordinat google map, foto aset, sejarah aset dan lain sebagainya.'),
 		        Field::make( 'textarea', 'crb_tombol_header_1', __( 'Tombol' ) )
-		        	->set_default_value('<span class=""><a href="#dokumentasi" class="btn slide-btn scroll">Dokumentasi</a></span><span class=""><a href="#masuk" class="btn slide-btn bg-inverse scroll">Masuk</a></span>'),
+		        	->set_default_value('<span class=""><a href="#dokumentasi" class="btn slide-btn scroll" style="font-family: inherit; text-decoration: none;">Dokumentasi</a></span><span class=""><a href="#masuk" class="btn slide-btn bg-inverse scroll" style="font-family: inherit; text-decoration: none;">Masuk</a></span>'),
 		        Field::make( 'image', 'crb_img_header_1', __( 'Gambar' ) )
 		        	->set_value_type('url')
 		        	->set_default_value('https://via.placeholder.com/498x266')
