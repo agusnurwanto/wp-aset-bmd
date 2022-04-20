@@ -117,7 +117,8 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset.php';
+		// require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-homepage.php';
 	}
 
 	function dashboard_aset_disewakan(){
@@ -147,8 +148,8 @@ class Wp_Aset_Bmd_Public {
 				        )
 				    )
 				);
-				echo '
-				<ul style="text-align: center; margin: 20px 0;">
+				return '
+				<ul style="text-align: center; margin: 0;">
 					<li style="list-style: none;"><a class="button button-primary" href="'.$link_detail_unit.'" target="_blank">Data Barang Milik Daerah '.$nama_skpd.'</a></li>
 				</ul>';
 		    }
@@ -546,22 +547,22 @@ class Wp_Aset_Bmd_Public {
 		$nama_jenis_aset = '';
 		$table_simda = '';
 		if($options['jenis_aset'] == 'tanah'){
-		    $nama_jenis_aset = 'Aset Tanah';
+		    $nama_jenis_aset = 'Tanah';
 		    $table_simda = 'Ta_KIB_A';
 		}else if($options['jenis_aset'] == 'mesin'){
-		    $nama_jenis_aset = 'Aset Mesin';
+		    $nama_jenis_aset = 'Peralatan dan Mesin';
 		    $table_simda = 'Ta_KIB_B';
 		}else if($options['jenis_aset'] == 'bangunan'){
-		    $nama_jenis_aset = 'Aset Bangunan';
+		    $nama_jenis_aset = 'Gedung dan Bangunan';
 		    $table_simda = 'Ta_KIB_C';
 		}else if($options['jenis_aset'] == 'jalan'){
-		    $nama_jenis_aset = 'Aset Jalan Irigrasi';
+		    $nama_jenis_aset = 'Jalan, Jaringan dan Irigrasi';
 		    $table_simda = 'Ta_KIB_D';
 		}else if($options['jenis_aset'] == 'aset_tetap'){
-		    $nama_jenis_aset = 'Aset Tetap seperti buku, tanaman, hewan';
+		    $nama_jenis_aset = 'Aset Tetap Lainnya';
 		    $table_simda = 'Ta_KIB_E';
 		}else if($options['jenis_aset'] == 'bangunan_dalam_pengerjaan'){
-		    $nama_jenis_aset = 'Aset Kontruksi Dalam Pengerjaan';
+		    $nama_jenis_aset = 'Kontruksi Dalam Pengerjaan';
 		    $table_simda = 'Ta_KIB_F';
 		}
 		return array(

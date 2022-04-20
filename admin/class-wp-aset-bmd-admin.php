@@ -197,7 +197,7 @@ class Wp_Aset_Bmd_Admin {
 		$kepala_umum_nip = $status['data']['kepala_umum_nip'];
 		$kepala_umum_jabatan = $status['data']['kepala_umum_jabatan'];
 
-		Container::make( 'theme_options', __( 'Aset BMD' ) )
+		$basic_options_container = Container::make( 'theme_options', __( 'Aset BMD' ) )
 			->set_page_menu_position( 4 )
 	        ->add_fields( array(
 	        	Field::make( 'html', 'crb_simda_bmd_dasboard' )
@@ -245,6 +245,125 @@ class Wp_Aset_Bmd_Admin {
 		        Field::make( 'html', 'crb_save_button' )
 	            	->set_html( '<a onclick="import_excel(); return false" href="javascript:void(0);" class="button button-primary">Import Excel Custom username Sub Unit</a>' )
 	        ) );
+
+		Container::make( 'theme_options', __( 'Tampilan Beranda' ) )
+			->set_page_parent( $basic_options_container )
+		    ->add_tab( __( 'Background' ), array(
+		    	Field::make( 'complex', 'crb_background', 'Background Header' )
+		    		->add_fields( 'header_utama', array(
+				        Field::make( 'image', 'gambar', 'Gambar' )
+		        			->set_value_type('url')
+		        			->set_default_value(plugin_dir_url(dirname(__FILE__)).'public/images/bg_video.jpg')
+		        		) ),
+		        Field::make( 'image', 'crb_background_fitur', 'Background Fitur' )
+        			->set_value_type('url')
+        			->set_default_value(plugin_dir_url(dirname(__FILE__)).'public/images/bg_fitur.jpg'),
+		        Field::make( 'image', 'crb_background_pratinjau', 'Background Pratinjau' )
+        			->set_value_type('url')
+        			->set_default_value(plugin_dir_url(dirname(__FILE__)).'public/images/bg_pratinjau.jpg'),
+		        Field::make( 'image', 'crb_background_video', 'Background Video' )
+        			->set_value_type('url')
+        			->set_default_value(plugin_dir_url(dirname(__FILE__)).'public/images/bg_video.jpg')
+		    ) )
+		    ->add_tab( __( 'Logo & Menu' ), array(
+		        Field::make( 'image', 'crb_menu_logo', __( 'Gambar Logo' ) )
+		        	->set_value_type('url')
+        			->set_default_value(plugin_dir_url(dirname(__FILE__)).'public/images/logo.png'),
+		    	Field::make( 'textarea', 'crb_menu_kanan', __( 'Menu Kanan' ) )
+		    ) )
+		    ->add_tab( __( 'Header Utama' ), array(
+		        Field::make( 'textarea', 'crb_judul_header_1', __( 'Judul' ) )
+		        	->set_default_value('<span class="rotate text-color">Si</span>stem Informasi <span class="rotate text-color">Ma</span>najemen Da<span class="rotate text-color">ta</span> Aset'),
+		        Field::make( 'textarea', 'crb_text_header_1', __( 'Text' ) )
+		        	->set_default_value('Sistem Informasi Manajemen Data Aset atau bisa disingkat dengan SIMATA adalah aplikasi yang dikembangkan oleh Badan Pengelola Keuangan dan Aset Daerah Kabupaten Madiun (BPKAD) untuk menampilkan data aset pemerintah kabupaten Madiun secara daring. SIMATA terintegrasi dengan data aset di Sistem Informasi Manajemen Daerah Barang Milik Daerah (SIMDA BMD) dan dilengkapi dengan data meta lain seperti lokasi koordinat google map, foto aset, sejarah aset dan lain sebagainya.'),
+		        Field::make( 'textarea', 'crb_tombol_header_1', __( 'Tombol' ) )
+		        	->set_default_value('<span class=""><a href="#dokumentasi" class="btn slide-btn scroll">Dokumentasi</a></span><span class=""><a href="#masuk" class="btn slide-btn bg-inverse scroll">Masuk</a></span>'),
+		        Field::make( 'image', 'crb_img_header_1', __( 'Gambar' ) )
+		        	->set_value_type('url')
+		        	->set_default_value('https://via.placeholder.com/498x266')
+		    ) )
+		    ->add_tab( __( 'Testimoni' ), array(
+		        Field::make( 'complex', 'crb_testimoni' )
+				    ->add_fields( 'testimoni', array(
+				        Field::make( 'image', 'gambar', 'Gambar' )
+		        			->set_value_type('url')
+		        			->set_default_value('https://via.placeholder.com/300x367'),
+				        Field::make( 'text', 'nama', 'Nama' )
+		        			->set_default_value('Agus Nurwanto (2022) - <span>Masyarakat Umum</span>'),
+				        Field::make( 'rich_text', 'pesan', 'Pesan' )
+		        			->set_default_value('"Dengan adanya aplikasi SIMATA maka data Barang Milik Daerah (BMD) dapat diakses secara daring."')
+				    ) )
+		    ) )
+		    ->add_tab( __( 'Fitur' ), array(
+		        Field::make( 'textarea', 'crb_judul_fitur', __( 'Judul' ) )
+        			->set_default_value('<span>Fitur</span> SIMATA'),
+		        Field::make( 'image', 'crb_gambar_fitur', __( 'Gambar' ) )
+        			->set_value_type('url')
+        			->set_default_value('https://via.placeholder.com/359x358'),
+		        Field::make( 'text', 'crb_fitur_icon1', 'Icon 1' )
+					->set_default_value('<i class="fa fa-university fa-3x"></i>'),
+		        Field::make( 'text', 'crb_fitur_judul1', 'Judul 1' )
+					->set_default_value('TRANSPARANSI'),
+		        Field::make( 'rich_text', 'crb_fitur_pesan1', 'Pesan 1' )
+        			->set_default_value('<p>Barang milik daerah ditampilkan secara daring, sehingga bsia diakses oleh masyarakat umum.</p>'),
+		        Field::make( 'text', 'crb_fitur_icon2', 'Icon 2' )
+					->set_default_value('<i class="fa fa-book fa-3x"></i>'),
+		        Field::make( 'text', 'crb_fitur_judul2', 'Judul 2' )
+					->set_default_value('SEWA ASET'),
+		        Field::make( 'rich_text', 'crb_fitur_pesan2', 'Pesan 2' )
+        			->set_default_value('<p>Menampilkan data potensi aset dan aset yang disewakan.</p>'),
+		        Field::make( 'text', 'crb_fitur_icon3', 'Icon 3' )
+					->set_default_value('<i class="fa fa-lightbulb-o fa-3x"></i>'),
+		        Field::make( 'text', 'crb_fitur_judul3', 'Judul 3' )
+					->set_default_value('PERENCANAAN'),
+		        Field::make( 'rich_text', 'crb_fitur_pesan3', 'Pesan 3' )
+        			->set_default_value('<p>Membantu penyusunan Rencana Kebutuhan Barang Milik Daerah.</p>'),
+		        Field::make( 'text', 'crb_fitur_icon4', 'Icon 4' )
+					->set_default_value('<i class="fa fa-edit fa-3x"></i>'),
+		        Field::make( 'text', 'crb_fitur_judul4', 'Judul 4' )
+					->set_default_value('INVENTARISASI'),
+		        Field::make( 'rich_text', 'crb_fitur_pesan4', 'Pesan 4' )
+        			->set_default_value('<p>Mendukung proses pelaksanaan dan pelaporan kegiatan pendataan Aset.</p>'),
+		        Field::make( 'text', 'crb_fitur_icon5', 'Icon 5' )
+					->set_default_value('<i class="fa fa-binoculars fa-3x"></i>'),
+		        Field::make( 'text', 'crb_fitur_judul5', 'Judul 5' )
+					->set_default_value('PENGAWASAN'),
+		        Field::make( 'rich_text', 'crb_fitur_pesan5', 'Pesan 5' )
+        			->set_default_value('<p>Membantu kegiatan pengawasan & pengendalian BMD.</p>'),
+		        Field::make( 'text', 'crb_fitur_icon6', 'Icon 6' )
+					->set_default_value('<i class="fa fa-handshake-o fa-3x"></i>'),
+		        Field::make( 'text', 'crb_fitur_judul6', 'Judul 6' )
+					->set_default_value('PENGELOLAAN'),
+		        Field::make( 'rich_text', 'crb_fitur_pesan6', 'Pesan 6' )
+        			->set_default_value('<p>Membantu penyusunan & pengajuan permohonan BMD.</p>')
+		    ) )
+		    ->add_tab( __( 'Pratinjau' ), array(
+		        Field::make( 'textarea', 'crb_judul_pratinjau', __( 'Judul' ) )
+        			->set_default_value('Pratinjau <span>SIMATA</span>'),
+		        Field::make( 'complex', 'crb_pratinjau' )
+				    ->add_fields( 'gambar', array(
+				        Field::make( 'image', 'gambar', 'Gambar' )
+        				->set_value_type('url')
+        				->set_default_value('https://via.placeholder.com/1024x576')
+				    ) )
+		    ) )
+		    ->add_tab( __( 'Video Demo' ), array(
+		        Field::make( 'textarea', 'crb_judul_video', __( 'Judul' ) )
+        			->set_default_value('<span>Video Demo</span> SIMATA'),
+				Field::make( 'text', 'crb_video_demo', 'Url Video Youtube' )
+        			->set_default_value('https://www.youtube.com/embed/8wDyFBXkWaM?controls=0')
+        			->set_help_text('Masukan link youtube dengan format embed. Contoh https://www.youtube.com/embed/8wDyFBXkWaM?controls=0')
+		    ) )
+		    ->add_tab( __( 'Monitoring Data' ), array(
+		        Field::make( 'textarea', 'crb_judul_monitoring', __( 'Judul' ) )
+        			->set_default_value('<span>Monitoring</span> SIMATA'),
+		        Field::make( 'text', 'crb_total_nilai', __( 'Total nilai aset pemerintah daerah' ) )
+            		->set_attribute('type', 'number')
+        			->set_default_value('6977197616941.44'),
+		        Field::make( 'text', 'crb_jumlah_sub_unit', __( 'Jumlah sub unit' ) )
+            		->set_attribute('type', 'number')
+        			->set_default_value('114')
+		    ) );
 	}
 
 	function generate_user_aset(){
