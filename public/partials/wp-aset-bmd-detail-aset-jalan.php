@@ -172,11 +172,11 @@
         </form>
     </div>
 </div>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBrDSUIMFDIleLOFUUXf1wFVum9ae3lJ0&callback=initMap&libraries=places"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBrDSUIMFDIleLOFUUXf1wFVum9ae3lJ0&v=3.33&callback=initMap&libraries=places"></script>
 <script>
 <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
     function simpan_aset(){
-        if(confirm("Apakah anda yakin untuk menimpan data ini. Data lama akan diupdate sesuai perubahan terbaru!")){
+        if(confirm("Apakah anda yakin untuk menyimpan data ini. Data lama akan diupdate sesuai perubahan terbaru!")){
             jQuery('#wrap-loading').show();
             jQuery.ajax({
                 url: ajax.url,
@@ -283,13 +283,14 @@
             '</table>';
 
         // Membuat Shape
-        var bentuk_bidang1 = new google.maps.Polygon({
+        var bentuk_bidang1 = new google.maps.Polyline({
             paths: Coords1,
+            geodesic: true,
             strokeColor: '#00cc00',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
+            strokeOpacity: 3,
+            strokeWeight: 6,
             fillColor: '#00cc00',
-            fillOpacity: 0.45,
+            fillOpacity: 3,
         <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
             editable: true,
             draggable: true,
