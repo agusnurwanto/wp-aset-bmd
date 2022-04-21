@@ -260,7 +260,7 @@ class Wp_Aset_Bmd_Simda
 			update_post_meta($custom_post->ID, 'site-post-title', 'disabled');
 			update_post_meta($custom_post->ID, 'site-sidebar-layout', 'no-sidebar');
 			update_post_meta($custom_post->ID, 'theme-transparent-header-meta', 'disabled');
-		}else if(!empty($option['update'])){
+		}else if(!empty($options['update'])){
 			$_post['ID'] = $custom_post->ID;
 			wp_update_post( $_post );
 			$_post['update'] = 1;

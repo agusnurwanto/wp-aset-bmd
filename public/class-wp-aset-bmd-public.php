@@ -106,6 +106,7 @@ class Wp_Aset_Bmd_Public {
 		wp_enqueue_script($this->plugin_name . 'bootstrap', plugin_dir_url(__FILE__) . 'js/bootstrap.bundle.min.js', array('jquery'), $this->version, false);
 		wp_enqueue_script($this->plugin_name . 'select2', plugin_dir_url(__FILE__) . 'js/select2.min.js', array('jquery'), $this->version, false);
 		wp_enqueue_script($this->plugin_name . 'datatables', plugin_dir_url(__FILE__) . 'js/jquery.dataTables.min.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name . 'chart', plugin_dir_url(__FILE__) . 'js/chart.min.js', array('jquery'), $this->version, false);
 		wp_localize_script( $this->plugin_name, 'ajax', array(
 		    'url' => admin_url( 'admin-ajax.php' )
 		));
@@ -117,8 +118,15 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		// require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-homepage.php';
+	}
+
+	function dashboard_aset_pemda(){
+		// untuk disable render shortcode di halaman edit page/post
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset.php';
 	}
 
 	function dashboard_aset_disewakan(){
@@ -437,7 +445,7 @@ class Wp_Aset_Bmd_Public {
 		$link = $this->functions->generatePage(array(
 			'nama_page' => 'Daftar Aset Barang Milik Daerah',
 			'content' => '[daftar_aset]',
-			'post_status' => 'public',
+			'post_status' => 'publish',
         	'show_header' => 1,
 			'custom_url' => $custom_url
 		));

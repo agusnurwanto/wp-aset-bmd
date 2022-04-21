@@ -1,3 +1,13 @@
+<?php
+    $link_dashboard = $this->functions->generatePage(array(
+        'nama_page' => 'Dasboard Aset Pemerintah Daerah',
+        'content' => '[dashboard_aset_pemda]',
+        'show_header' => 1,
+        'no_key' => 1,
+        'update' => 0,
+        'post_status' => 'publish'
+    ));
+?>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/loadingoverlay.min.js"></script>
 <script type="text/javascript">
     var $ = jQuery;
@@ -223,19 +233,26 @@
         color:#ffffff;
     }
     #pratinjau {
-        background-image: url(<?php echo get_option('_crb_background_pratinjau'); ?>) !important;
+        /*background-image: url(<?php echo get_option('_crb_background_pratinjau'); ?>) !important;
         background-attachment:fixed;
         background-size:cover;
         -o-background-size:cover;
         -moz-background-size:cover;
         -webkit-background-size:cover;
-        background-repeat: no-repeat !important;
+        background-repeat: no-repeat !important;*/
         color:#ffffff;
         text-align:center;
     }
     #demo-video {
         background-image: url(<?php echo get_option('_crb_background_video'); ?>) !important;
         background-repeat: no-repeat !important;
+    }
+    .navbar ul.nav a {
+        text-decoration: none;
+    }
+    h3.normal {
+        font-weight: bold;
+        font-size: 25px;
     }
 </style>
 <header id="header">
@@ -395,7 +412,7 @@
 <!-- Features Section Ends -->
 
 <!-- Screenshot Section -->
-<section id="pratinjau">
+<section id="pratinjau" class="counting bg-infinity">
     <div class="screenshots">
         <div class="bg-overlay pattern"></div>
         <div class="container screenshots-inner">
@@ -458,7 +475,7 @@
 <!-- End Demo Video Section -->
 
 <!-- Monitoring Section Begins -->
-<section id="monitoring" class="counting bg-infinity">
+<section id="monitoring">
     <div class="container counting-inner">
         <!-- Title & Desc Row Begins -->
         <div class="row">
@@ -469,39 +486,37 @@
                 </div>
             </div>
         </div>
-        <!-- Monitoring Row Begins -->
         <div class="container counting-inner">
-            <!-- Counting Row Begins -->
             <div class="row counting-box title-row" style="margin-bottom: 75px;">
-                <!-- Counting Box 1 Begins -->
                 <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
                 	data-animation-delay="100">
-                    <!-- Icon -->
                     <i class="fa fa-money fa-3x" style="background-color: #34b677"></i>
-                    <!-- Title -->
                     <h3 class="normal">Total Nilai Barang Milik Daerah</h3>
-                    <!-- Count Number -->
                     <div id="statAkses">
-                        <div class="factor" style="color: #258154"><?php echo number_format(get_option('_crb_total_nilai'), 2, ',', '.'); ?></div>
+                        <div class="factor" style="color: #258154">Rp <?php echo number_format(get_option('_crb_total_nilai'), 2, ',', '.'); ?></div>
                     </div>
                 </div>
-                <!-- Counting Table 1 Ends -->
             </div>
-            <div class="row counting-box title-row">
-                <!-- Counting Table 2 Begins -->
+            <div class="row counting-box title-row" style="margin-bottom: 55px;">
                 <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
                     data-animation-delay="200">
-                    <!-- Icon -->
-                    <i class="fa fa-users fa-3x" style="background-color: #6d46bb"></i>
-                    <!-- Title -->
-                    <h3 class="normal">Jumlah Sub Unit Pengelola Aset</h3>
-                    <!-- Count Number -->
-                    <div class="fact-number" id="statUser" data-perc="<?php echo get_option('_crb_jumlah_sub_unit'); ?>">
-                        <div class="factor" style="color: #5e3aa9"></div>
+                    <h3 class="normal">Grafik Nilai Per Jenis Aset</h3>
+                    <div style="width: 100%; max-width: 500px; max-height: 500px; margin: auto; margin-bottom: 20px;">
+                        <canvas id="chart_per_jenis_aset"></canvas>
                     </div>
+                    <a href="<?php echo $link_dashboard['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
                 </div>
             </div>
-            <!-- Counting Row Ends -->
+            <div class="row counting-box title-row">
+                <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
+                    data-animation-delay="200">
+                    <h3 class="normal">Grafik Nilai Per Unit SKPD</h3>
+                    <div style="width: 100%; max-width: 1500px; max-height: 1000px; margin: auto; margin-bottom: 25px;">
+                        <canvas id="chart_per_unit"></canvas>
+                    </div>
+                    <a href="<?php echo $link_dashboard['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+                </div>
+            </div>
         </div>
         <!-- Monitoring Row Ends -->
     </div>

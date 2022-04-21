@@ -191,6 +191,7 @@ class Wp_Aset_Bmd {
 		$this->loader->add_action('wp_ajax_simpan_aset',  $plugin_public, 'simpan_aset');
 
 		add_shortcode('dashboard_aset',  array($plugin_public, 'dashboard_aset'));
+		add_shortcode('dashboard_aset_pemda',  array($plugin_public, 'dashboard_aset_pemda'));
 		add_shortcode('daftar_aset',  array($plugin_public, 'daftar_aset'));
 		add_shortcode('detail_aset',  array($plugin_public, 'detail_aset'));
 		add_shortcode('dashboard_aset_disewakan',  array($plugin_public, 'dashboard_aset_disewakan'));

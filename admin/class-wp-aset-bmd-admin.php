@@ -173,7 +173,7 @@ class Wp_Aset_Bmd_Admin {
 			'content' => '[dashboard_aset]',
         	'show_header' => 1,
         	'no_key' => 1,
-			'post_status' => 'public'
+			'post_status' => 'publish'
 		));
 
 		$link_dashboard_sewa = $this->functions->generatePage(array(
@@ -181,7 +181,7 @@ class Wp_Aset_Bmd_Admin {
 			'content' => '[dashboard_aset_disewakan]',
         	'show_header' => 1,
         	'no_key' => 1,
-			'post_status' => 'public'
+			'post_status' => 'publish'
 		));
 
         $status = $this->get_status_simda();
