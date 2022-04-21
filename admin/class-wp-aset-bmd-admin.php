@@ -366,13 +366,26 @@ class Wp_Aset_Bmd_Admin {
 		    ) )
 		    ->add_tab( __( 'Monitoring Data' ), array(
 		        Field::make( 'textarea', 'crb_judul_monitoring', __( 'Judul' ) )
-        			->set_default_value('<span>Monitoring</span> SIMATA'),
+        			->set_default_value('<span>Monitoring</span> <span style="color: #000">SIMATA</span>'),
 		        Field::make( 'text', 'crb_total_nilai', __( 'Total nilai aset pemerintah daerah' ) )
             		->set_attribute('type', 'number')
         			->set_default_value('6977197616941.44'),
 		        Field::make( 'text', 'crb_jumlah_sub_unit', __( 'Jumlah sub unit' ) )
             		->set_attribute('type', 'number')
         			->set_default_value('114')
+		    ) )
+		    ->add_tab( __( 'Sewa Aset' ), array(
+		        Field::make( 'textarea', 'crb_judul_sewa_aset', __( 'Judul' ) )
+        			->set_default_value('<span>Aset</span> <span style="color: #000">Disewakan</span>'),
+		        Field::make( 'text', 'crb_total_potensi_aset', __( 'Total nilai potensi aset yang disewakan' ) )
+            		->set_attribute('type', 'number')
+        			->set_default_value('5000000000'),
+		        Field::make( 'text', 'crb_jumlah_tanah_belum_sertifikat', __( 'Jumlah aset tanah yang belum bersetifikat' ) )
+            		->set_attribute('type', 'number')
+        			->set_default_value('20'),
+		        Field::make( 'text', 'crb_jumlah_aset_rusak', __( 'Jumlah aset rusak (potensi dihapus)' ) )
+            		->set_attribute('type', 'number')
+        			->set_default_value('2000')
 		    ) );
 	}
 

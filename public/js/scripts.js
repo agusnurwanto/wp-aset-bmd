@@ -35,10 +35,9 @@ jQuery(function($){
 
 });
 
-window.pieChart = new Chart(document.getElementById('chart_per_jenis_aset'), {
-    type: 'pie',
-    data: {
-        labels: [
+if(typeof chart_jenis_aset == 'undefined'){
+	chart_jenis_aset = {
+		label : [
 	        'Tanah', 
 	        'Peralatan dan Mesin', 
 	        'Gedung dan Bangunan', 
@@ -46,18 +45,30 @@ window.pieChart = new Chart(document.getElementById('chart_per_jenis_aset'), {
 	        'Aset Tetap Lainya', 
 	        'Kontruksi Dalam Pengerjaan'
         ],
+		data : [10, 23, 345, 3, 6, 0],
+		color : [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+        	'rgba(255, 159, 64, 1)'
+        ],
+	}
+}else{
+	chart_jenis_aset.data.map(function(b, i){
+		chart_jenis_aset.data[i] = +b;
+	})
+}
+window.pieChart = new Chart(document.getElementById('chart_per_jenis_aset'), {
+    type: 'pie',
+    data: {
+        labels: chart_jenis_aset.label,
         datasets: [
             {
                 label: 'Total Nilai Per Jenis Aset',
-                data: [433618589332, 784749216828.34, 935989409850.77, 4799381690744.73, 23458710185.60, 0],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                	'rgba(255, 159, 64, 1)'
-                ]
+                data: chart_jenis_aset.data,
+                backgroundColor: chart_jenis_aset.color
             }
         ]
     },

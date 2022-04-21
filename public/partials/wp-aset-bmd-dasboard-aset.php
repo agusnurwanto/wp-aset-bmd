@@ -87,6 +87,33 @@ $gedung_pengerjaan = $this->functions->CurlSimda(array(
     'no_debug' => 1
 ));
 
+$chart_jenis_aset = array(
+    'label' => array(
+        'Tanah', 
+        'Peralatan dan Mesin', 
+        'Gedung dan Bangunan', 
+        'Jalan, Jaringan dan Irigrasi', 
+        'Aset Tetap Lainya', 
+        'Kontruksi Dalam Pengerjaan'
+    ),
+    'data' => array(
+        empty($tanah[0]->harga) ? 0 : $tanah[0]->harga,
+        empty($mesin[0]->harga) ? 0 : $mesin[0]->harga,
+        empty($gedung[0]->harga) ? 0 : $gedung[0]->harga,
+        empty($jalan[0]->harga) ? 0 : $jalan[0]->harga,
+        empty($tetap_lainnya[0]->harga) ? 0 : $tetap_lainnya[0]->harga,
+        empty($gedung_pengerjaan[0]->harga) ? 0 : $gedung_pengerjaan[0]->harga,
+    ),
+    'color' => array(
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+    )
+);
+
 $body .= '
     <tr>
         <td class="text-center" rowspan="2">1</td>
@@ -176,6 +203,16 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
 <div class="cetak">
     <div style="padding: 10px;">
         <h2 class="text-center">Data Barang Milik Daerah Per Jenis Aset<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <div class="container counting-inner">
+            <div class="row counting-box title-row" style="margin-bottom: 55px;">
+                <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
+                    data-animation-delay="200">
+                    <div style="width: 100%; max-width: 500px; max-height: 500px; margin: auto; margin-bottom: 20px;">
+                        <canvas id="chart_per_jenis_aset"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
         <table class="table table-bordered">
             <thead id="data_header">
                 <tr>
@@ -197,6 +234,17 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
             <tfoot>
         </table>
         <h2 class="text-center">Data Barang Milik Daerah Per SKPD<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <div class="container counting-inner">
+            <div class="row counting-box title-row">
+                <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
+                    data-animation-delay="200">
+                    <h3 class="normal">Grafik Nilai Per Unit SKPD</h3>
+                    <div style="width: 100%; max-width: 1500px; max-height: 1000px; margin: auto; margin-bottom: 25px;">
+                        <canvas id="chart_per_unit"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
         <table class="table table-bordered" id="table-aset-skpd">
             <thead id="data_header">
                 <tr>
@@ -219,6 +267,7 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
     </div>
 </div>
 <script type="text/javascript">
+window.chart_jenis_aset = <?php echo json_encode($chart_jenis_aset); ?>;
 var skpd = <?php echo json_encode($skpd_all); ?>;
 var row_skpd = {};
 jQuery(document).on('ready', function() {
@@ -293,6 +342,7 @@ jQuery(document).on('ready', function() {
     }, Promise.resolve(skpd[last]))
     .then(function(data_last){
         console.log('Berhasil! total=', total_all);
+        var json = [];
         var total_page = tableRender.api().column( 3, { page: 'current'} )
             .data()
             .reduce( function (a, b) {
@@ -302,3 +352,4 @@ jQuery(document).on('ready', function() {
     });
 });
 </script>
+<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/scripts.js"></script>

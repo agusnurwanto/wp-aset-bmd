@@ -495,26 +495,72 @@
                     <div id="statAkses">
                         <div class="factor" style="color: #258154">Rp <?php echo number_format(get_option('_crb_total_nilai'), 2, ',', '.'); ?></div>
                     </div>
-                </div>
-            </div>
-            <div class="row counting-box title-row" style="margin-bottom: 55px;">
-                <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
-                    data-animation-delay="200">
-                    <h3 class="normal">Grafik Nilai Per Jenis Aset</h3>
-                    <div style="width: 100%; max-width: 500px; max-height: 500px; margin: auto; margin-bottom: 20px;">
-                        <canvas id="chart_per_jenis_aset"></canvas>
-                    </div>
                     <a href="<?php echo $link_dashboard['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
                 </div>
             </div>
-            <div class="row counting-box title-row">
+            <div class="row counting-box title-row" style="margin-bottom: 75px;">
+                <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
+                    data-animation-delay="200">
+                    <h3 class="normal">Grafik Nilai Per Jenis Aset</h3>
+                    <div style="width: 100%; max-width: 500px; max-height: 500px; margin: auto;">
+                        <canvas id="chart_per_jenis_aset"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="row counting-box title-row" style="margin-bottom: 75px;">
                 <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
                     data-animation-delay="200">
                     <h3 class="normal">Grafik Nilai Per Unit SKPD</h3>
                     <div style="width: 100%; max-width: 1500px; max-height: 1000px; margin: auto; margin-bottom: 25px;">
                         <canvas id="chart_per_unit"></canvas>
                     </div>
-                    <a href="<?php echo $link_dashboard['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="sewa_aset" class="counting bg-infinity">
+    <div class="container counting-inner">
+        <!-- Title & Desc Row Begins -->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <!-- Title -->
+                <div class="title">
+                    <h2><?php echo get_option('_crb_judul_sewa_aset'); ?></h2>
+                </div>
+            </div>
+        </div>
+        <div class="container counting-inner">
+            <div class="row counting-box title-row" style="margin-bottom: 75px;">
+                <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
+                    data-animation-delay="200">
+                    <i class="fa fa-money fa-3x" style="background-color: #6d46bb"></i>
+                    <h3 class="normal">Potensi Sewa Aset</h3>
+                    <div style="margin-bottom: 20px;">
+                        <div class="factor" style="color: #6d46bb">Rp <?php echo number_format(get_option('_crb_total_potensi_aset'), 2, ',', '.'); ?></div>
+                    </div>
+                    <a href="#" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+                </div>
+            </div>
+            <div class="row counting-box title-row">
+                <div class="col-md-6 text-center animated" data-animation="fadeInBottom"
+                    data-animation-delay="200">
+                    <i class="fa fa-money fa-3x" style="background-color: #ad3a61"></i>
+                    <h3 class="normal">Aset Tanah Belum Bersertifikat</h3>
+                    <div style="margin-bottom: 20px;">
+                        <div class="factor" style="color: #ad3a61"><?php echo number_format(get_option('_crb_jumlah_tanah_belum_sertifikat'), 0, ',', '.'); ?></div>
+                    </div>
+                    <a href="#" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+                </div>
+                <div class="col-md-6 text-center animated" data-animation="fadeInBottom"
+                    data-animation-delay="200">
+                    <i class="fa fa-money fa-3x" style="background-color: #c97f4b"></i>
+                    <h3 class="normal">Data Aset Rusak (Potensi dihapus)</h3>
+                    <div style="margin-bottom: 20px;">
+                        <div class="factor" style="color: #c97f4b"><?php echo number_format(get_option('_crb_jumlah_aset_rusak'), 0, ',', '.'); ?></div>
+                    </div>
+                    <a href="#" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
                 </div>
             </div>
         </div>
