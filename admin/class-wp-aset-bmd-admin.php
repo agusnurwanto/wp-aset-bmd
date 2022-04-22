@@ -387,6 +387,28 @@ class Wp_Aset_Bmd_Admin {
             		->set_attribute('type', 'number')
         			->set_default_value('2000')
 		    ) );
+
+		Container::make( 'theme_options', __( 'Google Maps' ) )
+			->set_page_parent( $basic_options_container )
+			->add_fields( array(
+	        	Field::make( 'text', 'crb_google_api', 'Google Maps APIKEY' )
+	        		->set_default_value('AIzaSyDBrDSUIMFDIleLOFUUXf1wFVum9ae3lJ0'),
+	        	Field::make( 'color', 'crb_warna_tanah', 'Warna garis aset Tanah' )
+	        		->set_default_value('#00cc00'),
+	        	Field::make( 'image', 'crb_icon_tanah', 'Icon aset Tanah' )
+	        		->set_value_type('url')
+        			->set_default_value(plugin_dir_url(dirname(__FILE__)).'public/images/lokasi.png'),
+	        	Field::make( 'color', 'crb_warna_gedung', 'Warna garis aset Gedung dan Bangunan' )
+	        		->set_default_value('#CC0003'),
+	        	Field::make( 'image', 'crb_icon_gedung', 'Icon aset Gedung dan Bangunan' )
+	        		->set_value_type('url')
+        			->set_default_value(plugin_dir_url(dirname(__FILE__)).'public/images/lokasi.png'),
+	        	Field::make( 'color', 'crb_warna_jalan', 'Warna garis aset Jalan, Jaringan dan Irigrasi' )
+	        		->set_default_value('#005ACC'),
+	        	Field::make( 'image', 'crb_icon_jalan', 'Icon aset Jaringan dan Irigrasi' )
+	        		->set_value_type('url')
+        			->set_default_value(plugin_dir_url(dirname(__FILE__)).'public/images/lokasi.png')
+	        ) );
 	}
 
 	function generate_user_aset(){
