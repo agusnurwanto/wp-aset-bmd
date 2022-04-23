@@ -254,6 +254,9 @@
         font-weight: bold;
         font-size: 25px;
     }
+    .factor {
+        word-break: break-all;
+    }
 </style>
 <header id="header">
     <div class="stars"></div>
@@ -262,7 +265,7 @@
     <div class="bg-overlay pattern "></div>
     <div id="navigation-sticky-wrapper" class="sticky-wrapper" style="height: 110px;">
         <div class="navbar navbar-fixed-top" id="navigation">
-            <div class="container" style="flex-wrap: nowrap;">
+            <div class="container" style="flex-wrap: nowrap; display: block;">
                 <!-- Navigation Bar -->
                 <div class="navbar-header">
                     <!-- Responsive Menu Button -->
@@ -279,7 +282,7 @@
                     </a>
                 </div>
                 <nav id="topnav" role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
-                    <ul class="nav navbar-right">
+                    <ul class="nav navbar-nav navbar-right" style="flex-wrap: nowrap; display: block; margin-left: 0px;">
                         <?php echo get_option('_crb_menu_kanan'); ?>
                     </ul>
                 </nav>
@@ -467,7 +470,7 @@
             </div>
             <!-- Title & Desc Row Ends -->
             <div class="video_bg animated" data-animated="fadeInUp" data-animation-delay="200">
-                <iframe id="video-demo" src="<?php echo get_option('_crb_video_demo'); ?>" width="640" height="360"></iframe>
+                <iframe id="video-demo" data-src="<?php echo get_option('_crb_video_demo'); ?>" width="640" height="360" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
             </div>
         </div>
     </div>
@@ -546,19 +549,19 @@
             <div class="row counting-box title-row">
                 <div class="col-md-6 text-center animated" data-animation="fadeInBottom"
                     data-animation-delay="200">
-                    <i class="fa fa-money fa-3x" style="background-color: #ad3a61"></i>
-                    <h3 class="normal">Aset Tanah Belum Bersertifikat</h3>
+                    <i class="fa fa-money fa-3x" style="background-color: #c97f4b"></i>
+                    <h3 class="normal">Aset Disewakan</h3>
                     <div style="margin-bottom: 20px;">
-                        <div class="factor" style="color: #ad3a61"><?php echo number_format(get_option('_crb_jumlah_tanah_belum_sertifikat'), 0, ',', '.'); ?></div>
+                        <div class="factor" style="color: #c97f4b"><?php echo number_format(get_option('_crb_jumlah_aset_disewakan'), 0, ',', '.'); ?></div>
                     </div>
                     <a href="#" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
                 </div>
                 <div class="col-md-6 text-center animated" data-animation="fadeInBottom"
                     data-animation-delay="200">
-                    <i class="fa fa-money fa-3x" style="background-color: #c97f4b"></i>
-                    <h3 class="normal">Data Aset Rusak (Potensi dihapus)</h3>
+                    <i class="fa fa-money fa-3x" style="background-color: #ad3a61"></i>
+                    <h3 class="normal">Tanah Belum Bersertifikat</h3>
                     <div style="margin-bottom: 20px;">
-                        <div class="factor" style="color: #c97f4b"><?php echo number_format(get_option('_crb_jumlah_aset_rusak'), 0, ',', '.'); ?></div>
+                        <div class="factor" style="color: #ad3a61"><?php echo number_format(get_option('_crb_jumlah_tanah_belum_sertifikat'), 0, ',', '.'); ?></div>
                     </div>
                     <a href="#" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
                 </div>
@@ -701,4 +704,19 @@
         $(this).closest('ul').find('li').removeClass('active');
         $(this).closest('li').addClass('active');
     });
+
+    cek_click = false;
+    $('html').on('click', function(){
+        play_video();
+    });
+    function play_video() {
+        if(!cek_click){
+            console.log('play_video!');
+            cek_click = true;
+            var src = $('#video-demo').attr('data-src');
+            setTimeout(function(){
+                $('#video-demo').attr('src', src);
+            }, 1000);
+        }
+    }
 </script>

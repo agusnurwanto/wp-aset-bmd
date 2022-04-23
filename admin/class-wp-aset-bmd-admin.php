@@ -361,8 +361,8 @@ class Wp_Aset_Bmd_Admin {
 		        Field::make( 'textarea', 'crb_judul_video', __( 'Judul' ) )
         			->set_default_value('<span>Video Demo</span> SIMATA'),
 				Field::make( 'text', 'crb_video_demo', 'Url Video Youtube' )
-        			->set_default_value('https://www.youtube.com/embed/8wDyFBXkWaM?controls=0')
-        			->set_help_text('Masukan link youtube dengan format embed. Contoh https://www.youtube.com/embed/8wDyFBXkWaM?controls=0')
+        			->set_default_value('https://www.youtube.com/embed/8wDyFBXkWaM?controls=0&autoplay=1')
+        			->set_help_text('Masukan link youtube dengan format embed. Contoh https://www.youtube.com/embed/ZbXSzejdyEE?controls=0&autoplay=1')
 		    ) )
 		    ->add_tab( __( 'Monitoring Data' ), array(
 		        Field::make( 'textarea', 'crb_judul_monitoring', __( 'Judul' ) )
@@ -380,12 +380,12 @@ class Wp_Aset_Bmd_Admin {
 		        Field::make( 'text', 'crb_total_potensi_aset', __( 'Total nilai potensi aset yang disewakan' ) )
             		->set_attribute('type', 'number')
         			->set_default_value('5000000000'),
+		        Field::make( 'text', 'crb_jumlah_aset_disewakan', __( 'Jumlah aset disewakan' ) )
+            		->set_attribute('type', 'number')
+        			->set_default_value('5000000000'),
 		        Field::make( 'text', 'crb_jumlah_tanah_belum_sertifikat', __( 'Jumlah aset tanah yang belum bersetifikat' ) )
             		->set_attribute('type', 'number')
-        			->set_default_value('20'),
-		        Field::make( 'text', 'crb_jumlah_aset_rusak', __( 'Jumlah aset rusak (potensi dihapus)' ) )
-            		->set_attribute('type', 'number')
-        			->set_default_value('2000')
+        			->set_default_value('20')
 		    ) );
 
 		Container::make( 'theme_options', __( 'Google Maps' ) )
