@@ -3223,11 +3223,6 @@ canvas.rainbowbg.rainbowcover {
 
 /* Media queries */
 @media print, screen and (min-width: 768px) { /* Large resolution */
-    /* Landing section */
-    .site-logo {
-        margin-top: 8px !important;
-    }
-
     .non-landing {
         height: 110px !important;
     }

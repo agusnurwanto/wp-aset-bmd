@@ -2,89 +2,80 @@
 $nama_pemda = get_option('_crb_bmd_nama_pemda');
 $tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 $api_key = get_option( '_crb_apikey_simda_bmd' );
-
-$limit = '';
-if(
-    !empty($_GET)
-    && !empty($_GET['limit'])
-    && is_numeric($_GET['limit'])
-){
-    $limit = 'top '.$_GET['limit'];
-}
-$body_skpd = '';
-$skpd = $this->functions->CurlSimda(array(
-    'query' => '
-        select '.$limit.' 
-            u.Kd_Prov, 
-            u.Kd_Kab_Kota, 
-            u.Kd_Bidang, 
-            u.Kd_Unit, 
-            n.Nm_Unit
-        from ref_upb u
-        LEFT JOIN Ref_Unit n ON n.Kd_Prov=u.Kd_Prov
-            AND n.Kd_Kab_Kota=u.Kd_Kab_Kota
-            AND n.Kd_Bidang=u.Kd_Bidang
-            AND n.Kd_Unit=u.Kd_Unit
-        '
-));
-$jml = 10;
 $skpd_all = array();
-$skpd_sementara = array();
-$no=0;
-$cek_skpd = array();
-foreach($skpd as $k => $val){
-    $kd_lokasi = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit);
-    if(empty($cek_skpd[$kd_lokasi])){
-        $cek_skpd[$kd_lokasi] = $kd_lokasi;
-    }else{
-        continue;
-    }
-    $no++;
-    $val->kd_lokasi = $kd_lokasi;
-    $skpd_sementara[] = $val;
-    if($no%$jml == 0){
-        $skpd_all[] = $skpd_sementara;
-        $skpd_sementara = array();
-    }
-    $body_skpd .= '
-        <tr>
-            <td class="text-center">'.$no.'</td>
-            <td class="text-center">'.$kd_lokasi.'</td>
-            <td>'.$val->Nm_Unit.'</td>
-            <td class="text-right harga_total" data-kd_lokasi="'.$kd_lokasi.'">Menunggu... </td>
-            <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('kd_lokasi' => $kd_lokasi, 'nama_skpd' => $val->Nm_Unit, 'daftar_aset' => 1))).'" class="btn btn-primary">Detail</a></td>
-        </tr>
-    ';
-}
-if(!empty($skpd_sementara)){
-    $skpd_all[] = $skpd_sementara;
-}
-$total_nilai_skpd = 0;
-
 $body = '';
 $tanah = $this->functions->CurlSimda(array(
-    'query' => 'select sum(Luas_M2) as jml, COUNT(*) as jml_bidang, sum(Harga) as harga from ta_kib_a',
-    'no_debug' => 1
+    'query' => "
+        select 
+            sum(B.Luas_M2) as jml, 
+            COUNT(B.Harga) as jml_bidang, 
+            sum(C.Harga) as harga 
+        from ta_kib_a B
+        INNER JOIN Ta_Fn_KIB_A C ON C.IDPemda = B.IDPemda
+        where B.Kd_Hapus = '0'
+            AND B.Kd_Data != '3' 
+            AND B.Kd_KA= '1'",
+    'no_debug' => 0
 ));
 $mesin = $this->functions->CurlSimda(array(
-    'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_b',
-    'no_debug' => 1
+    'query' => "
+        select 
+            COUNT(B.Harga) as jml, 
+            sum(C.Harga) as harga 
+        from ta_kib_b B
+        INNER JOIN Ta_Fn_KIB_B C ON C.IDPemda = B.IDPemda 
+        where B.Kd_Hapus= '0' 
+            AND B.Kd_Data != '3' 
+            AND B.Kd_KA= '1'",
+    'no_debug' => 0
 ));
 $gedung = $this->functions->CurlSimda(array(
-    'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_c',
-    'no_debug' => 1
+    'query' => "
+        select 
+            COUNT(B.Harga) as jml, 
+            sum(C.Harga) as harga 
+        from ta_kib_c B
+        INNER JOIN Ta_Fn_KIB_C C ON C.IDPemda = B.IDPemda 
+        where B.Kd_Hapus= '0' 
+            AND B.Kd_Data != '3' 
+            AND B.Kd_KA= '1'",
+    'no_debug' => 0
 ));
 $jalan = $this->functions->CurlSimda(array(
-    'query' => 'select sum(Panjang) as jml, sum(Harga) as harga from ta_kib_d',
-    'no_debug' => 1
+    'query' => "
+        select 
+            sum(B.Panjang) as jml, 
+            sum(C.Harga) as harga 
+        from ta_kib_d B
+        INNER JOIN Ta_Fn_KIB_D C ON C.IDPemda = B.IDPemda 
+        where B.Kd_Hapus= '0' 
+            AND B.Kd_Data != '3' 
+            AND B.Kd_KA= '1'",
+    'no_debug' => 0
 ));
 $tetap_lainnya = $this->functions->CurlSimda(array(
-    'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_e',
-    'no_debug' => 1
+    'query' => "
+        select 
+            COUNT(B.Harga) as jml, 
+            sum(C.Harga) as harga 
+        from ta_kib_e B
+        INNER JOIN Ta_Fn_KIB_E C ON C.IDPemda = B.IDPemda 
+        where B.Kd_Hapus= '0' 
+            AND B.Kd_Data != '3' 
+            AND B.Kd_KA= '1'",
+    'no_debug' => 0
 ));
 $gedung_pengerjaan = $this->functions->CurlSimda(array(
-    'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_f',
-    'no_debug' => 1
+    'query' => "
+        select 
+            COUNT(B.Harga) as jml, 
+            sum(C.Harga) as harga 
+        from Ta_KIB_A B
+        INNER JOIN Ta_Fn_KIB_F C ON C.IDPemda = B.IDPemda 
+        where B.Kd_Hapus= '0' 
+            AND B.Kd_Data != '3' 
+            AND B.Kd_KA= '1'",
+    'no_debug' => 0
 ));
 
 $chart_jenis_aset = array(
@@ -233,122 +224,99 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
                 <th></th>
             <tfoot>
         </table>
-        <h2 class="text-center">Data Barang Milik Daerah Per SKPD<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
-        <div class="container counting-inner">
-            <div class="row counting-box title-row">
-                <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
-                    data-animation-delay="200">
-                    <h3 class="normal">Grafik Nilai Per Unit SKPD</h3>
-                    <div style="width: 100%; max-width: 1500px; max-height: 1000px; margin: auto; margin-bottom: 25px;">
-                        <canvas id="chart_per_unit"></canvas>
+        <section id="data_per_skpd">
+            <h2 class="text-center">Data Barang Milik Daerah Per SKPD<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+            <div class="container counting-inner">
+                <div class="row counting-box title-row">
+                    <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
+                        data-animation-delay="200">
+                        <div style="width: 100%; max-width: 1500px; max-height: 1000px; margin: auto; margin-bottom: 25px;">
+                            <canvas id="chart_per_unit"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <table class="table table-bordered" id="table-aset-skpd">
-            <thead id="data_header">
-                <tr>
-                    <th class="text-center">No</th>
-                    <th class="text-center">Kode Unit</th>
-                    <th class="text-center">Nama Unit</th>
-                    <th class="text-center">Nilai (Rupiah)</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="data_body">
-                <?php echo $body_skpd; ?>
-            </tbody>
-            <tfoot>
-                <th colspan="3" class="text-center">Total Nilai</th>
-                <th class="text-right" id="total_all_skpd">Menunggu... </th>
-                <th></th>
-            <tfoot>
-        </table>
+            <table class="table table-bordered" id="table-aset-skpd">
+                <thead id="data_header">
+                    <tr>
+                        <th class="text-center">Kode Unit</th>
+                        <th class="text-center">Nama Unit</th>
+                        <th class="text-center">Nilai (Rupiah)</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4" class="text-center">Menunggu...</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <th colspan="2" class="text-center">Total Nilai</th>
+                    <th class="text-right" id="total_all_skpd">Menunggu...</th>
+                    <th></th>
+                <tfoot>
+            </table>
+        </section>
     </div>
 </div>
+<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/loadingoverlay.min.js"></script>
 <script type="text/javascript">
+jQuery("#data_per_skpd").LoadingOverlay("show", {
+    image : '<?php echo get_option('_crb_menu_logo_loading'); ?>', 
+    imageAnimation : false,
+    background : "rgba(255, 255, 255, 0.8)",
+    progress    : true
+});
+var count     = 0;
+var interval  = setInterval(function(){
+    count += 10;
+    jQuery("#data_per_skpd").LoadingOverlay("progress", count);
+}, 5000);
+
 window.chart_jenis_aset = <?php echo json_encode($chart_jenis_aset); ?>;
-var skpd = <?php echo json_encode($skpd_all); ?>;
-var row_skpd = {};
+var text_menunggu = 'Menunggu...';
 jQuery(document).on('ready', function() {
-    jQuery('#table-aset-skpd tbody tr').map(function(i, b){
-        var tr = jQuery(b);
-        var kd_lokasi = tr.find('td.harga_total').attr('data-kd_lokasi');
-        row_skpd[kd_lokasi] = i;
-    });
-    var tableRender = jQuery('#table-aset-skpd').dataTable({
-        lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
-        footerCallback: function ( row, data, start, end, display ) {
-            var api = this.api();
-            var cek_menunggu = false;
-            var text_menunggu = 'Menunggu...';
-            var total_page = api.column( 3, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    if(b == text_menunggu){
-                        cek_menunggu = text_menunggu;
-                        return a;
-                    }else{
-                        return a + to_number(b);
-                    }
-                }, 0 );
-            if(cek_menunggu){
-                total_page = cek_menunggu;
-            }else{
-                total_page = formatRupiah(total_page);
+    jQuery.ajax({
+        url: ajax.url,
+        type: "POST",
+        data: {
+            action: 'get_total_skpd_all',
+            api_key: '<?php echo $api_key; ?>'
+        },
+        dataType: 'json',
+        success: function(ret){
+            if(ret.status == 'error'){
+                return alert(ret.message);
             }
-            jQuery('#total_all_skpd').text(total_page);
-        }
-    });
-    var total_all = 0;
-    var last = skpd.length-1;
-    skpd.reduce(function(sequence, nextData){
-        return sequence.then(function(current_data){
-            return new Promise(function(resolve_reduce, reject_reduce){
-                var sendData2 = current_data.map(function(opd, i){
-                    // console.log('Get pagu SKPD', opd);
-                    return new Promise(function(resolve2, reject2){
-                        jQuery.ajax({
-                            url: ajax.url,
-                            type: "POST",
-                            data: {
-                                action: 'get_total_skpd',
-                                api_key: '<?php echo $api_key; ?>',
-                                data: opd
-                            },
-                            dataType: 'json',
-                            success: function(ret){
-                                tableRender.api().cell({row: row_skpd[ret.data.kd_lokasi], column:3}).data(ret.data.total).draw()
-                                total_all += +ret.data.total_asli;
-                                resolve2();
-                            }
+            jQuery('#table-aset-skpd tbody').html(ret.html);
+            jQuery("#data_per_skpd").LoadingOverlay("hide", true);
+            clearInterval(interval);
+            window.tableRender = jQuery('#table-aset-skpd').dataTable({
+                lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
+                footerCallback: function ( row, data, start, end, display ) {
+                    var api = this.api();
+                    var total_page = api.column( 2, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return a + to_number(b);
+                        }, 0 );
+                    jQuery('#total_all_skpd').text(formatRupiah(total_page));
+                    if(pieChart2){
+                        var new_data = [];
+                        var labels = [];
+                        api.rows( {page:'current'} ).data().map(function(b, i){
+                            labels.push(b[1].substring(0, 50));
+                            new_data.push(to_number(b[2].display));
                         });
-                    });
-                });
-                Promise.all(sendData2)
-                .then(function(all_data){
-                    resolve_reduce(nextData);
-                });
-            })
-            .catch(function(e){
-                console.log(e);
-                return Promise.resolve(nextData);
+                        if(new_data.length == labels.length){
+                            pieChart2.data.labels = labels;
+                            pieChart2.data.datasets[0].data = new_data;
+                            pieChart2.update();
+                        }
+                    }
+                }
             });
-        })
-        .catch(function(e){
-            console.log(e);
-            return Promise.resolve(nextData);
-        });
-    }, Promise.resolve(skpd[last]))
-    .then(function(data_last){
-        console.log('Berhasil! total=', total_all);
-        var json = [];
-        var total_page = tableRender.api().column( 3, { page: 'current'} )
-            .data()
-            .reduce( function (a, b) {
-                return a + to_number(b);
-            }, 0 );
-        jQuery('#total_all_skpd').text(formatRupiah(total_page));
+        }
     });
 });
 </script>

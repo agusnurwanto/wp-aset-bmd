@@ -452,7 +452,79 @@ class Wp_Aset_Bmd_Public {
 		return $link['url'];
 	}
 
-	function get_total_skpd(){
+	function get_total_skpd_all($json = false){
+		global $wpdb;
+		$return = array(
+			'status' => 'success',
+			'message'	=> 'Berhasil get total per SKPD!'
+		);
+		if(!empty($_POST)){
+			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
+				$limit = '';
+				if(
+				    !empty($_POST['limit'])
+				    && is_numeric($_POST['limit'])
+				){
+				    $limit = 'top '.$_POST['limit'];
+				}
+				$body_skpd = '';
+				$skpd = $this->functions->CurlSimda(array(
+				    'query' => '
+				        select '.$limit.' 
+				            u.Kd_Prov, 
+				            u.Kd_Kab_Kota, 
+				            u.Kd_Bidang, 
+				            u.Kd_Unit, 
+				            n.Nm_Unit
+				        from ref_upb u
+				        LEFT JOIN Ref_Unit n ON n.Kd_Prov=u.Kd_Prov
+				            AND n.Kd_Kab_Kota=u.Kd_Kab_Kota
+				            AND n.Kd_Bidang=u.Kd_Bidang
+				            AND n.Kd_Unit=u.Kd_Unit
+				        '
+				));
+				$no=0;
+				$cek_skpd = array();
+				foreach($skpd as $k => $val){
+				    $kd_lokasi = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit);
+				    if(empty($cek_skpd[$kd_lokasi])){
+				        $cek_skpd[$kd_lokasi] = $kd_lokasi;
+				    }else{
+				        continue;
+				    }
+				    $no++;
+				    $val->kd_lokasi = $kd_lokasi;
+				    $_POST['data'] = (array) $val;
+				    $total = $this->get_total_skpd(true);
+				    if(empty($total['data']['total_asli'])){
+				        continue;
+				    }
+				    $body_skpd .= '
+				        <tr>
+				            <td class="text-center">'.$kd_lokasi.'</td>
+				            <td>'.$val->Nm_Unit.'</td>
+				            <td class="text-right harga_total" data-kd_lokasi="'.$kd_lokasi.'" data-order="'.$total['data']['total_asli'].'">'.$total['data']['total'].'</td>
+				            <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('kd_lokasi' => $kd_lokasi, 'nama_skpd' => $val->Nm_Unit, 'daftar_aset' => 1))).'" class="btn btn-primary">Detail</a></td>
+				        </tr>
+				    ';
+				}
+				$return['html'] = $body_skpd;
+			}else{
+				$return = array(
+					'status' => 'error',
+					'message'	=> 'Api Key tidak sesuai!'
+				);
+			}
+		}else{
+			$return = array(
+				'status' => 'error',
+				'message'	=> 'Format tidak sesuai!'
+			);
+		}
+		die(json_encode($return));
+	}
+
+	function get_total_skpd($json = false){
 		global $wpdb;
 		$ret = array(
 			'status'	=> 'success',
@@ -461,64 +533,108 @@ class Wp_Aset_Bmd_Public {
 		if (!empty($_POST)) {
 			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
 				if (!empty($_POST['data'])) {
-					$where = ' where Kd_Prov=\''.$_POST['data']['Kd_Prov'].'\' and Kd_Kab_Kota=\''.$_POST['data']['Kd_Kab_Kota'].'\' and Kd_Bidang=\''.$_POST['data']['Kd_Bidang'].'\' and Kd_Unit=\''.$_POST['data']['Kd_Unit'].'\'';
+					$where = ' where 
+						B.Kd_Hapus= \'0\' 
+			            AND B.Kd_Data != \'3\' 
+			            AND B.Kd_KA= \'1\'
+						and B.Kd_Prov=\''.$_POST['data']['Kd_Prov'].'\' 
+						and B.Kd_Kab_Kota=\''.$_POST['data']['Kd_Kab_Kota'].'\' 
+						and B.Kd_Bidang=\''.$_POST['data']['Kd_Bidang'].'\' 
+						and B.Kd_Unit=\''.$_POST['data']['Kd_Unit'].'\'';
 				    if(!empty($_POST['data']['Kd_Sub'])){
-				    	$where .= ' and Kd_Sub=\''.$_POST['data']['Kd_Sub'].'\'';
+				    	$where .= ' and B.Kd_Sub=\''.$_POST['data']['Kd_Sub'].'\'';
 				    }
 				    if(!empty($_POST['data']['Kd_UPB'])){
-					    $where .= ' and Kd_UPB=\''.$_POST['data']['Kd_UPB'].'\'';
+					    $where .= ' and B.Kd_UPB=\''.$_POST['data']['Kd_UPB'].'\'';
 					    if(!empty($_POST['data']['Kd_Kecamatan'])){
-					        $where .= ' and Kd_Kecamatan=\''.$_POST['data']['Kd_Kecamatan'].'\'';
+					        $where .= ' and B.Kd_Kecamatan=\''.$_POST['data']['Kd_Kecamatan'].'\'';
 					    }else{
-					        $where .= ' and Kd_Kecamatan is null';
+					        $where .= ' and B.Kd_Kecamatan is null';
 					    }
 					    if(!empty($_POST['data']['Kd_Desa'])){
-					        $where .= ' and Kd_Desa=\''.$_POST['data']['Kd_Desa'].'\'';
+					        $where .= ' and B.Kd_Desa=\''.$_POST['data']['Kd_Desa'].'\'';
 					    }else{
-					        $where .= ' and Kd_Desa is null';
+					        $where .= ' and B.Kd_Desa is null';
 					    }
 					}
 
 				    $harga = 0;
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'tanah'){
 					    $tanah = $this->functions->CurlSimda(array(
-					        'query' => 'select sum(Luas_M2) as jml, COUNT(*) as jml_bidang, sum(Harga) as harga from ta_kib_a'.$where,
-					        'no_debug' => 1
+					        'query' => "
+					        	select 
+					        		sum(B.Luas_M2) as jml, 
+					        		COUNT(B.Harga) as jml_bidang, 
+					        		sum(C.Harga) as harga 
+					        	from ta_kib_a B
+					        	INNER JOIN Ta_Fn_KIB_A C ON C.IDPemda = B.IDPemda
+					        	".$where,
+					        'no_debug' => 0
 					    ));
 				    	$harga += $tanah[0]->harga;
 					}
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'mesin'){
 					    $mesin = $this->functions->CurlSimda(array(
-					        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_b'.$where,
-					        'no_debug' => 1
+					        'query' => "
+					        	select 
+					        		COUNT(B.Harga) as jml, 
+					        		sum(C.Harga) as harga 
+					        	from ta_kib_b B
+					        	INNER JOIN Ta_Fn_KIB_B C ON C.IDPemda = B.IDPemda
+					        	".$where,
+					        'no_debug' => 0
 					    ));
 				    	$harga += $mesin[0]->harga;
 				    }
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'bangunan'){
 					    $gedung = $this->functions->CurlSimda(array(
-					        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_c'.$where,
-					        'no_debug' => 1
+					        'query' => "
+					        	select 
+					        		COUNT(B.Harga) as jml, 
+					        		sum(C.Harga) as harga 
+					        	from ta_kib_c B
+					        	INNER JOIN Ta_Fn_KIB_C C ON C.IDPemda = B.IDPemda
+					        	".$where,
+					        'no_debug' => 0
 					    ));
 				    	$harga += $gedung[0]->harga;
 				    }
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'jalan'){
 					    $jalan = $this->functions->CurlSimda(array(
-					        'query' => 'select sum(Panjang) as jml, sum(Harga) as harga from ta_kib_d'.$where,
-					        'no_debug' => 1
+					        'query' => "
+					        	select 
+					        		sum(B.Panjang) as jml, 
+					        		sum(C.Harga) as harga 
+					        	from ta_kib_d B
+					        	INNER JOIN Ta_Fn_KIB_D C ON C.IDPemda = B.IDPemda
+					        	".$where,
+					        'no_debug' => 0
 					    ));
 				    	$harga += $jalan[0]->harga;
 				    }
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'aset_tetap'){
 					    $tetap_lainnya = $this->functions->CurlSimda(array(
-					        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_e'.$where,
-					        'no_debug' => 1
+					        'query' => "
+					        	select 
+					        		COUNT(B.Harga) as jml, 
+					        		sum(C.Harga) as harga 
+					        	from ta_kib_e B
+					        	INNER JOIN Ta_Fn_KIB_E C ON C.IDPemda = B.IDPemda
+					        	".$where,
+					        'no_debug' => 0
 					    ));
 				    	$harga += $tetap_lainnya[0]->harga;
 				    }
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'bangunan_dalam_pengerjaan'){
 					    $gedung_pengerjaan = $this->functions->CurlSimda(array(
-					        'query' => 'select COUNT(*) as jml, sum(Harga) as harga from ta_kib_f'.$where,
-					        'no_debug' => 1
+					        'query' => "
+					        	select 
+					        		COUNT(B.Harga) as jml, 
+					        		sum(C.Harga) as harga 
+					        	from ta_kib_a B
+					        	INNER JOIN Ta_Fn_KIB_F C ON C.IDPemda = B.IDPemda
+					        	".$where,
+					        'no_debug' => 0
 					    ));
 				    	$harga += $gedung_pengerjaan[0]->harga;
 				    }
@@ -548,7 +664,11 @@ class Wp_Aset_Bmd_Public {
 				$ret['message'] = 'APIKEY tidak sesuai!';
 			}
 		}
-		die(json_encode($ret));
+		if($json){
+			return $ret;
+		}else{
+			die(json_encode($ret));
+		}
 	}
 
 	function get_nama_jenis_aset($options=array()){

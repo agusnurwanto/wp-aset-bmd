@@ -257,6 +257,9 @@
     .factor {
         word-break: break-all;
     }
+    .navbar-fixed-bottom .navbar-collapse, .navbar-fixed-top .navbar-collapse {
+        max-height: inherit;
+    }
 </style>
 <header id="header">
     <div class="stars"></div>
@@ -470,7 +473,13 @@
             </div>
             <!-- Title & Desc Row Ends -->
             <div class="video_bg animated" data-animated="fadeInUp" data-animation-delay="200">
-                <iframe id="video-demo" data-src="<?php echo get_option('_crb_video_demo'); ?>" width="640" height="360" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+            <?php
+                $src = 'src="'.str_replace('autoplay=1', '', get_option('_crb_video_demo')).'"';
+                if(get_option('_crb_video_autoplay') == 1){
+                    $src = 'data-src="'.get_option('_crb_video_demo').'"';
+                }
+            ?>
+                <iframe id="video-demo" <?php echo $src; ?> width="640" height="360" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
             </div>
         </div>
     </div>
@@ -714,9 +723,11 @@
             console.log('play_video!');
             cek_click = true;
             var src = $('#video-demo').attr('data-src');
-            setTimeout(function(){
-                $('#video-demo').attr('src', src);
-            }, 1000);
+            if(src){
+                setTimeout(function(){
+                    $('#video-demo').attr('src', src);
+                }, 1000);
+            }
         }
     }
 </script>

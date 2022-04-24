@@ -357,12 +357,19 @@ class Wp_Aset_Bmd_Admin {
         				->set_default_value('https://via.placeholder.com/1024x576')
 				    ) )
 		    ) )
-		    ->add_tab( __( 'Video Demo' ), array(
+		    ->add_tab( __( 'Video' ), array(
 		        Field::make( 'textarea', 'crb_judul_video', __( 'Judul' ) )
-        			->set_default_value('<span>Video Demo</span> SIMATA'),
+        			->set_default_value('<span>Tentang</span> SIMATA'),
 				Field::make( 'text', 'crb_video_demo', 'Url Video Youtube' )
         			->set_default_value('https://www.youtube.com/embed/8wDyFBXkWaM?controls=0&autoplay=1')
-        			->set_help_text('Masukan link youtube dengan format embed. Contoh https://www.youtube.com/embed/ZbXSzejdyEE?controls=0&autoplay=1')
+        			->set_help_text('Masukan link youtube dengan format embed. Contoh https://www.youtube.com/embed/ZbXSzejdyEE?controls=0&autoplay=1'),
+				Field::make( 'radio', 'crb_video_autoplay', 'Autoplay Video' )
+					->add_options( array(
+				        '1' => 'Iya',
+				        '2' => 'Tidak'
+				    ) )
+        			->set_default_value('1')
+        			->set_help_text('Jika dipilih iya, maka video akan otomatis dinyalakan ketika user melakukan event klik pada halaman.')
 		    ) )
 		    ->add_tab( __( 'Monitoring Data' ), array(
 		        Field::make( 'textarea', 'crb_judul_monitoring', __( 'Judul' ) )

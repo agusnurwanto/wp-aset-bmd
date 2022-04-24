@@ -185,6 +185,9 @@ class Wp_Aset_Bmd {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
+		$this->loader->add_action('wp_ajax_get_total_skpd_all',  $plugin_public, 'get_total_skpd_all');
+		$this->loader->add_action('wp_ajax_nopriv_get_total_skpd_all',  $plugin_public, 'get_total_skpd_all');
+
 		$this->loader->add_action('wp_ajax_get_total_skpd',  $plugin_public, 'get_total_skpd');
 		$this->loader->add_action('wp_ajax_nopriv_get_total_skpd',  $plugin_public, 'get_total_skpd');
 
