@@ -160,6 +160,33 @@ $body .= '
     </tr>
 ';
 $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->harga+$tetap_lainnya[0]->harga+$gedung_pengerjaan[0]->harga;
+update_option('_crb_total_nilai', $total_nilai);
+update_option('_crb_total_per_jenis', json_encode(array(
+    array(
+        'nama' => 'Tanah',
+        'total' => $tanah[0]->harga
+    ),
+    array(
+        'nama' => 'Peralatan dan Mesin',
+        'total' => $mesin[0]->harga
+    ),
+    array(
+        'nama' => 'Gedung dan Bangunan',
+        'total' => $gedung[0]->harga
+    ),
+    array(
+        'nama' => 'Jalan, Jaringan dan Irigrasi',
+        'total' => $jalan[0]->harga
+    ),
+    array(
+        'nama' => 'Aset Tetap Lainnya',
+        'total' => $tetap_lainnya[0]->harga
+    ),
+    array(
+        'nama' => 'Kontruksi Dalam Pengerjaan',
+        'total' => $gedung_pengerjaan[0]->harga
+    )
+)));
 ?>
 <div class="modal fade" id="mod-aset" role="dialog" data-backdrop="static" aria-hidden="true">'
     <div class="modal-dialog modal-lg" role="document">
@@ -224,18 +251,18 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
                 <th></th>
             <tfoot>
         </table>
-        <section id="data_per_skpd">
-            <h2 class="text-center">Data Barang Milik Daerah Per SKPD<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
-            <div class="container counting-inner">
-                <div class="row counting-box title-row">
-                    <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
-                        data-animation-delay="200">
-                        <div style="width: 100%; max-width: 1500px; max-height: 1000px; margin: auto; margin-bottom: 25px;">
-                            <canvas id="chart_per_unit"></canvas>
-                        </div>
+        <h2 class="text-center">Data Barang Milik Daerah Per SKPD<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <div class="container counting-inner">
+            <div class="row counting-box title-row">
+                <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
+                    data-animation-delay="200">
+                    <div style="width: 100%; max-width: 1500px; max-height: 1000px; margin: auto; margin-bottom: 25px;">
+                        <canvas id="chart_per_unit"></canvas>
                     </div>
                 </div>
             </div>
+        </div>
+        <section id="data_per_skpd">
             <table class="table table-bordered" id="table-aset-skpd">
                 <thead id="data_header">
                     <tr>
@@ -261,63 +288,79 @@ $total_nilai = $tanah[0]->harga+$mesin[0]->harga+$gedung[0]->harga+$jalan[0]->ha
 </div>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/loadingoverlay.min.js"></script>
 <script type="text/javascript">
-jQuery("#data_per_skpd").LoadingOverlay("show", {
-    image : '<?php echo get_option('_crb_menu_logo_loading'); ?>', 
-    imageAnimation : false,
-    background : "rgba(255, 255, 255, 0.8)",
-    progress    : true
-});
-var count     = 0;
-var interval  = setInterval(function(){
-    count += 10;
-    jQuery("#data_per_skpd").LoadingOverlay("progress", count);
-}, 5000);
-
-window.chart_jenis_aset = <?php echo json_encode($chart_jenis_aset); ?>;
-var text_menunggu = 'Menunggu...';
-jQuery(document).on('ready', function() {
-    jQuery.ajax({
-        url: ajax.url,
-        type: "POST",
-        data: {
-            action: 'get_total_skpd_all',
-            api_key: '<?php echo $api_key; ?>'
-        },
-        dataType: 'json',
-        success: function(ret){
-            if(ret.status == 'error'){
-                return alert(ret.message);
+    window.total_per_bidang = <?php echo get_option('_crb_total_per_skpd'); ?>;
+    setTimeout(function(){
+        if(pieChart2){
+            var new_data = [];
+            var labels = [];
+            for(var i in total_per_bidang){
+                labels.push(total_per_bidang[i].nama.substring(0, 50));
+                new_data.push(to_number(total_per_bidang[i].total));
+            };
+            if(new_data.length == labels.length){
+                pieChart2.data.labels = labels;
+                pieChart2.data.datasets[0].data = new_data;
+                pieChart2.update();
             }
-            jQuery('#table-aset-skpd tbody').html(ret.html);
-            jQuery("#data_per_skpd").LoadingOverlay("hide", true);
-            clearInterval(interval);
-            window.tableRender = jQuery('#table-aset-skpd').dataTable({
-                lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
-                footerCallback: function ( row, data, start, end, display ) {
-                    var api = this.api();
-                    var total_page = api.column( 2, { page: 'current'} )
-                        .data()
-                        .reduce( function (a, b) {
-                            return a + to_number(b);
-                        }, 0 );
-                    jQuery('#total_all_skpd').text(formatRupiah(total_page));
-                    if(pieChart2){
-                        var new_data = [];
-                        var labels = [];
-                        api.rows( {page:'current'} ).data().map(function(b, i){
-                            labels.push(b[1].substring(0, 50));
-                            new_data.push(to_number(b[2].display));
-                        });
-                        if(new_data.length == labels.length){
-                            pieChart2.data.labels = labels;
-                            pieChart2.data.datasets[0].data = new_data;
-                            pieChart2.update();
+        }
+    }, 1000);
+    jQuery("#data_per_skpd").LoadingOverlay("show", {
+        image : '<?php echo get_option('_crb_menu_logo_loading'); ?>', 
+        imageAnimation : false,
+        background : "rgba(255, 255, 255, 0.8)",
+        progress    : true
+    });
+    var count     = 0;
+    var interval  = setInterval(function(){
+        count += 10;
+        jQuery("#data_per_skpd").LoadingOverlay("progress", count);
+    }, 5000);
+
+    window.chart_jenis_aset = <?php echo json_encode($chart_jenis_aset); ?>;
+    var text_menunggu = 'Menunggu...';
+    jQuery(document).on('ready', function() {
+        jQuery.ajax({
+            url: ajax.url,
+            type: "POST",
+            data: {
+                action: 'get_total_skpd_all',
+                api_key: '<?php echo $api_key; ?>'
+            },
+            dataType: 'json',
+            success: function(ret){
+                if(ret.status == 'error'){
+                    return alert(ret.message);
+                }
+                jQuery('#table-aset-skpd tbody').html(ret.html);
+                jQuery("#data_per_skpd").LoadingOverlay("hide", true);
+                clearInterval(interval);
+                window.tableRender = jQuery('#table-aset-skpd').dataTable({
+                    lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
+                    footerCallback: function ( row, data, start, end, display ) {
+                        var api = this.api();
+                        var total_page = api.column( 2, { page: 'current'} )
+                            .data()
+                            .reduce( function (a, b) {
+                                return a + to_number(b);
+                            }, 0 );
+                        jQuery('#total_all_skpd').text(formatRupiah(total_page));
+                        if(pieChart2){
+                            var new_data = [];
+                            var labels = [];
+                            api.rows( {page:'current'} ).data().map(function(b, i){
+                                labels.push(b[1].substring(0, 50));
+                                new_data.push(to_number(b[2].display));
+                            });
+                            if(new_data.length == labels.length){
+                                pieChart2.data.labels = labels;
+                                pieChart2.data.datasets[0].data = new_data;
+                                pieChart2.update();
+                            }
                         }
                     }
-                }
-            });
-        }
+                });
+            }
+        });
     });
-});
 </script>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/scripts.js"></script>

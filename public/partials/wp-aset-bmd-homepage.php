@@ -10,6 +10,24 @@
 ?>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/loadingoverlay.min.js"></script>
 <script type="text/javascript">
+    window.total_per_jenis = <?php echo get_option('_crb_total_per_jenis'); ?>;
+    window.chart_jenis_aset = {
+        label : [],
+        data : [],
+        color : [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+        ]
+    };
+    total_per_jenis.map(function(b, i){
+        chart_jenis_aset.label.push(b.nama);
+        chart_jenis_aset.data.push(b.total);
+    });
+    window.total_per_bidang = <?php echo get_option('_crb_total_per_bidang'); ?>;
     var $ = jQuery;
     function siteUrl(){ 
         return "<?php echo plugin_dir_url(dirname(__FILE__)); ?>"; 
@@ -504,7 +522,7 @@
                 	data-animation-delay="100">
                     <i class="fa fa-money fa-3x" style="background-color: #34b677"></i>
                     <h3 class="normal">Total Nilai Barang Milik Daerah</h3>
-                    <div id="statAkses">
+                    <div id="statAkses" style="margin-bottom: 20px;">
                         <div class="factor" style="color: #258154">Rp <?php echo number_format(get_option('_crb_total_nilai'), 2, ',', '.'); ?></div>
                     </div>
                     <a href="<?php echo $link_dashboard['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
@@ -522,8 +540,8 @@
             <div class="row counting-box title-row" style="margin-bottom: 75px;">
                 <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
                     data-animation-delay="200">
-                    <h3 class="normal">Grafik Nilai Per Unit SKPD</h3>
-                    <div style="width: 100%; max-width: 1500px; max-height: 1000px; margin: auto; margin-bottom: 25px;">
+                    <h3 class="normal">Grafik Nilai Per Bidang Urusan</h3>
+                    <div style="width: 100%; max-width: 1500px; max-height: 1000px; margin: auto;">
                         <canvas id="chart_per_unit"></canvas>
                     </div>
                 </div>
@@ -728,6 +746,19 @@
                     $('#video-demo').attr('src', src);
                 }, 1000);
             }
+        }
+    }
+    if(pieChart2){
+        var new_data = [];
+        var labels = [];
+        for(var i in total_per_bidang){
+            labels.push(total_per_bidang[i].nama.substring(0, 50));
+            new_data.push(total_per_bidang[i].total);
+        };
+        if(new_data.length == labels.length){
+            pieChart2.data.labels = labels;
+            pieChart2.data.datasets[0].data = new_data;
+            pieChart2.update();
         }
     }
 </script>

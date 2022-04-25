@@ -475,8 +475,10 @@ class Wp_Aset_Bmd_Public {
 				            u.Kd_Kab_Kota, 
 				            u.Kd_Bidang, 
 				            u.Kd_Unit, 
+				            b.Nm_Bidang, 
 				            n.Nm_Unit
 				        from ref_upb u
+				        LEFT JOIN ref_bidang b ON b.Kd_Bidang=u.Kd_Bidang
 				        LEFT JOIN Ref_Unit n ON n.Kd_Prov=u.Kd_Prov
 				            AND n.Kd_Kab_Kota=u.Kd_Kab_Kota
 				            AND n.Kd_Bidang=u.Kd_Bidang
@@ -485,8 +487,11 @@ class Wp_Aset_Bmd_Public {
 				));
 				$no=0;
 				$cek_skpd = array();
+				$all_skpd = array();
+				$all_bidang = array();
 				foreach($skpd as $k => $val){
-				    $kd_lokasi = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit);
+				    $kd_bidang = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang);
+				    $kd_lokasi = $kd_bidang.'.'.$this->functions->CekNull($val->Kd_Unit);
 				    if(empty($cek_skpd[$kd_lokasi])){
 				        $cek_skpd[$kd_lokasi] = $kd_lokasi;
 				    }else{
@@ -507,7 +512,20 @@ class Wp_Aset_Bmd_Public {
 				            <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('kd_lokasi' => $kd_lokasi, 'nama_skpd' => $val->Nm_Unit, 'daftar_aset' => 1))).'" class="btn btn-primary">Detail</a></td>
 				        </tr>
 				    ';
+				    $all_skpd[$kd_lokasi] = array(
+				    	'nama' => $val->Nm_Unit,
+				    	'total' => $total['data']['total_asli']
+				    );
+				    if(empty($all_bidang[$kd_bidang])){
+				    	$all_bidang[$kd_bidang] = array(
+				    		'nama' => $val->Nm_Bidang,
+				    		'total' => 0
+				    	);
+				    }
+				    $all_bidang[$kd_bidang]['total'] += $total['data']['total_asli'];
 				}
+				update_option('_crb_total_per_skpd', json_encode($all_skpd));
+				update_option('_crb_total_per_bidang', json_encode($all_bidang));
 				$return['html'] = $body_skpd;
 			}else{
 				$return = array(

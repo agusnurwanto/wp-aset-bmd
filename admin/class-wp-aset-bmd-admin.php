@@ -377,6 +377,12 @@ class Wp_Aset_Bmd_Admin {
 		        Field::make( 'text', 'crb_total_nilai', __( 'Total nilai aset pemerintah daerah' ) )
             		->set_attribute('type', 'number')
         			->set_default_value('6977197616941.44'),
+		        Field::make( 'textarea', 'crb_total_per_jenis', __( 'Data total aset per jenis aset' ) )
+        			->set_default_value('[]'),
+		        Field::make( 'textarea', 'crb_total_per_bidang', __( 'Data total aset per bidang urusan' ) )
+        			->set_default_value('[]'),
+		        Field::make( 'textarea', 'crb_total_per_skpd', __( 'Data total aset per unit SKPD' ) )
+        			->set_default_value('[]'),
 		        Field::make( 'text', 'crb_jumlah_sub_unit', __( 'Jumlah sub unit' ) )
             		->set_attribute('type', 'number')
         			->set_default_value('114')
