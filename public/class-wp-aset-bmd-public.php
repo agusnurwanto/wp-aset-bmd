@@ -129,12 +129,27 @@ class Wp_Aset_Bmd_Public {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset.php';
 	}
 
-	function dashboard_aset_disewakan(){
+	function dashboard_aset_tanah(){
 		// untuk disable render shortcode di halaman edit page/post
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset-disewakan.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-aset-tanah.php';
+	}
+
+	function dashboard_aset_disewakan($atts){
+		// untuk disable render shortcode di halaman edit page/post
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		$params = shortcode_atts( array(
+			'potensi' => '0'
+		), $atts );
+		if($params['potensi'] == 1){
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-potensi-aset-disewakan.php';
+		}else{
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset-disewakan.php';
+		}
 	}
 
 	function dashboard_aset_user(){

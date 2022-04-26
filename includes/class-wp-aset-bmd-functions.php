@@ -274,6 +274,7 @@ class Wp_Aset_Bmd_Simda
 			$link = $this->get_link_post($custom_post);
 		}
 		return array(
+			'id' => $custom_post->ID,
 			'title' => $options['nama_page'],
 			'url' => $link
 		);

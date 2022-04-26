@@ -199,6 +199,7 @@ class Wp_Aset_Bmd {
 		add_shortcode('detail_aset',  array($plugin_public, 'detail_aset'));
 		add_shortcode('dashboard_aset_disewakan',  array($plugin_public, 'dashboard_aset_disewakan'));
 		add_shortcode('dashboard_aset_user',  array($plugin_public, 'dashboard_aset_user'));
+		add_shortcode('dashboard_aset_tanah',  array($plugin_public, 'dashboard_aset_tanah'));
 	}
 
 	/**

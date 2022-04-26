@@ -7,6 +7,27 @@
         'update' => 0,
         'post_status' => 'publish'
     ));
+    $link_dashboard_sewa = $this->functions->generatePage(array(
+        'nama_page' => 'Data Aset Yang Disewakan',
+        'content' => '[dashboard_aset_disewakan]',
+        'show_header' => 1,
+        'no_key' => 1,
+        'post_status' => 'publish'
+    ));
+    $link_dashboard_potensi_sewa = $this->functions->generatePage(array(
+        'nama_page' => 'Data Potensi Aset Yang Disewakan',
+        'content' => '[dashboard_aset_disewakan potensi="1"]',
+        'show_header' => 1,
+        'no_key' => 1,
+        'post_status' => 'publish'
+    ));
+    $link_dashboard_tanah = $this->functions->generatePage(array(
+        'nama_page' => 'Data Aset Tanah',
+        'content' => '[dashboard_aset_tanah]',
+        'show_header' => 1,
+        'no_key' => 1,
+        'post_status' => 'publish'
+    ));
 ?>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/loadingoverlay.min.js"></script>
 <script type="text/javascript">
@@ -525,7 +546,7 @@
                     <div id="statAkses" style="margin-bottom: 20px;">
                         <div class="factor" style="color: #258154">Rp <?php echo number_format(get_option('_crb_total_nilai'), 2, ',', '.'); ?></div>
                     </div>
-                    <a href="<?php echo $link_dashboard['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+                    <a target="_blank" href="<?php echo $link_dashboard['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
                 </div>
             </div>
             <div class="row counting-box title-row" style="margin-bottom: 75px;">
@@ -570,7 +591,7 @@
                     <div style="margin-bottom: 20px;">
                         <div class="factor" style="color: #6d46bb">Rp <?php echo number_format(get_option('_crb_total_potensi_aset'), 2, ',', '.'); ?></div>
                     </div>
-                    <a href="#" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+                    <a target="_blank" href="<?php echo $link_dashboard_potensi_sewa['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
                 </div>
             </div>
             <div class="row counting-box title-row">
@@ -579,18 +600,18 @@
                     <i class="fa fa-money fa-3x" style="background-color: #c97f4b"></i>
                     <h3 class="normal">Aset Disewakan</h3>
                     <div style="margin-bottom: 20px;">
-                        <div class="factor" style="color: #c97f4b"><?php echo number_format(get_option('_crb_jumlah_aset_disewakan'), 0, ',', '.'); ?></div>
+                        <div class="factor" style="color: #c97f4b">Rp <?php echo number_format(get_option('_crb_jumlah_aset_disewakan'), 2, ',', '.'); ?></div>
                     </div>
-                    <a href="#" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+                    <a target="_blank" href="<?php echo $link_dashboard_sewa['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
                 </div>
                 <div class="col-md-6 text-center animated" data-animation="fadeInBottom"
                     data-animation-delay="200">
                     <i class="fa fa-money fa-3x" style="background-color: #ad3a61"></i>
                     <h3 class="normal">Tanah Belum Bersertifikat</h3>
                     <div style="margin-bottom: 20px;">
-                        <div class="factor" style="color: #ad3a61"><?php echo number_format(get_option('_crb_jumlah_tanah_belum_sertifikat'), 0, ',', '.'); ?></div>
+                        <div class="factor" style="color: #ad3a61"><?php echo number_format(get_option('_crb_jumlah_tanah_belum_sertifikat'), 0, ',', '.'); ?> Bidang</div>
                     </div>
-                    <a href="#" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+                    <a target="_blank" href="<?php echo $link_dashboard_tanah['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
                 </div>
             </div>
         </div>

@@ -25,13 +25,10 @@ foreach($query->posts as $post){
     $date1 = strtotime($waktu_sewa_akhir);
     $date2 = strtotime($now);
     $interval = $date1 - $date2;
-    // cek jika masa sewa telah habis
-    if($interval < 0){ continue; }
+    // cek jika masa sewa belum habis
+    if($interval >= 0){ continue; }
 
     $nilai_sewa = get_post_meta($post->ID, 'meta_nilai_sewa', true);
-    $nama_sewa = get_post_meta($post->ID, 'meta_nama_sewa', true);
-    $alamat_sewa = get_post_meta($post->ID, 'meta_alamat_sewa', true);
-    $waktu_sewa_awal = get_post_meta($post->ID, 'meta_waktu_sewa_awal', true);
     $params = shortcode_parse_atts(str_replace('[detail_aset', '', str_replace(']', '', $post->post_content)));
     $kd_lokasi = explode('.', $params['kd_lokasi']);
     $Kd_Prov = (int) $kd_lokasi[1];
@@ -220,10 +217,8 @@ foreach($query->posts as $post){
             <td>'.$aset[0]->Nm_Aset5.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
             <td class="text-right" data-sort="'.$aset[0]->Harga.'">'.number_format($aset[0]->Harga,2,",",".").'</td>
-            <td>'.$nama_sewa.'</td>
-            <td class="text-center">'.$waktu_sewa_awal.'<br>sampai<br>'.$waktu_sewa_akhir.'</td>
             <td class="text-right" data-sort="'.$nilai_sewa.'">'.number_format($nilai_sewa,2,",",".").'</td>
-            <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a style="margin-top: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
+            <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
         </tr>
     ';
     $total_nilai_sewa += $nilai_sewa;
@@ -233,16 +228,12 @@ foreach($query->posts as $post){
         'ltd' => $koordinatY,
         'polygon' => $polygon,
         'nilai_sewa' => number_format($nilai_sewa,2,",","."),
-        'nama_sewa' => $nama_sewa,
-        'alamat_sewa' => $alamat_sewa,
-        'waktu_sewa_awal' => $waktu_sewa_awal,
-        'waktu_sewa_akhir' => $waktu_sewa_akhir,
         'nama_skpd' => $params['nama_skpd'].' '.$alamat,
         'kd_barang' => $params['kd_barang'],
         'kd_lokasi' => $params['kd_lokasi']
     );
 }
-update_option('_crb_jumlah_aset_disewakan', $total_nilai_sewa);
+update_option('_crb_total_potensi_aset', $total_nilai_sewa);
 ?>
 <style type="text/css">
     .warning {
@@ -254,7 +245,7 @@ update_option('_crb_jumlah_aset_disewakan', $total_nilai_sewa);
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Barang Milik Daerah Yang Disewakan<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Potensi Data Barang Milik Daerah Yang Disewakan<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div>
         <table class="table table-bordered" id="data_aset_sewa">
             <thead>
@@ -263,8 +254,6 @@ update_option('_crb_jumlah_aset_disewakan', $total_nilai_sewa);
                     <th class="text-center">Nama Aset</th>
                     <th class="text-center">Keterangan</th>
                     <th class="text-center">Nilai Aset (Rp)</th>
-                    <th class="text-center">Penyewa</th>
-                    <th class="text-center">Waktu Sewa</th>
                     <th class="text-center">Nilai Sewa (Rp)</th>
                     <th class="text-center">Aksi</th>
                 </tr>
@@ -275,7 +264,7 @@ update_option('_crb_jumlah_aset_disewakan', $total_nilai_sewa);
             <tfoot>
                 <th colspan="3" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_aset">0</th>
-                <th colspan="3" class="text-right" id="total_sewa">0</th>
+                <th class="text-right" id="total_sewa">0</th>
                 <th></th>
             <tfoot>
         </table>
@@ -306,7 +295,7 @@ jQuery(document).on('ready', function(){
                     return a + to_number(b);
                 }, 0 );
             jQuery('#total_aset').text(formatRupiah(total_page));
-            var total_sewa = api.column( 6, { page: 'current'} )
+            var total_sewa = api.column( 4, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
