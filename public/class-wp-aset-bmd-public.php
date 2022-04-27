@@ -291,6 +291,23 @@ class Wp_Aset_Bmd_Public {
 		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
 		$nama_jenis_aset = $data_jenis['nama'];
 		$table_simda = $data_jenis['table_simda'];
+		$api_googlemap = get_option( '_crb_google_api' );
+		$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
+		
+		if ($params['jenis_aset'] == 'tanah') {
+			$warna_map = get_option('_crb_warna_tanah');
+			$ikon_map  = get_option('_crb_icon_tanah');
+		}
+
+		if ($params['jenis_aset'] == 'bangunan') {
+			$warna_map = get_option('_crb_warna_gedung');
+			$ikon_map  = get_option('_crb_icon_gedung');
+		}
+
+		if ($params['jenis_aset'] == 'jalan') {
+			$warna_map = get_option('_crb_warna_jalan');
+			$ikon_map  = get_option('_crb_icon_jalan');
+		}
 
 		if(empty($nama_jenis_aset)){
 		    die('Jenis Aset tidak ditemukan!');

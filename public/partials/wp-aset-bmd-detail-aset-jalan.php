@@ -1,3 +1,5 @@
+            <?php echo $ikon_map; ?>
+            <?php echo 'warna maphaha'; ?>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Lokasi</label>
                 <div class="col-md-10">
@@ -172,7 +174,7 @@
         </form>
     </div>
 </div>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBrDSUIMFDIleLOFUUXf1wFVum9ae3lJ0&v=3.33&callback=initMap&libraries=places"></script>
+<script async defer src="<?php echo $api_googlemap ?>"></script>
 <script>
 <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
     function simpan_aset(){
@@ -224,29 +226,20 @@
     var no_sertipikat;
     var penggunaan;
     var keterangan;
+    var warna_map;
+    var ikon_map;
     
     function initMap() {
         // Lokasi Center Map
         var lokasi_aset = new google.maps.LatLng(<?php echo $koordinatX; ?>, <?php echo $koordinatY; ?>);
         // Setting Map
-        var mapOptions = {
+        var mapOptions = {  
             zoom: 18,
             center: lokasi_aset,
             mapTypeId: google.maps.MapTypeId.HYBRID
         };
         // Membuat Map
         map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-
-        // Menampilkan Marker
-        var marker1 = new google.maps.Marker({
-            position: lokasi_aset,
-            map: map,
-        <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
-            draggable: true,
-        <?php endif; ?>
-            title: 'Lokasi Aset',
-            // icon: baseUrl + 'assets/images/marker-icon/kib-a.png'
-        });
 
         // Define the LatLng coordinates for the shape.
         var Coords1 = <?php echo $polygon; ?>;
@@ -258,6 +251,20 @@
         luas           = '<?php echo number_format($aset[0]->Luas,2,",","."); ?>';
         alamat         = '<?php echo $aset[0]->Lokasi; ?>';
         keterangan     = '<?php echo $aset[0]->Keterangan; ?>';
+        warna_map      = '<?php echo $warna_map; ?>';
+        ikon_map       = '<?php echo $ikon_map; ?>';
+
+        // Menampilkan Marker
+        var marker1 = new google.maps.Marker({
+            position: lokasi_aset,
+            map,
+            icon: ikon_map,
+        <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
+            draggable: true,
+        <?php endif; ?>
+            title: 'Lokasi Aset',
+            // icon: baseUrl + 'assets/images/marker-icon/kib-a.png'
+        });
 
         // Menampilkan Informasi Data
         var contentString = '<br>' +
@@ -286,10 +293,10 @@
         var bentuk_bidang1 = new google.maps.Polyline({
             paths: Coords1,
             geodesic: true,
-            strokeColor: '#00cc00',
+            strokeColor: warna_map,
             strokeOpacity: 3,
             strokeWeight: 6,
-            fillColor: '#00cc00',
+            fillColor: warna_map,
             fillOpacity: 3,
         <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
             editable: true,

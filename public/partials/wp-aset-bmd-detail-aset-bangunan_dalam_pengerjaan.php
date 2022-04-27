@@ -152,7 +152,7 @@
         </form>
     </div>
 </div>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBrDSUIMFDIleLOFUUXf1wFVum9ae3lJ0&callback=initMap&libraries=places"></script>
+<script async defer src="<?php echo $api_googlemap ?>"></script>
 <script>
 <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
     function simpan_aset(){
