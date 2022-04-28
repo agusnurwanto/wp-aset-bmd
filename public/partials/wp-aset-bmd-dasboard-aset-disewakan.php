@@ -281,7 +281,7 @@ update_option('_crb_jumlah_aset_disewakan', $total_nilai_sewa);
         </table>
     </div>
 </div>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBrDSUIMFDIleLOFUUXf1wFVum9ae3lJ0&callback=initMap&libraries=places"></script>
+<script async defer src="<?php echo $api_googlemap ?>"></script>
 <script type="text/javascript">
 function setCenter(lng, ltd){
     var lokasi_aset = new google.maps.LatLng(lng, ltd);
