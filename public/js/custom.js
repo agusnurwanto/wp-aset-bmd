@@ -264,7 +264,7 @@ Carousel-slider
                             .delay(6000)
                             .countTo({
 
-                                from: 10,
+                                from: 0,
 
                                 decimals: 0,
 

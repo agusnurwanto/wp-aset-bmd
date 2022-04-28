@@ -221,7 +221,7 @@ foreach($query->posts as $post){
             <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
         </tr>
     ';
-    $total_nilai_sewa += $nilai_sewa;
+    $total_nilai_sewa++;
     $data_aset[] = array(
         'aset' => $aset[0],
         'lng' => $koordinatX,

@@ -390,12 +390,15 @@ class Wp_Aset_Bmd_Admin {
 		    ->add_tab( __( 'Sewa Aset' ), array(
 		        Field::make( 'textarea', 'crb_judul_sewa_aset', __( 'Judul' ) )
         			->set_default_value('<span>Aset</span> <span style="color: #000">Disewakan</span>'),
-		        Field::make( 'text', 'crb_total_potensi_aset', __( 'Total nilai potensi aset yang disewakan' ) )
+		        Field::make( 'text', 'crb_total_potensi_aset', __( 'Jumlah aset yang belum disewakan' ) )
             		->set_attribute('type', 'number')
-        			->set_default_value('5000000000'),
+        			->set_default_value('500'),
 		        Field::make( 'text', 'crb_jumlah_aset_disewakan', __( 'Jumlah aset disewakan' ) )
             		->set_attribute('type', 'number')
-        			->set_default_value('5000000000'),
+        			->set_default_value('500'),
+		        Field::make( 'text', 'crb_jumlah_tanah_sertifikat', __( 'Jumlah aset tanah yang bersetifikat' ) )
+            		->set_attribute('type', 'number')
+        			->set_default_value('20'),
 		        Field::make( 'text', 'crb_jumlah_tanah_belum_sertifikat', __( 'Jumlah aset tanah yang belum bersetifikat' ) )
             		->set_attribute('type', 'number')
         			->set_default_value('20')

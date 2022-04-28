@@ -5,6 +5,11 @@ $tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
 
+$where = 'AND a.Sertifikat_Nomor is null';
+if(!empty($_GET) && !empty($_GET['sertifikat'])){
+    $where = 'AND a.Sertifikat_Nomor is not null';
+}
+
 $sql = '
     select 
         a.*,
@@ -39,8 +44,8 @@ $sql = '
     where a.Kd_Hapus= 0 
         AND a.Kd_Data != 3 
         AND a.Kd_KA= 1
-        AND a.Sertifikat_Nomor is null
-    ';
+    '.$where;
+
 $aset = $this->functions->CurlSimda(array(
     'query' => $sql 
 ));
@@ -105,7 +110,11 @@ foreach($aset as $k => $val){
     );
     $total_nilai++;
 }
-update_option('_crb_jumlah_tanah_belum_sertifikat', $total_nilai);
+if(!empty($_GET) && !empty($_GET['sertifikat'])){
+    update_option('_crb_jumlah_tanah_sertifikat', $total_nilai);
+}else{
+    update_option('_crb_jumlah_tanah_belum_sertifikat', $total_nilai);
+}
 ?>
 <style type="text/css">
     .warning {

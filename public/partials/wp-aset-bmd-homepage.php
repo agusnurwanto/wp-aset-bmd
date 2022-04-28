@@ -572,54 +572,65 @@
 </div>
 
 <section id="sewa_aset" class="counting bg-infinity">
-    <div class="container counting-inner">
-        <!-- Title & Desc Row Begins -->
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <!-- Title -->
-                <div class="title">
-                    <h2><?php echo get_option('_crb_judul_sewa_aset'); ?></h2>
-                </div>
+    <!-- Title & Desc Row Begins -->
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <!-- Title -->
+            <div class="title">
+                <h2><?php echo get_option('_crb_judul_sewa_aset'); ?></h2>
             </div>
         </div>
-        <div class="container counting-inner">
-            <div class="row counting-box title-row" style="margin-bottom: 75px;">
-                <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
-                    data-animation-delay="200">
-                    <i class="fa fa-money fa-3x" style="background-color: #6d46bb"></i>
-                    <h3 class="normal">Potensi Sewa Aset</h3>
-                    <div style="margin-bottom: 20px;">
-                        <div class="factor" style="color: #6d46bb">Rp <?php echo number_format(get_option('_crb_total_potensi_aset'), 2, ',', '.'); ?></div>
-                    </div>
-                    <a target="_blank" href="<?php echo $link_dashboard_potensi_sewa['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
-                </div>
-            </div>
-            <div class="row counting-box title-row">
-                <div class="col-md-6 text-center animated" data-animation="fadeInBottom"
-                    data-animation-delay="200">
-                    <i class="fa fa-money fa-3x" style="background-color: #c97f4b"></i>
-                    <h3 class="normal">Aset Disewakan</h3>
-                    <div style="margin-bottom: 20px;">
-                        <div class="factor" style="color: #c97f4b">Rp <?php echo number_format(get_option('_crb_jumlah_aset_disewakan'), 2, ',', '.'); ?></div>
-                    </div>
-                    <a target="_blank" href="<?php echo $link_dashboard_sewa['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
-                </div>
-                <div class="col-md-6 text-center animated" data-animation="fadeInBottom"
-                    data-animation-delay="200">
-                    <i class="fa fa-money fa-3x" style="background-color: #ad3a61"></i>
-                    <h3 class="normal">Tanah Belum Bersertifikat</h3>
-                    <div style="margin-bottom: 20px;">
-                        <div class="factor" style="color: #ad3a61"><?php echo number_format(get_option('_crb_jumlah_tanah_belum_sertifikat'), 0, ',', '.'); ?> Bidang</div>
-                    </div>
-                    <a target="_blank" href="<?php echo $link_dashboard_tanah['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
-                </div>
-            </div>
-        </div>
-        <!-- Monitoring Row Ends -->
     </div>
-    <!-- Container Ends -->
+    <div class="container counting-inner">
+        <div class="row counting-box title-row" style="margin-bottom: 75px;">
+            <div class="col-md-6 text-center animated" data-animation="fadeInBottom"
+                data-animation-delay="200">
+                <i class="fa fa-money fa-3x" style="background-color: #6d46bb"></i>
+                <h3 class="normal">Potensi Sewa Aset</h3>
+                <div class="fact-number" data-perc="<?php echo get_option('_crb_total_potensi_aset'); ?>">
+                    <div class="factor" style="color: #6d46bb"></div>
+                </div>
+                <div class="factor" style="color: #6d46bb; font-size: 30px; display: block;">Aset</div>
+                <a target="_blank" href="<?php echo $link_dashboard_potensi_sewa['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+            </div>
+            <div class="col-md-6 text-center animated" data-animation="fadeInBottom"
+                data-animation-delay="200">
+                <i class="fa fa-money fa-3x" style="background-color: #c97f4b"></i>
+                <h3 class="normal">Aset Disewakan</h3>
+                <div class="fact-number" data-perc="<?php echo get_option('_crb_jumlah_aset_disewakan'); ?>">
+                    <div class="factor" style="color: #c97f4b"></div>
+                </div>
+                <div class="factor" style="color: #c97f4b; font-size: 30px; display: block;">Aset</div>
+                <a target="_blank" href="<?php echo $link_dashboard_sewa['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+            </div>
+        </div>
+        <div class="row counting-box title-row">
+            <div class="col-md-6 text-center animated" data-animation="fadeInBottom"
+                data-animation-delay="200">
+                <i class="fa fa-money fa-3x" style="background-color: #ad3a61"></i>
+                <h3 class="normal">Tanah Bersertifikat</h3>
+                <div class="fact-number" data-perc="<?php echo get_option('_crb_jumlah_tanah_sertifikat'); ?>">
+                    <div class="factor" style="color: #ad3a61"></div>
+                </div>
+                <div class="factor" style="color: #ad3a61; font-size: 30px; display: block;">Bidang</div>
+                <a target="_blank" href="<?php echo $link_dashboard_tanah['url']; ?>?sertifikat=1" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+            </div>
+            <div class="col-md-6 text-center animated" data-animation="fadeInBottom"
+                data-animation-delay="200">
+                <i class="fa fa-money fa-3x" style="background-color: #34b677"></i>
+                <h3 class="normal">Tanah Belum Bersertifikat</h3>
+                <div class="fact-number" data-perc="<?php echo get_option('_crb_jumlah_tanah_belum_sertifikat'); ?>">
+                    <div class="factor" style="color: #34b677"></div>
+                </div>
+                <div class="factor" style="color: #34b677; font-size: 30px; display: block;">Bidang</div>
+                <a target="_blank" href="<?php echo $link_dashboard_tanah['url']; ?>" class="btn slide-btn bg-inverse scroll">Detail <span class="fa fa-light fa-arrow-right"></span></a>
+            </div>
+        </div>
+    </div>
+    <!-- Monitoring Row Ends -->
 </section>
 <!-- Monitoring Section Ends -->
+
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/jquery.sticky.js"></script>
 <!-- Slider and Features Canvas -->
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/jquery.flexslider-min.js"></script>
