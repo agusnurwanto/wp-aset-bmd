@@ -1,6 +1,5 @@
 <?php
 
-global $post;
 $body = '';
 $total_nilai = 0;
 $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
@@ -119,8 +118,6 @@ foreach($aset as $k => $val){
         $warna_map = get_option('_crb_warna_jalan');
         $ikon_map  = get_option('_crb_icon_jalan');
     }
-    echo $link['id'];
-    echo "post id";
     $koordinatX = get_post_meta($link['id'], 'latitude', true);
     if(empty($koordinatX)){
         $koordinatX = '0';
@@ -198,7 +195,7 @@ foreach($aset as $k => $val){
 </div>
 <script async defer src="<?php echo $api_googlemap ?>"></script>
 <script type="text/javascript">
-    
+
 function setCenter(lng, ltd){
     var lokasi_aset = new google.maps.LatLng(lng, ltd);
     map.setCenter(lokasi_aset);
