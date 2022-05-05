@@ -4,6 +4,8 @@ $nama_pemda = get_option('_crb_bmd_nama_pemda');
 $tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
+$api_googlemap = get_option( '_crb_google_api' );
+$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
 
 $args = array(
    'meta_key' => 'meta_disewakan',
@@ -125,6 +127,21 @@ foreach($query->posts as $post){
     $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
     $nama_jenis_aset = $data_jenis['nama'];
     $table_simda = $data_jenis['table_simda'];
+
+    if ($params['jenis_aset'] == 'tanah') {
+        $warna_map = get_option('_crb_warna_tanah');
+        $ikon_map  = get_option('_crb_icon_tanah');
+    }
+
+    if ($params['jenis_aset'] == 'bangunan') {
+        $warna_map = get_option('_crb_warna_gedung');
+        $ikon_map  = get_option('_crb_icon_gedung');
+    }
+
+    if ($params['jenis_aset'] == 'jalan') {
+        $warna_map = get_option('_crb_warna_jalan');
+        $ikon_map  = get_option('_crb_icon_jalan');
+    }
     $koordinatX = get_post_meta($post->ID, 'latitude', true);
     if(empty($koordinatX)){
         $koordinatX = '0';
@@ -239,7 +256,9 @@ foreach($query->posts as $post){
         'waktu_sewa_akhir' => $waktu_sewa_akhir,
         'nama_skpd' => $params['nama_skpd'].' '.$alamat,
         'kd_barang' => $params['kd_barang'],
-        'kd_lokasi' => $params['kd_lokasi']
+        'kd_lokasi' => $params['kd_lokasi'],
+        'warna_map' => $warna_map,
+        'ikon_map'  => $ikon_map,
     );
 }
 update_option('_crb_jumlah_aset_disewakan', $total_nilai_sewa);
@@ -328,6 +347,8 @@ var tgl_sertipikat;
 var no_sertipikat;
 var penggunaan;
 var keterangan;
+var warna_map;
+var ikon_map;
 
 function initMap() {
     geocoder = new google.maps.Geocoder();
@@ -346,6 +367,7 @@ function initMap() {
             var marker1 = new google.maps.Marker({
                 position: lokasi_aset,
                 map: map,
+                icon: ikon_map,
                 title: 'Lokasi Aset'
             });
             
@@ -377,10 +399,10 @@ function initMap() {
             // Membuat Shape
             var bentuk_bidang1 = new google.maps.Polygon({
                 paths: Coords1,
-                strokeColor: '#00cc00',
+                strokeColor: warna_map,
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillColor: '#00cc00',
+                fillColor: warna_map,
                 fillOpacity: 0.45,
                 html: contentString
             });
