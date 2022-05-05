@@ -121,6 +121,14 @@ class Wp_Aset_Bmd_Public {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-homepage.php';
 	}
 
+	function dashboard_galeri(){
+		// untuk disable render shortcode di halaman edit page/post
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-galeri.php';
+	}
+
 	function dashboard_aset_pemda(){
 		// untuk disable render shortcode di halaman edit page/post
 		if(!empty($_GET) && !empty($_GET['post'])){
@@ -134,6 +142,8 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
+		$api_googlemap = get_option( '_crb_google_api' );
+		$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-aset-tanah.php';
 	}
 
@@ -145,6 +155,8 @@ class Wp_Aset_Bmd_Public {
 		$params = shortcode_atts( array(
 			'potensi' => '0'
 		), $atts );
+		$api_googlemap = get_option( '_crb_google_api' );
+		$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
 		if($params['potensi'] == 1){
 			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-potensi-aset-disewakan.php';
 		}else{
