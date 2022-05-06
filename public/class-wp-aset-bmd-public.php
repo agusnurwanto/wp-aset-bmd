@@ -386,11 +386,18 @@ class Wp_Aset_Bmd_Public {
 			$checked_private = 'checked';
 			$checked_publish = '';
 		}
+		$meta_tindak_lanjut = get_post_meta($post->ID, 'meta_aset_perlu_tindak_lanjut', true);
+		$checked_tindak_lanjut = '';
+		if($meta_tindak_lanjut == '1'){
+			$checked_tindak_lanjut = 'checked';
+		}
+
 		$nilai_sewa = get_post_meta($post->ID, 'meta_nilai_sewa', true);
 		$nama_sewa = get_post_meta($post->ID, 'meta_nama_sewa', true);
 		$alamat_sewa = get_post_meta($post->ID, 'meta_alamat_sewa', true);
 		$waktu_sewa_awal = get_post_meta($post->ID, 'meta_waktu_sewa_awal', true);
 		$waktu_sewa_akhir = get_post_meta($post->ID, 'meta_waktu_sewa_akhir', true);
+		$aset_perlu_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
 		$allow_edit_post = $this->cek_edit_post(array(
 		    'Kd_Prov' => $Kd_Prov,
 		    'Kd_Kab_Kota' => $Kd_Kab_Kota,
@@ -837,6 +844,8 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_alamat_sewa', $_POST['alamat_sewa']);
 						update_post_meta($post->ID, 'meta_waktu_sewa_awal', $_POST['waktu_sewa_awal']);
 						update_post_meta($post->ID, 'meta_waktu_sewa_akhir', $_POST['waktu_sewa_akhir']);
+						update_post_meta($post->ID, 'meta_aset_perlu_tindak_lanjut', $_POST['aset_perlu_tindak_lanjut']);
+						update_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', $_POST['ket_aset_perlu_tindak_lanjut']);
 						$post_status = 'private';
 						if(
 							!empty($_POST['status_informasi'])
