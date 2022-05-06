@@ -138,6 +138,13 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label">Aset Perlu Tindak Lanjut</label>
+                <div class="col-md-10">
+                    <label><input type="checkbox" <?php echo $disabled.' '.$checked_tindak_lanjut; ?> name="aset_perlu_tindak_lanjut" value=""> Ya / Tidak</label>
+                    <input type="text" <?php echo $disabled; ?> class="form-control" name="ket_aset_perlu_tindak_lanjut" value="<?php echo $aset_perlu_tindak_lanjut; ?>">
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Status informasi aset</label>
                 <div class="col-md-10">
                     <label><input type="radio" <?php echo $disabled.' '.$checked_private; ?> name="status_informasi" value="1"> Privasi / rahasia</label>
