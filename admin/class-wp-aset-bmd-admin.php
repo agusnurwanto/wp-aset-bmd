@@ -169,13 +169,40 @@ class Wp_Aset_Bmd_Admin {
         }
 
 		$link_dashboard_homepage = $this->functions->generatePage(array(
-			'nama_page' => 'Dasboard Aset Barang Milik Daerah',
+			'nama_page' => 'Dashboard Aset Barang Milik Daerah',
 			'content' => '[dashboard_aset]',
         	'show_header' => 1,
         	'no_key' => 1,
 			'post_status' => 'publish'
 		));
-
+	    $link_dashboard_pemda = $this->functions->generatePage(array(
+	        'nama_page' => 'Dashboard Aset Pemerintah Daerah',
+	        'content' => '[dashboard_aset_pemda]',
+	        'show_header' => 1,
+	        'no_key' => 1,
+	        'post_status' => 'publish'
+	    ));
+	    $link_aset_per_unit = $this->functions->generatePage(array(
+	        'nama_page' => 'Aset Per Unit SKPD',
+	        'content' => '[aset_per_unit]',
+	        'show_header' => 1,
+	        'no_key' => 1,
+	        'post_status' => 'publish'
+	    ));
+	    $link_peta_aset = $this->functions->generatePage(array(
+	        'nama_page' => 'Peta Aset Pemerintah Daerah',
+	        'content' => '[peta_aset]',
+	        'show_header' => 1,
+	        'no_key' => 1,
+	        'post_status' => 'publish'
+	    ));
+	    $link_dashboard_potensi_sewa = $this->functions->generatePage(array(
+	        'nama_page' => 'Data Potensi Aset Yang Disewakan',
+	        'content' => '[dashboard_aset_disewakan potensi="1"]',
+	        'show_header' => 1,
+	        'no_key' => 1,
+	        'post_status' => 'publish'
+	    ));
 		$link_dashboard_sewa = $this->functions->generatePage(array(
 			'nama_page' => 'Data Aset Yang Disewakan',
 			'content' => '[dashboard_aset_disewakan]',
@@ -183,10 +210,44 @@ class Wp_Aset_Bmd_Admin {
         	'no_key' => 1,
 			'post_status' => 'publish'
 		));
-
+		$klasifikasi_aset = $this->functions->generatePage(array(
+			'nama_page' => 'Klasifikasi Aset',
+			'content' => '[klasifikasi_aset]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'publish'
+		));
+	    $link_dashboard_tanah = $this->functions->generatePage(array(
+	        'nama_page' => 'Data Aset Tanah',
+	        'content' => '[dashboard_aset_tanah]',
+	        'show_header' => 1,
+	        'no_key' => 1,
+	        'post_status' => 'publish'
+	    ));
+	    $aset_perlu_tindak_lanjut = $this->functions->generatePage(array(
+	        'nama_page' => 'Aset Perlu Tindak Lanjut',
+	        'content' => '[aset_perlu_tindak_lanjut]',
+	        'show_header' => 1,
+	        'no_key' => 1,
+	        'post_status' => 'publish'
+	    ));
 		$link_dashboard_galeri = $this->functions->generatePage(array(
 			'nama_page' => 'Galeri Aset',
 			'content' => '[dashboard_galeri]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'publish'
+		));
+		$petunjuk_penggunaan = $this->functions->generatePage(array(
+			'nama_page' => 'Petunjuk Penggunaan',
+			'content' => '[petunjuk_penggunaan]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'publish'
+		));
+		$dokumentasi_sistem = $this->functions->generatePage(array(
+			'nama_page' => 'Dokumentasi Sistem',
+			'content' => '[dokumentasi_sistem]',
         	'show_header' => 1,
         	'no_key' => 1,
 			'post_status' => 'publish'
@@ -209,11 +270,26 @@ class Wp_Aset_Bmd_Admin {
 			->set_page_menu_position( 4 )
 	        ->add_fields( array(
 	        	Field::make( 'html', 'crb_simda_bmd_dasboard' )
-	            	->set_html( '<b>Halaman Beranda: <a target="_blank" href="'.$link_dashboard_homepage['url'].'">'.$link_dashboard_homepage['title'].'</a></b>' ),
-	        	Field::make( 'html', 'crb_simda_bmd_dasboard_sewa' )
-	            	->set_html( '<b>Halaman Data Aset Yang Disewakan: <a target="_blank" href="'.$link_dashboard_sewa['url'].'">'.$link_dashboard_sewa['title'].'</a></b>' ),
+	            	->set_html( '
+	            	<b>HALAMAN TERKAIT</b>
+	            	<ul>
+	            		<li><b>Beranda: <a target="_blank" href="'.$link_dashboard_homepage['url'].'">'.$link_dashboard_homepage['title'].'</a></b></li>
+	            		<li><b>Aset Pemerintah Daerah: <a target="_blank" href="'.$link_dashboard_pemda['url'].'">'.$link_dashboard_pemda['title'].'</a></b></li>
+	            		<li><b>Aset Per Unit SKPD: <a target="_blank" href="'.$link_aset_per_unit['url'].'">'.$link_aset_per_unit['title'].'</a></b></li>
+	            		<li><b>Peta Aset: <a target="_blank" href="'.$link_peta_aset['url'].'">'.$link_peta_aset['title'].'</a></b></li>
+	            		<li><b>Potensi Aset: <a target="_blank" href="'.$link_dashboard_potensi_sewa['url'].'">'.$link_dashboard_potensi_sewa['title'].'</a></b></li>
+	            		<li><b>Aset Yang Disewakan: <a target="_blank" href="'.$link_dashboard_sewa['url'].'">'.$link_dashboard_sewa['title'].'</a></b></li>
+	            		<li><b>Klasifikasi Aset: <a target="_blank" href="'.$klasifikasi_aset['url'].'">'.$klasifikasi_aset['title'].'</a></b></li>
+	            		<li><b>Aset Tanah Bersertifikat: <a target="_blank" href="'.$link_dashboard_tanah['url'].'?sertifikat=1">'.$link_dashboard_tanah['title'].'</a></b></li>
+	            		<li><b>Aset Tanah Tidak Bersertifikat: <a target="_blank" href="'.$link_dashboard_tanah['url'].'">'.$link_dashboard_tanah['title'].'</a></b></li>
+	            		<li><b>Aset Perlu Tindak Lanjut: <a target="_blank" href="'.$aset_perlu_tindak_lanjut['url'].'">'.$aset_perlu_tindak_lanjut['title'].'</a></b></li>
+	            		<li><b>Galeri: <a target="_blank" href="'.$link_dashboard_galeri['url'].'">'.$link_dashboard_galeri['title'].'</a></b></li>
+	            		<li><b>Petunjuk Penggunaan: <a target="_blank" href="'.$petunjuk_penggunaan['url'].'">'.$petunjuk_penggunaan['title'].'</a></b></li>
+	            		<li><b>Dokumentasi Sistem: <a target="_blank" href="'.$dokumentasi_sistem['url'].'">'.$dokumentasi_sistem['title'].'</a></b></li>
+	            	</ul>
+	            	' ),
 	        	Field::make( 'html', 'crb_simda_bmd_referensi_html' )
-	            	->set_html( 'Referensi: <a target="_blank" href="https://github.com/agusnurwanto/wp-aset-bmd">https://github.com/agusnurwanto/wp-aset-bmd</a>' ),
+	            	->set_html( '<b>Referensi: <a target="_blank" href="https://github.com/agusnurwanto/wp-aset-bmd">https://github.com/agusnurwanto/wp-aset-bmd</a></b>' ),
 	        	Field::make( 'html', 'crb_simda_bmd_koneksi_html' )
 	            	->set_html( '<b>Configurasi Koneksi Database SIMDA BMD ( Status: '.$status['html'].' )</b>' ),
 	            Field::make( 'text', 'crb_url_api_simda_bmd', 'URL API SIMDA' )
@@ -267,7 +343,13 @@ class Wp_Aset_Bmd_Admin {
 		        Field::make( 'text', 'crb_lama_loading', __( 'Lama Loading' ) )
         			->set_default_value('10000')
             		->set_attribute('type', 'number')
-        			->set_help_text('Lama waktu untuk menghilangkan gambar atau video intro. Satuan dalam mili detik.')
+        			->set_help_text('Lama waktu untuk menghilangkan gambar atau video intro. Satuan dalam mili detik.'),
+		    	Field::make( 'complex', 'crb_background_beranda', 'Background Beranda' )
+		    		->add_fields( 'beranda', array(
+				        Field::make( 'image', 'gambar', 'Gambar' )
+		        			->set_value_type('url')
+		        			->set_default_value(BMD_PLUGIN_URL.'public/images/bg_video.jpg')
+		        		) ),
 		    ) )
 			->add_tab( __( 'Icon & Menu' ), array(
 		        Field::make( 'image', 'crb_menu_logo_1', __( 'Gambar Menu 1' ) )
@@ -275,73 +357,85 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/money.png'),
 		        Field::make( 'text', 'crb_menu_text_1', __( 'Text Menu 1' ) )
         			->set_default_value('Total Aset'),
-		        Field::make( 'text', 'crb_menu_url_1', __( 'URL Menu 1' ) ),
+		        Field::make( 'text', 'crb_menu_url_1', __( 'URL Menu 1' ) )
+        			->set_default_value($link_dashboard_pemda['url']),
 		        Field::make( 'image', 'crb_menu_logo_2', __( 'Gambar Menu 2' ) )
 		        	->set_value_type('url')
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/home.png'),
 		        Field::make( 'text', 'crb_menu_text_2', __( 'Text Menu 2' ) )
         			->set_default_value('Aset Per Unit SKPD'),
-		        Field::make( 'text', 'crb_menu_url_2', __( 'URL Menu 2' ) ),
+		        Field::make( 'text', 'crb_menu_url_2', __( 'URL Menu 2' ) )
+        			->set_default_value($link_aset_per_unit['url']),
 		        Field::make( 'image', 'crb_menu_logo_3', __( 'Gambar Menu 3' ) )
 		        	->set_value_type('url')
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/demografi.png'),
 		        Field::make( 'text', 'crb_menu_text_3', __( 'Text Menu 3' ) )
         			->set_default_value('Peta'),
-		        Field::make( 'text', 'crb_menu_url_3', __( 'URL Menu 3' ) ),
+		        Field::make( 'text', 'crb_menu_url_3', __( 'URL Menu 3' ) )
+        			->set_default_value($link_peta_aset['url']),
 		        Field::make( 'image', 'crb_menu_logo_4', __( 'Gambar Menu 4' ) )
 		        	->set_value_type('url')
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/binwas.png'),
 		        Field::make( 'text', 'crb_menu_text_4', __( 'Text Menu 4' ) )
         			->set_default_value('Aset Disewakan'),
-		        Field::make( 'text', 'crb_menu_url_4', __( 'URL Menu 4' ) ),
+		        Field::make( 'text', 'crb_menu_url_4', __( 'URL Menu 4' ) )
+        			->set_default_value($link_dashboard_sewa['url']),
 		        Field::make( 'image', 'crb_menu_logo_5', __( 'Gambar Menu 5' ) )
 		        	->set_value_type('url')
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/monitor.png'),
 		        Field::make( 'text', 'crb_menu_text_5', __( 'Text Menu 5' ) )
         			->set_default_value('Potensi Aset'),
-		        Field::make( 'text', 'crb_menu_url_5', __( 'URL Menu 5' ) ),
+		        Field::make( 'text', 'crb_menu_url_5', __( 'URL Menu 5' ) )
+        			->set_default_value($link_dashboard_potensi_sewa['url']),
 		        Field::make( 'image', 'crb_menu_logo_6', __( 'Gambar Menu 6' ) )
 		        	->set_value_type('url')
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/line.png'),
 		        Field::make( 'text', 'crb_menu_text_6', __( 'Text Menu 6' ) )
         			->set_default_value('Klasifikasi Aset'),
-		        Field::make( 'text', 'crb_menu_url_6', __( 'URL Menu 6' ) ),
+		        Field::make( 'text', 'crb_menu_url_6', __( 'URL Menu 6' ) )
+        			->set_default_value($klasifikasi_aset['url']),
 		        Field::make( 'image', 'crb_menu_logo_7', __( 'Gambar Menu 7' ) )
 		        	->set_value_type('url')
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/nasional.png'),
 		        Field::make( 'text', 'crb_menu_text_7', __( 'Text Menu 7' ) )
         			->set_default_value('Tanah Bersertifikat'),
-		        Field::make( 'text', 'crb_menu_url_7', __( 'URL Menu 7' ) ),
+		        Field::make( 'text', 'crb_menu_url_7', __( 'URL Menu 7' ) )
+        			->set_default_value($link_dashboard_tanah['url'].'?sertifikat=1'),
 		        Field::make( 'image', 'crb_menu_logo_8', __( 'Gambar Menu 8' ) )
 		        	->set_value_type('url')
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/geografi.png'),
 		        Field::make( 'text', 'crb_menu_text_8', __( 'Text Menu 8' ) )
         			->set_default_value('Tanah Belum Bersertifikat'),
-		        Field::make( 'text', 'crb_menu_url_8', __( 'URL Menu 8' ) ),
+		        Field::make( 'text', 'crb_menu_url_8', __( 'URL Menu 8' ) )
+        			->set_default_value($link_dashboard_tanah['url']),
 		        Field::make( 'image', 'crb_menu_logo_9', __( 'Gambar Menu 9' ) )
 		        	->set_value_type('url')
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/lppd.png'),
 		        Field::make( 'text', 'crb_menu_text_9', __( 'Text Menu 9' ) )
         			->set_default_value('Aset Perlu Tindak Lanjut'),
-		        Field::make( 'text', 'crb_menu_url_9', __( 'URL Menu 9' ) ),
+		        Field::make( 'text', 'crb_menu_url_9', __( 'URL Menu 9' ) )
+        			->set_default_value($aset_perlu_tindak_lanjut['url']),
 		        Field::make( 'image', 'crb_menu_logo_10', __( 'Gambar Menu 10' ) )
 		        	->set_value_type('url')
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/galeri.png'),
 		        Field::make( 'text', 'crb_menu_text_10', __( 'Text Menu 10' ) )
         			->set_default_value('Galeri'),
-		        Field::make( 'text', 'crb_menu_url_10', __( 'URL Menu 10' ) ),
+		        Field::make( 'text', 'crb_menu_url_10', __( 'URL Menu 10' ) )
+        			->set_default_value($link_dashboard_galeri['url']),
 		        Field::make( 'image', 'crb_menu_logo_11', __( 'Gambar Menu 11' ) )
 		        	->set_value_type('url')
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/pedoman.png'),
 		        Field::make( 'text', 'crb_menu_text_11', __( 'Text Menu 11' ) )
         			->set_default_value('Petunjuk Penggunaan'),
-		        Field::make( 'text', 'crb_menu_url_11', __( 'URL Menu 11' ) ),
+		        Field::make( 'text', 'crb_menu_url_11', __( 'URL Menu 11' ) )
+        			->set_default_value($petunjuk_penggunaan['url']),
 		        Field::make( 'image', 'crb_menu_logo_12', __( 'Gambar Menu 12' ) )
 		        	->set_value_type('url')
         			->set_default_value(BMD_PLUGIN_URL . 'public/images/budget.png'),
 		        Field::make( 'text', 'crb_menu_text_12', __( 'Text Menu 12' ) )
         			->set_default_value('Dokumentasi Sistem'),
 		        Field::make( 'text', 'crb_menu_url_12', __( 'URL Menu 12' ) )
+        			->set_default_value($dokumentasi_sistem['url'])
 		    ) );
 
 		Container::make( 'theme_options', __( 'Tampilan Galeri' ) )

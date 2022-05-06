@@ -1,41 +1,3 @@
-<?php
-    $link_dashboard_galeri = $this->functions->generatePage(array(
-        'nama_page' => 'Galeri Aset',
-        'content' => '[dashboard_galeri]',
-        'show_header' => 1,
-        'no_key' => 1,
-        'post_status' => 'publish'
-    ));
-    $link_dashboard_pemda = $this->functions->generatePage(array(
-        'nama_page' => 'Dasboard Aset Pemerintah Daerah',
-        'content' => '[dashboard_aset_pemda]',
-        'show_header' => 1,
-        'no_key' => 1,
-        'update' => 0,
-        'post_status' => 'publish'
-    ));
-    $link_dashboard_sewa = $this->functions->generatePage(array(
-        'nama_page' => 'Data Aset Yang Disewakan',
-        'content' => '[dashboard_aset_disewakan]',
-        'show_header' => 1,
-        'no_key' => 1,
-        'post_status' => 'publish'
-    ));
-    $link_dashboard_potensi_sewa = $this->functions->generatePage(array(
-        'nama_page' => 'Data Potensi Aset Yang Disewakan',
-        'content' => '[dashboard_aset_disewakan potensi="1"]',
-        'show_header' => 1,
-        'no_key' => 1,
-        'post_status' => 'publish'
-    ));
-    $link_dashboard_tanah = $this->functions->generatePage(array(
-        'nama_page' => 'Data Aset Tanah',
-        'content' => '[dashboard_aset_tanah]',
-        'show_header' => 1,
-        'no_key' => 1,
-        'post_status' => 'publish'
-    ));
-?>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/loadingoverlay.min.js"></script>
 <script type="text/javascript">
 <?php
@@ -253,9 +215,6 @@
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/effect.js"></script>
 <!-- Twitter -->
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/carousel.js"></script>
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/scripts.js"></script>
-<!-- <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/tweetie.min.js"></script> -->
-<!-- Custom -->
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/custom.js"></script>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/delaunator.min.js"></script>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/rainbow-lines.js"></script>
@@ -263,20 +222,14 @@
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/color-panel.js"></script>
 <script type="text/javascript">
 <?php
-    $background_header_db = $this->functions->get_option_complex('_crb_background', 'header_utama');
+    $background_header_db = $this->functions->get_option_complex('_crb_background_beranda', 'beranda');
     $background_header = array();
     foreach($background_header_db as $background){
         $background_header[] = array('src' => $background['gambar']);
     }
     echo 'var background_header = '.json_encode($background_header).';';
 ?>
-    var windowW = window.innerWidth;
-    var windowH = window.innerHeight;
-    // console.log(windowW+'x'+windowH);
-    $('#beranda header, .container.intro')
-    .css( 'min-height', windowH + 'px' );
-
-    $('#header').vegas({
+    $('body').vegas({
         slides: background_header
     });
 </script>
