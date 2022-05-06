@@ -19,8 +19,8 @@
     progressLoading();
     setTimeout(function(){
         $(document).ready(function() { $.LoadingOverlay('hide'); });
+        jQuery('body').addClass('bg-infinity');
     }, <?php echo get_option('_crb_lama_loading'); ?>);
-    jQuery('body').addClass('bg-infinity');
 </script>
 <!-- CSS Begins-->
 <link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
@@ -99,6 +99,16 @@
     }
     .intro-text h1 {
         font-size: 40px;
+        color: #fff;
+    }
+    .pull-up {
+        transition: all 0.25s ease; 
+    }
+    .pull-up:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0px 14px 24px rgb(62 57 107 / 20%);
+        z-index: 999;
+        box-shadow: inset 0 0 4px #2e3642;
     }
 </style>
 <section id="sewa_aset">
@@ -119,78 +129,126 @@
         </div>
         <div class="row counting-box title-row text-center">
             <div class="col-md-2 animated" data-animation="fadeInLeft" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_1'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_1'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_1'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_1'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_url_1'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_1'); ?></h3>
+                </a>
             </div>
             <div class="col-md-2 animated" data-animation="fadeInLeft" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_2'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_2'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_2'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_2'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_url_2'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_2'); ?></h3>
+                </a>
             </div>
             <div class="col-md-2 animated" data-animation="fadeInTop" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_3'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_3'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_3'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_3'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_url_3'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_3'); ?></h3>
+                </a>
             </div>
             <div class="col-md-2 animated" data-animation="fadeInTop" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_4'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_4'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_4'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_4'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_url_4'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_4'); ?></h3>
+                </a>
             </div>
             <div class="col-md-2 animated" data-animation="fadeInRight" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_5'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_5'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_5'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_5'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_url_5'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_5'); ?></h3>
+                </a>
             </div>
             <div class="col-md-2 animated" data-animation="fadeInRight" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_6'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_6'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_6'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_6'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_url_6'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_6'); ?></h3>
+                </a>
             </div>
         </div>
         <div class="row counting-box text-center title-row">
             <div class="col-md-2 animated" data-animation="fadeInLeft" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_7'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_7'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_7'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_7'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_url_7'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_7'); ?></h3>
+                </a>
             </div>
             <div class="col-md-2 animated" data-animation="fadeInLeft" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_8'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_8'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_8'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_8'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_url_8'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_8'); ?></h3>
+                </a>
             </div>
             <div class="col-md-2 animated" data-animation="fadeInBottom" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_9'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_9'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_9'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_9'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_url_9'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_9'); ?></h3>
+                </a>
             </div>
             <div class="col-md-2 animated" data-animation="fadeInBottom" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_10'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_lurl10'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_10'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_10'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_lurl10'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_10'); ?></h3>
+                </a>
             </div>
             <div class="col-md-2 animated" data-animation="fadeInRight" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_11'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_lurl11'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_11'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_11'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_lurl11'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_11'); ?></h3>
+                </a>
             </div>
             <div class="col-md-2 animated" data-animation="fadeInRight" data-animation-delay="1000">
-                <div class="setbulet bg-info">
-                    <img src="<?php echo get_option('_crb_menu_logo_12'); ?>">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_lurl12'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_12'); ?>">
+                    </a>
                 </div>
-                <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_12'); ?></h3>
+                <a href="<?php echo get_option('_crb_menu_lurl12'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_12'); ?></h3>
+                </a>
             </div>
         </div>
     </div>
