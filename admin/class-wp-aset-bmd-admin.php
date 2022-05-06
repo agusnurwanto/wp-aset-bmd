@@ -338,8 +338,8 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value('https://via.placeholder.com/135x25'),
 		        Field::make( 'textarea', 'crb_judul_header', __( 'Judul' ) )
 		        	->set_default_value('<span class="rotate text-color">Si</span>stem Informasi <span class="rotate text-color">Ma</span>najemen Da<span class="rotate text-color">ta</span> Aset'),
-		        Field::make( 'text', 'crb_menu_logo_loading', __( 'Video Loading' ) )
-        			->set_default_value('https://www.youtube.com/embed/ZbXSzejdyEE?controls=0&autoplay=1&mute=1'),
+		        Field::make( 'text', 'crb_menu_video_loading', __( 'Video Loading' ) )
+        			->set_default_value(BMD_PLUGIN_URL.'public/images/video-loading.mp4'),
 		        Field::make( 'text', 'crb_lama_loading', __( 'Lama Loading' ) )
         			->set_default_value('10000')
             		->set_attribute('type', 'number')

@@ -55,9 +55,10 @@
     }
     function progressLoading( $onlyload = false ) {
         $.LoadingOverlay('show', { 
-            image : '<?php echo get_option('_crb_menu_logo_loading'); ?>', 
+            image : '', 
+            custom : '<video style="position: absolute; width: 100%; top: 0" autoplay muted><source src="'.get_option('_crb_menu_video_loading').'" type="video/mp4">Your browser does not support the video tag.</video>', 
             imageAnimation : false,
-            background : "rgba(255, 255, 255, 1)" 
+            background : "rgba(0, 0, 0, 1)" 
         });
         if ( $onlyload === false ) {
             $(document).ready(function() { $.LoadingOverlay('hide'); });

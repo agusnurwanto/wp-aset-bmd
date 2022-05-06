@@ -1,7 +1,7 @@
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/loadingoverlay.min.js"></script>
 <script type="text/javascript">
 <?php
-    $src = 'src="'.get_option('_crb_menu_logo_loading').'"';
+    $src = 'src="'.get_option('_crb_menu_video_loading').'"';
 ?>
     var $ = jQuery;
     function siteUrl(){ 
@@ -10,10 +10,9 @@
     function progressLoading() {
         $.LoadingOverlay('show', { 
             image : '', 
-            // image : '<?php echo get_option('_crb_menu_logo_loading'); ?>', 
-            custom : '<iframe style="position: absolute;" id="video-demo" <?php echo $src; ?> width="640" height="360" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>', 
+            custom : '<video style="position: absolute; width: 100%; top: 0" autoplay muted><source <?php echo $src; ?> type="video/mp4">Your browser does not support the video tag.</video>', 
             imageAnimation : false,
-            background : "rgba(255, 255, 255, 1)" 
+            background : "rgba(0, 0, 0, 1)" 
         });
     }
     progressLoading();
@@ -123,12 +122,12 @@
         <div class="row text-center">
             <div class="col-md-12">
                 <div class="main animated" data-animation="fadeInTop" data-animation-delay="1000">
-                    <h1 style="padding-top: 0 !important;padding-bottom: 50px; margin-top: 20px !important;"><?php echo get_option('_crb_judul_header'); ?></h1>
+                    <h1 class="text-shadow" style="padding-top: 0 !important;padding-bottom: 50px; margin-top: 20px !important;"><?php echo get_option('_crb_judul_header'); ?></h1>
                 </div>
             </div>
         </div>
         <div class="row counting-box title-row text-center">
-            <div class="col-md-2 animated" data-animation="fadeInLeft" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInLeft" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_1'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_1'); ?>">
@@ -138,7 +137,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_1'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 animated" data-animation="fadeInLeft" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInLeft" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_2'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_2'); ?>">
@@ -148,7 +147,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_2'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 animated" data-animation="fadeInTop" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInTop" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_3'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_3'); ?>">
@@ -158,7 +157,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_3'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 animated" data-animation="fadeInTop" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInTop" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_4'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_4'); ?>">
@@ -168,7 +167,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_4'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 animated" data-animation="fadeInRight" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInRight" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_5'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_5'); ?>">
@@ -178,7 +177,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_5'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 animated" data-animation="fadeInRight" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInRight" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_6'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_6'); ?>">
@@ -190,7 +189,7 @@
             </div>
         </div>
         <div class="row counting-box text-center title-row">
-            <div class="col-md-2 animated" data-animation="fadeInLeft" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInLeft" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_7'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_7'); ?>">
@@ -200,7 +199,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_7'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 animated" data-animation="fadeInLeft" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInLeft" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_8'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_8'); ?>">
@@ -210,7 +209,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_8'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 animated" data-animation="fadeInBottom" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInBottom" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_9'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_9'); ?>">
@@ -220,7 +219,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_9'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 animated" data-animation="fadeInBottom" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInBottom" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_lurl10'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_10'); ?>">
@@ -230,7 +229,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_10'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 animated" data-animation="fadeInRight" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInRight" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_lurl11'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_11'); ?>">
@@ -240,7 +239,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_11'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 animated" data-animation="fadeInRight" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInRight" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_lurl12'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_12'); ?>">
