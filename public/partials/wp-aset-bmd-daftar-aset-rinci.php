@@ -61,6 +61,7 @@ $aset = $this->functions->CurlSimda(array(
     'query' => $sql 
 ));
 $no=0;
+$show_map = false;
 foreach($aset as $k => $val){
     $no++;
     $total_nilai += $val->Harga;
@@ -104,19 +105,25 @@ foreach($aset as $k => $val){
         }
     }
 
+    $warna_map = '';
+    $ikon_map = '';
+
     if ($params['jenis_aset'] == 'tanah') {
         $warna_map = get_option('_crb_warna_tanah');
         $ikon_map  = get_option('_crb_icon_tanah');
+        $show_map = true;
     }
 
     if ($params['jenis_aset'] == 'bangunan') {
         $warna_map = get_option('_crb_warna_gedung');
         $ikon_map  = get_option('_crb_icon_gedung');
+        $show_map = true;
     }
 
     if ($params['jenis_aset'] == 'jalan') {
         $warna_map = get_option('_crb_warna_jalan');
         $ikon_map  = get_option('_crb_icon_jalan');
+        $show_map = true;
     }
     $koordinatX = get_post_meta($link['id'], 'latitude', true);
     if(empty($koordinatX)){
@@ -130,6 +137,11 @@ foreach($aset as $k => $val){
     if(empty($polygon)){
         $polygon = '[]';
     }
+
+    $map_center = '';
+    if(!empty($warna_map)){
+        $map_center = ' <a style="margin-bottom: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a>';
+    }
     $body_skpd .= '
         <tr>
             <td class="text-center">'.$no.'</td>
@@ -138,7 +150,7 @@ foreach($aset as $k => $val){
             <td>'.$val->Nm_Aset5.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
             <td class="text-right" data-sort="'.$val->Harga.'">'.number_format($val->Harga,2,",",".").'</td>
-            <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a style="margin-top: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
+            <td class="text-center"><a style="margin-bottom: 5px;" target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a>'.$map_center.'</td>
         </tr>
     ';
 
@@ -149,9 +161,9 @@ foreach($aset as $k => $val){
         'polygon' => $polygon,
         'nilai' => number_format($val->Harga,2,",","."),
         'nama_aset' => $val->Nm_Aset5,
-        'keterangan' => $keterangan,
-        'nama_skpd' => $params['nama_skpd'].' '.$keterangan,
-        'kd_barang' => $params['kd_barang'],
+        'keterangan' => implode(' | ', $keterangan),
+        'nama_skpd' => $params['nama_skpd'],
+        'kd_barang' => $kd_barang,
         'kd_lokasi' => $params['kd_lokasi'],
         'warna_map' => $warna_map,
         'ikon_map'  => $ikon_map,
@@ -169,7 +181,11 @@ foreach($aset as $k => $val){
 <div class="cetak">
     <div style="padding: 10px;">
         <h2 class="text-center">Data Barang Milik Daerah<br><a href="<?php echo $link_detail_unit; ?>" target="_blank"><?php echo $kd_lokasi_unit; ?></a><?php echo $kd_lokasi_upb.'<br>'; ?><?php echo $params['nama_skpd']; ?><br><?php echo $nama_jenis_aset; ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
-        <div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div>
+    <?php
+        if($show_map){
+            echo '<div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div>';
+        }
+    ?>
         <table class="table table-bordered" id="table-aset-skpd">
             <thead id="data_header">
                 <tr>

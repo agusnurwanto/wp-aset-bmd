@@ -401,4 +401,14 @@ class Wp_Aset_Bmd_Simda
         }
         return $res;
     }
+
+	function get_option_multiselect($key){
+		global $wpdb;
+        $ret = $wpdb->get_results('select option_name, option_value from '.$wpdb->prefix.'options where option_name like \''.$key.'|||%\'', ARRAY_A);
+        $res = array();
+        foreach($ret as $v){
+            $res[$v['option_value']] = $v['option_value'];
+        }
+        return $res;
+    }
 }

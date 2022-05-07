@@ -266,6 +266,41 @@ class Wp_Aset_Bmd_Admin {
 		$kepala_umum_nip = $status['data']['kepala_umum_nip'];
 		$kepala_umum_jabatan = $status['data']['kepala_umum_jabatan'];
 
+		$skpd = $this->functions->CurlSimda(array(
+		    'query' => '
+		        select 
+		            u.Kd_Prov, 
+		            u.Kd_Kab_Kota, 
+		            u.Kd_Bidang, 
+		            u.Kd_Unit, 
+		            u.Kd_Sub, 
+		            b.Nm_Bidang, 
+		            n.Nm_Unit, 
+		            s.Nm_Sub_Unit
+		        from ref_upb u
+		        LEFT JOIN ref_bidang b ON b.Kd_Bidang=u.Kd_Bidang
+		        LEFT JOIN Ref_Unit n ON n.Kd_Prov=u.Kd_Prov
+		            AND n.Kd_Kab_Kota=u.Kd_Kab_Kota
+		            AND n.Kd_Bidang=u.Kd_Bidang
+		            AND n.Kd_Unit=u.Kd_Unit
+                INNER JOIN ref_sub_unit s ON u.Kd_Prov=s.Kd_Prov
+                    AND u.Kd_Kab_Kota = s.Kd_Kab_Kota 
+                    AND u.Kd_Bidang = s.Kd_Bidang 
+                    AND u.Kd_Unit = s.Kd_Unit 
+                    AND u.Kd_Sub = s.Kd_Sub 
+		        '
+		));
+		$cek_skpd = array();
+		foreach($skpd as $k => $val){
+		    $kd_bidang = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang);
+		    $kd_lokasi = $kd_bidang.'.'.$this->functions->CekNull($val->Kd_Unit).'.'.$this->functions->CekNull($val->Kd_Sub);
+		    if(empty($cek_skpd[$kd_lokasi])){
+		        $cek_skpd[$kd_lokasi] = $val->Nm_Sub_Unit;
+		    }else{
+		        continue;
+		    }
+		}
+
 		$basic_options_container = Container::make( 'theme_options', __( 'Aset BMD' ) )
 			->set_page_menu_position( 4 )
 	        ->add_fields( array(
@@ -436,6 +471,11 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value('Dokumentasi Sistem'),
 		        Field::make( 'text', 'crb_menu_url_12', __( 'URL Menu 12' ) )
         			->set_default_value($dokumentasi_sistem['url'])
+		    ) )
+			->add_tab( __( 'Sub Unit' ), array(
+				Field::make( 'multiselect', 'crb_sub_unit_pilihan', __( 'Sub Unit Pilihan' ) )
+        			->add_options( $cek_skpd )
+        			->set_help_text('Sub unit yang akan ditampilkan saat masuk ke halaman total aset per SKPD.')
 		    ) );
 
 		Container::make( 'theme_options', __( 'Tampilan Galeri' ) )
