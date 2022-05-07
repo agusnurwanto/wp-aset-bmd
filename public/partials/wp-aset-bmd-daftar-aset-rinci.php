@@ -40,8 +40,10 @@ $body_skpd = '';
 $sql = $wpdb->prepare('
     select 
         a.*,
+        b.Harga as harga_asli,
         r.Nm_Aset5
     from '.$data_jenis['table_simda'].' a
+    LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda
     LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
         and r.kd_aset0=a.Kd_Aset80 
         and r.kd_aset1=a.Kd_Aset81 
@@ -55,6 +57,10 @@ $sql = $wpdb->prepare('
         AND a.Kd_Unit=%d 
         AND a.Kd_Sub=%d 
         AND a.Kd_UPB=%d
+        AND a.Kd_Hapus= \'0\' 
+        AND a.Kd_Data != \'3\' 
+        AND a.Kd_KA= \'1\'
+        AND b.Harga > 0
         '.$where.'
     ', $Kd_Prov, $Kd_Kab_Kota, $Kd_Bidang, $Kd_Unit, $Kd_Sub, $Kd_UPB);
 $aset = $this->functions->CurlSimda(array(
@@ -64,7 +70,7 @@ $no=0;
 $show_map = false;
 foreach($aset as $k => $val){
     $no++;
-    $total_nilai += $val->Harga;
+    $total_nilai += $val->harga_asli;
     $kd_lokasi = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit).'.'.$this->functions->CekNull($val->Kd_Sub).'.'.$this->functions->CekNull($val->Kd_UPB).'.'.$this->functions->CekNull($val->Kd_Kecamatan).'.'.$this->functions->CekNull($val->Kd_Desa);
     $kd_barang = $val->Kd_Aset8.'.'.$val->Kd_Aset80.'.'.$this->functions->CekNull($val->Kd_Aset81).'.'.$this->functions->CekNull($val->Kd_Aset82).'.'.$this->functions->CekNull($val->Kd_Aset83).'.'.$this->functions->CekNull($val->Kd_Aset84).'.'.$this->functions->CekNull($val->Kd_Aset85, 3);
     $kd_register = $this->functions->CekNull($val->No_Reg8, 6);
@@ -149,17 +155,18 @@ foreach($aset as $k => $val){
             <td class="text-center">'.$kd_register.'</td>
             <td>'.$val->Nm_Aset5.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
-            <td class="text-right" data-sort="'.$val->Harga.'">'.number_format($val->Harga,2,",",".").'</td>
+            <td class="text-right" data-sort="'.$val->harga_asli.'">'.number_format($val->harga_asli,2,",",".").'</td>
             <td class="text-center"><a style="margin-bottom: 5px;" target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a>'.$map_center.'</td>
         </tr>
     ';
 
     $data_aset[] = array(
-        'aset' => $aset[0],
+        'jenis' => $params['jenis_aset'],
+        'aset' => $val,
         'lng' => $koordinatX,
         'ltd' => $koordinatY,
         'polygon' => $polygon,
-        'nilai' => number_format($val->Harga,2,",","."),
+        'nilai' => number_format($val->harga_asli,2,",","."),
         'nama_aset' => $val->Nm_Aset5,
         'keterangan' => implode(' | ', $keterangan),
         'nama_skpd' => $params['nama_skpd'],
@@ -302,15 +309,27 @@ function initMap() {
             var Coords1 = JSON.parse(aset.polygon);
 
             // Membuat Shape
-            var bentuk_bidang1 = new google.maps.Polygon({
-                paths: Coords1,
-                strokeColor: warna_map,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: warna_map,
-                fillOpacity: 0.45,
-                html: contentString
-            });
+            if(aset.jenis == 'jalan'){
+                var bentuk_bidang1 = new google.maps.Polyline({
+                    paths: Coords1,
+                    strokeColor: warna_map,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: warna_map,
+                    fillOpacity: 0.45,
+                    html: contentString
+                });
+            }else{
+                var bentuk_bidang1 = new google.maps.Polygon({
+                    paths: Coords1,
+                    strokeColor: warna_map,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: warna_map,
+                    fillOpacity: 0.45,
+                    html: contentString
+                });
+            }
 
             bentuk_bidang1.setMap(map);
             infoWindow = new google.maps.InfoWindow({

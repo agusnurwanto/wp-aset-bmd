@@ -113,6 +113,13 @@ class Wp_Aset_Bmd_Public {
 
 	}
 
+	function peta_aset(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-peta-aset.php';
+	}
+
 	function aset_per_unit(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
@@ -750,35 +757,44 @@ class Wp_Aset_Bmd_Public {
 	function get_nama_jenis_aset($options=array()){
 		$nama_jenis_aset = '';
 		$table_simda = '';
+		$table_simda_harga = '';
 		$color = '';
 		if($options['jenis_aset'] == 'tanah'){
 		    $nama_jenis_aset = 'Tanah';
 		    $table_simda = 'Ta_KIB_A';
+		    $table_simda_harga = 'Ta_Fn_KIB_A';
 			$color = 'red';
 		}else if($options['jenis_aset'] == 'mesin'){
 		    $nama_jenis_aset = 'Peralatan dan Mesin';
 		    $table_simda = 'Ta_KIB_B';
+		    $table_simda_harga = 'Ta_Fn_KIB_B';
 			$color = 'green';
 		}else if($options['jenis_aset'] == 'bangunan'){
 		    $nama_jenis_aset = 'Gedung dan Bangunan';
 		    $table_simda = 'Ta_KIB_C';
+		    $table_simda_harga = 'Ta_Fn_KIB_C';
 			$color = 'blue';
 		}else if($options['jenis_aset'] == 'jalan'){
 		    $nama_jenis_aset = 'Jalan, Jaringan dan Irigrasi';
 		    $table_simda = 'Ta_KIB_D';
+		    $table_simda_harga = 'Ta_Fn_KIB_D';
 			$color = 'black';
 		}else if($options['jenis_aset'] == 'aset_tetap'){
 		    $nama_jenis_aset = 'Aset Tetap Lainnya';
 		    $table_simda = 'Ta_KIB_E';
+		    $table_simda_harga = 'Ta_Fn_KIB_E';
 			$color = 'purple';
 		}else if($options['jenis_aset'] == 'bangunan_dalam_pengerjaan'){
 		    $nama_jenis_aset = 'Kontruksi Dalam Pengerjaan';
 		    $table_simda = 'Ta_KIB_F';
+		    $table_simda_harga = 'Ta_Fn_KIB_A';
 			$color = 'orange';
 		}
 		return array(
+			'jenis' => $options['jenis_aset'],
 			'nama' => $nama_jenis_aset,
 			'table_simda' => $table_simda,
+			'table_simda_harga' => $table_simda_harga,
 			'color' => $color
 		);
 	}

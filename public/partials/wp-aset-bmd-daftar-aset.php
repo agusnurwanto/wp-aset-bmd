@@ -213,7 +213,7 @@ if(!empty($skpd_sementara)){
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Barang Milik Daerah Per Unit SKPD<?php echo $nama_skpd; ?><br><?php echo implode(', ', $nama_jenis_aset_all); ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Barang Milik Daerah Per UPB SKPD<?php echo $nama_skpd; ?><br><?php echo implode(', ', $nama_jenis_aset_all); ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <div class="container counting-inner">
             <div class="row counting-box title-row">
                 <div class="col-md-12 text-center animated" data-animation="fadeInBottom"

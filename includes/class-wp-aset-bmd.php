@@ -202,6 +202,7 @@ class Wp_Aset_Bmd {
 		add_shortcode('dashboard_aset_user',  array($plugin_public, 'dashboard_aset_user'));
 		add_shortcode('dashboard_aset_tanah',  array($plugin_public, 'dashboard_aset_tanah'));
 		add_shortcode('aset_per_unit',  array($plugin_public, 'aset_per_unit'));
+		add_shortcode('peta_aset',  array($plugin_public, 'peta_aset'));
 	}
 
 	/**
