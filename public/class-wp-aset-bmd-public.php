@@ -113,6 +113,13 @@ class Wp_Aset_Bmd_Public {
 
 	}
 
+	function klasifikasi_aset(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-klasifikasi-aset.php';
+	}
+
 	function peta_aset(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
