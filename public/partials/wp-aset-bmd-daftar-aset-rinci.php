@@ -40,8 +40,10 @@ $body_skpd = '';
 $sql = $wpdb->prepare('
     select 
         a.*,
+        b.Harga as harga_asli,
         r.Nm_Aset5
     from '.$data_jenis['table_simda'].' a
+    LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda
     LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
         and r.kd_aset0=a.Kd_Aset80 
         and r.kd_aset1=a.Kd_Aset81 
@@ -55,15 +57,20 @@ $sql = $wpdb->prepare('
         AND a.Kd_Unit=%d 
         AND a.Kd_Sub=%d 
         AND a.Kd_UPB=%d
+        AND a.Kd_Hapus= \'0\' 
+        AND a.Kd_Data != \'3\' 
+        AND a.Kd_KA= \'1\'
+        AND b.Harga > 0
         '.$where.'
     ', $Kd_Prov, $Kd_Kab_Kota, $Kd_Bidang, $Kd_Unit, $Kd_Sub, $Kd_UPB);
 $aset = $this->functions->CurlSimda(array(
     'query' => $sql 
 ));
 $no=0;
+$show_map = false;
 foreach($aset as $k => $val){
     $no++;
-    $total_nilai += $val->Harga;
+    $total_nilai += $val->harga_asli;
     $kd_lokasi = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit).'.'.$this->functions->CekNull($val->Kd_Sub).'.'.$this->functions->CekNull($val->Kd_UPB).'.'.$this->functions->CekNull($val->Kd_Kecamatan).'.'.$this->functions->CekNull($val->Kd_Desa);
     $kd_barang = $val->Kd_Aset8.'.'.$val->Kd_Aset80.'.'.$this->functions->CekNull($val->Kd_Aset81).'.'.$this->functions->CekNull($val->Kd_Aset82).'.'.$this->functions->CekNull($val->Kd_Aset83).'.'.$this->functions->CekNull($val->Kd_Aset84).'.'.$this->functions->CekNull($val->Kd_Aset85, 3);
     $kd_register = $this->functions->CekNull($val->No_Reg8, 6);
@@ -104,19 +111,25 @@ foreach($aset as $k => $val){
         }
     }
 
+    $warna_map = '';
+    $ikon_map = '';
+
     if ($params['jenis_aset'] == 'tanah') {
         $warna_map = get_option('_crb_warna_tanah');
         $ikon_map  = get_option('_crb_icon_tanah');
+        $show_map = true;
     }
 
     if ($params['jenis_aset'] == 'bangunan') {
         $warna_map = get_option('_crb_warna_gedung');
         $ikon_map  = get_option('_crb_icon_gedung');
+        $show_map = true;
     }
 
     if ($params['jenis_aset'] == 'jalan') {
         $warna_map = get_option('_crb_warna_jalan');
         $ikon_map  = get_option('_crb_icon_jalan');
+        $show_map = true;
     }
     $koordinatX = get_post_meta($link['id'], 'latitude', true);
     if(empty($koordinatX)){
@@ -130,6 +143,11 @@ foreach($aset as $k => $val){
     if(empty($polygon)){
         $polygon = '[]';
     }
+
+    $map_center = '';
+    if(!empty($warna_map)){
+        $map_center = ' <a style="margin-bottom: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a>';
+    }
     $body_skpd .= '
         <tr>
             <td class="text-center">'.$no.'</td>
@@ -137,21 +155,22 @@ foreach($aset as $k => $val){
             <td class="text-center">'.$kd_register.'</td>
             <td>'.$val->Nm_Aset5.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
-            <td class="text-right" data-sort="'.$val->Harga.'">'.number_format($val->Harga,2,",",".").'</td>
-            <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a style="margin-top: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
+            <td class="text-right" data-sort="'.$val->harga_asli.'">'.number_format($val->harga_asli,2,",",".").'</td>
+            <td class="text-center"><a style="margin-bottom: 5px;" target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a>'.$map_center.'</td>
         </tr>
     ';
 
     $data_aset[] = array(
-        'aset' => $aset[0],
+        'jenis' => $params['jenis_aset'],
+        'aset' => $val,
         'lng' => $koordinatX,
         'ltd' => $koordinatY,
         'polygon' => $polygon,
-        'nilai' => number_format($val->Harga,2,",","."),
+        'nilai' => number_format($val->harga_asli,2,",","."),
         'nama_aset' => $val->Nm_Aset5,
-        'keterangan' => $keterangan,
-        'nama_skpd' => $params['nama_skpd'].' '.$keterangan,
-        'kd_barang' => $params['kd_barang'],
+        'keterangan' => implode(' | ', $keterangan),
+        'nama_skpd' => $params['nama_skpd'],
+        'kd_barang' => $kd_barang,
         'kd_lokasi' => $params['kd_lokasi'],
         'warna_map' => $warna_map,
         'ikon_map'  => $ikon_map,
@@ -169,7 +188,11 @@ foreach($aset as $k => $val){
 <div class="cetak">
     <div style="padding: 10px;">
         <h2 class="text-center">Data Barang Milik Daerah<br><a href="<?php echo $link_detail_unit; ?>" target="_blank"><?php echo $kd_lokasi_unit; ?></a><?php echo $kd_lokasi_upb.'<br>'; ?><?php echo $params['nama_skpd']; ?><br><?php echo $nama_jenis_aset; ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
-        <div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div>
+    <?php
+        if($show_map){
+            echo '<div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div>';
+        }
+    ?>
         <table class="table table-bordered" id="table-aset-skpd">
             <thead id="data_header">
                 <tr>
@@ -286,15 +309,27 @@ function initMap() {
             var Coords1 = JSON.parse(aset.polygon);
 
             // Membuat Shape
-            var bentuk_bidang1 = new google.maps.Polygon({
-                paths: Coords1,
-                strokeColor: warna_map,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: warna_map,
-                fillOpacity: 0.45,
-                html: contentString
-            });
+            if(aset.jenis == 'jalan'){
+                var bentuk_bidang1 = new google.maps.Polyline({
+                    paths: Coords1,
+                    strokeColor: warna_map,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: warna_map,
+                    fillOpacity: 0.45,
+                    html: contentString
+                });
+            }else{
+                var bentuk_bidang1 = new google.maps.Polygon({
+                    paths: Coords1,
+                    strokeColor: warna_map,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: warna_map,
+                    fillOpacity: 0.45,
+                    html: contentString
+                });
+            }
 
             bentuk_bidang1.setMap(map);
             infoWindow = new google.maps.InfoWindow({

@@ -1,10 +1,4 @@
 <?php
-
-    echo 'aset perlu tindak lanjut';
-
-?>
-
-<?php
 global $wpdb;
 $nama_pemda = get_option('_crb_bmd_nama_pemda');
 $tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
@@ -21,23 +15,13 @@ $args = array(
        )
    )
 );
-$total_nilai_aset = 0;
 $query = new WP_Query($args);
 $no = 0;
 $data_aset = array();
-$now = date('Y-m-d');
 foreach($query->posts as $post){
-    $waktu_aset_akhir = get_post_meta($post->ID, 'meta_waktu_aset_akhir', true);
-    $date1 = strtotime($waktu_aset_akhir);
-    $date2 = strtotime($now);
-    $interval = $date1 - $date2;
-    // cek jika masa sewa telah habis
-    if($interval < 0){ continue; }
-
     $nilai_aset = get_post_meta($post->ID, 'meta_nilai_aset', true);
     $nama_aset = get_post_meta($post->ID, 'meta_nama_aset', true);
     $alamat_aset = get_post_meta($post->ID, 'meta_alamat_aset', true);
-    $waktu_aset_awal = get_post_meta($post->ID, 'meta_waktu_aset_awal', true);
     $params = shortcode_parse_atts(str_replace('[detail_aset', '', str_replace(']', '', $post->post_content)));
     $kd_lokasi = explode('.', $params['kd_lokasi']);
     $Kd_Prov = (int) $kd_lokasi[1];
@@ -132,6 +116,8 @@ foreach($query->posts as $post){
     $nama_jenis_aset = $data_jenis['nama'];
     $table_simda = $data_jenis['table_simda'];
 
+    $warna_map = '';
+    $ikon_map = '';
     if ($params['jenis_aset'] == 'tanah') {
         $warna_map = get_option('_crb_warna_tanah');
         $ikon_map  = get_option('_crb_icon_tanah');
@@ -153,10 +139,6 @@ foreach($query->posts as $post){
     $koordinatY = get_post_meta($post->ID, 'longitude', true);
     if(empty($koordinatY)){
         $koordinatY = '0';
-    }
-    $polygon = get_post_meta($post->ID, 'polygon', true);
-    if(empty($polygon)){
-        $polygon = '[]';
     }
 
     $alamat = array();
@@ -183,8 +165,10 @@ foreach($query->posts as $post){
     $sql = $wpdb->prepare('
         select 
             a.*,
+            b.Harga as harga_asli,
             r.Nm_Aset5
         from '.$data_jenis['table_simda'].' a
+        INNER JOIN '.$data_jenis['table_simda_harga'].' b ON b.IDPemda = a.IDPemda 
         LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
             and r.kd_aset0=a.Kd_Aset80 
             and r.kd_aset1=a.Kd_Aset81 
@@ -204,6 +188,7 @@ foreach($query->posts as $post){
     $aset = $this->functions->CurlSimda(array(
         'query' => $sql 
     ));
+    $nilai_aset = $aset[0]->harga_asli;
     $no++;
     $kd_register = $this->functions->CekNull($aset[0]->No_Reg8, 6);
     $kd_lokasi = '12.'.$this->functions->CekNull($aset[0]->Kd_Prov).'.'.$this->functions->CekNull($aset[0]->Kd_Kab_Kota).'.'.$this->functions->CekNull($aset[0]->Kd_Bidang).'.'.$this->functions->CekNull($aset[0]->Kd_Unit).'.'.$this->functions->CekNull($aset[0]->Kd_Sub).'.'.$this->functions->CekNull($aset[0]->Kd_UPB).'.'.$this->functions->CekNull($aset[0]->Kd_Kecamatan).'.'.$this->functions->CekNull($aset[0]->Kd_Desa);
@@ -235,20 +220,23 @@ foreach($query->posts as $post){
             $keterangan[] = $aset[0]->Keterangan;
         }
     }
+    $polygon = get_post_meta($post->ID, 'polygon', true);
+    $keterangan_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
+
     $body .= '
         <tr>
-        <td class="text-center">'.$no.'</td>
-        <td class="text-center">'.$nama_aset.'</td>
-        <td class="text-center">'.$kd_lokasi.'</td>
-        <td>'.$Nm_Sub_Unit.'</td>
-        <td>'.$nama_skpd[0]->Nm_UPB.' '.$alamat.'</td>
-        <td class="text-right" data-sort="'.$val->jml.'">'.$jumlah.'</td>
-        <td class="text-center">'.$satuan.'</td>
-        <td class="text-right" data-kd_lokasi="'.$kd_lokasi.'" data-sort="'.$val->harga.'">'.number_format($val->harga,2,",",".").'</td>
-        <td class="text-center"><a target="_blank" href="'.$link.'" class="btn btn-primary">Detail</a></td>
+            <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'</td>
+            <td>'.$aset[0]->Nm_Aset5.'</td>
+            <td>'.implode(' | ', $keterangan).'</td>
+            <td>'.$keterangan_tindak_lanjut.'</td>
+            <td class="text-right" data-sort="'.$nilai_aset.'">'.number_format($nilai_aset,2,",",".").'</td>
+            <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a></td>
         </tr>
     ';
-    $total_nilai_aset++;
+
+    if(empty($polygon)){
+        continue;
+    }
     $data_aset[] = array(
         'aset' => $aset[0],
         'lng' => $koordinatX,
@@ -257,8 +245,6 @@ foreach($query->posts as $post){
         'nilai_aset' => number_format($nilai_aset,2,",","."),
         'nama_aset' => $nama_aset,
         'alamat_aset' => $alamat_aset,
-        'waktu_aset_awal' => $waktu_aset_awal,
-        'waktu_aset_akhir' => $waktu_aset_akhir,
         'nama_skpd' => $params['nama_skpd'].' '.$alamat,
         'kd_barang' => $params['kd_barang'],
         'kd_lokasi' => $params['kd_lokasi'],
@@ -266,7 +252,7 @@ foreach($query->posts as $post){
         'ikon_map'  => $ikon_map,
     );
 }
-// update_option('_crb_jumlah_aset_disewakan', $total_nilai_aset);
+
 ?>
 <style type="text/css">
     .warning {
@@ -284,8 +270,8 @@ foreach($query->posts as $post){
                 <tr>
                     <th class="text-center">Kode Barang</th>
                     <th class="text-center">Nama Aset</th>
-                    <th class="text-center">Keterangan</th>
-                    <th class="text-center">Keterangan Tindak Lanjut</th>
+                    <th class="text-center">Keterangan Aset</th>
+                    <th class="text-center">Keterangan Tidak Lanjut</th>
                     <th class="text-center">Nilai Aset (Rp)</th>
                     <th class="text-center">Aksi</th>
                 </tr>
@@ -294,9 +280,8 @@ foreach($query->posts as $post){
                 <?php echo $body; ?>
             </tbody>
             <tfoot>
-                <th colspan="3" class="text-center">Total Nilai</th>
+                <th colspan="4" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_aset">0</th>
-                <th colspan="3" class="text-right" id="total_aset">0</th>
                 <th></th>
             <tfoot>
         </table>
@@ -308,23 +293,17 @@ jQuery(document).on('ready', function(){
     jQuery('#data_aset_aset').dataTable({
         columnDefs: [
             { "width": "300px", "targets": 2 },
-            { "width": "110px", "targets": 5 }
+            { "width": "300px", "targets": 3 }
         ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
             var api = this.api();
-            var total_page = api.column( 3, { page: 'current'} )
+            var total_page = api.column( 4, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
                 }, 0 );
             jQuery('#total_aset').text(formatRupiah(total_page));
-            var total_aset = api.column( 6, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return a + to_number(b);
-                }, 0 );
-            jQuery('#total_aset').text(formatRupiah(total_aset));
         }
     });
 });

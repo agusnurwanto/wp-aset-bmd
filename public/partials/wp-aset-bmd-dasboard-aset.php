@@ -251,7 +251,7 @@ update_option('_crb_total_per_jenis', json_encode(array(
                 <th></th>
             <tfoot>
         </table>
-        <h2 class="text-center">Data Barang Milik Daerah Per SKPD<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Barang Milik Daerah Per Unit SKPD<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <div class="container counting-inner">
             <div class="row counting-box title-row">
                 <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
