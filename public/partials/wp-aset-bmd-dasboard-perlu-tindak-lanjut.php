@@ -279,18 +279,14 @@ foreach($query->posts as $post){
 <div class="cetak">
     <div style="padding: 10px;">
         <h2 class="text-center">Data Aset Yang Perlu Tindak Lanjut<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
-        <!-- <div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div> -->
         <table class="table table-bordered" id="data_aset_aset">
             <thead>
                 <tr>
-                    <th class="text-center">No</th>
-                    <th class="text-center">Jenis Aset</th>
-                    <th class="text-center">Kode Lokasi</th>
-                    <th class="text-center">Nama Sub Unit</th>
-                    <th class="text-center">Nama UPB</th>
-                    <th class="text-center">Jumlah</th>
-                    <th class="text-center">Satuan</th>
-                    <th class="text-center">Nilai (Rupiah)</th>
+                    <th class="text-center">Kode Barang</th>
+                    <th class="text-center">Nama Aset</th>
+                    <th class="text-center">Keterangan</th>
+                    <th class="text-center">Keterangan Tindak Lanjut</th>
+                    <th class="text-center">Nilai Aset (Rp)</th>
                     <th class="text-center">Aksi</th>
                 </tr>
             </thead>
