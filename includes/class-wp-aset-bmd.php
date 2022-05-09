@@ -204,6 +204,7 @@ class Wp_Aset_Bmd {
 		add_shortcode('aset_per_unit',  array($plugin_public, 'aset_per_unit'));
 		add_shortcode('peta_aset',  array($plugin_public, 'peta_aset'));
 		add_shortcode('klasifikasi_aset',  array($plugin_public, 'klasifikasi_aset'));
+		add_shortcode('aset_perlu_tindak_lanjut',  array($plugin_public, 'aset_perlu_tindak_lanjut'));
 	}
 
 	/**

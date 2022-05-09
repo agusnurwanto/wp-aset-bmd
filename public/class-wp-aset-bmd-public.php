@@ -185,6 +185,20 @@ class Wp_Aset_Bmd_Public {
 		}
 	}
 
+	function aset_perlu_tindak_lanjut($atts){
+		// untuk disable render shortcode di halaman edit page/post
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		// $params = shortcode_atts( array(
+		// 	'potensi' => '0'
+		// ), $atts );
+
+		$api_googlemap = get_option( '_crb_google_api' );
+		$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-perlu-tindak-lanjut.php';
+	}
+
 	function dashboard_aset_user(){
 		// untuk disable render shortcode di halaman edit page/post
 		if(!empty($_GET) && !empty($_GET['post'])){
