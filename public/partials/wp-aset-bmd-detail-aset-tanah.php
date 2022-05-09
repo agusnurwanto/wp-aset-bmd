@@ -140,8 +140,8 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aset Perlu Tindak Lanjut</label>
                 <div class="col-md-10">
-                    <label><input type="checkbox" <?php echo $disabled.' '.$checked_tindak_lanjut; ?> name="aset_perlu_tindak_lanjut" value=""> Ya / Tidak</label>
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="ket_aset_perlu_tindak_lanjut" value="<?php echo $aset_perlu_tindak_lanjut; ?>">
+                    <label><input type="checkbox" <?php echo $disabled.' '.$checked_tindak_lanjut; ?> name="aset_perlu_tindak_lanjut" value="1"> Ya / Tidak</label>
+                    <textarea <?php echo $disabled; ?> class="form-control" name="ket_aset_perlu_tindak_lanjut"><?php echo $aset_perlu_tindak_lanjut; ?></textarea>
                 </div>
             </div>
             <div class="form-group row">
@@ -194,7 +194,9 @@
                     "alamat_sewa": jQuery('input[name="alamat_sewa"]').val(),
                     "waktu_sewa_awal": jQuery('input[name="waktu_sewa_awal"]').val(),
                     "waktu_sewa_akhir": jQuery('input[name="waktu_sewa_akhir"]').val(),
-                    "status_informasi": jQuery('input[name="status_informasi"]:checked').val()
+                    "status_informasi": jQuery('input[name="status_informasi"]:checked').val(),
+                    "aset_perlu_tindak_lanjut": jQuery('input[name="aset_perlu_tindak_lanjut"]:checked').val(),
+                    "ket_aset_perlu_tindak_lanjut": jQuery('textarea[name="ket_aset_perlu_tindak_lanjut"]').val(),
                 },
                 dataType: "json",
                 success: function(data){

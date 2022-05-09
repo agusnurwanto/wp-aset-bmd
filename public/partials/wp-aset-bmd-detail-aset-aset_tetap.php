@@ -108,6 +108,13 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label">Aset Perlu Tindak Lanjut</label>
+                <div class="col-md-10">
+                    <label><input type="checkbox" <?php echo $disabled.' '.$checked_tindak_lanjut; ?> name="aset_perlu_tindak_lanjut" value="1"> Ya / Tidak</label>
+                    <textarea <?php echo $disabled; ?> class="form-control" name="ket_aset_perlu_tindak_lanjut"><?php echo $aset_perlu_tindak_lanjut; ?></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Status informasi aset</label>
                 <div class="col-md-10">
                     <label><input type="radio" <?php echo $disabled.' '.$checked_private; ?> name="status_informasi" value="1"> Privasi / rahasia</label>
@@ -156,6 +163,8 @@
                     "alamat_sewa": jQuery('input[name="alamat_sewa"]').val(),
                     "waktu_sewa_awal": jQuery('input[name="waktu_sewa_awal"]').val(),
                     "waktu_sewa_akhir": jQuery('input[name="waktu_sewa_akhir"]').val(),
+                    "aset_perlu_tindak_lanjut": jQuery('input[name="aset_perlu_tindak_lanjut"]:checked').val(),
+                    "ket_aset_perlu_tindak_lanjut": jQuery('textarea[name="ket_aset_perlu_tindak_lanjut"]').val(),
                     "status_informasi": jQuery('input[name="status_informasi"]:checked').val()
                 },
                 dataType: "json",
