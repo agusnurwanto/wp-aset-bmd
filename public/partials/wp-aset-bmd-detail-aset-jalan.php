@@ -148,6 +148,12 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label">Keterangan Penggunaan Aset yang Disewakan</label>
+                <div class="col-md-10">
+                    <textarea <?php echo $disabled; ?> class="form-control" name="ket_penggunaan_aset"><?php echo $ket_penggunaan_aset; ?></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aset Perlu Tindak Lanjut</label>
                 <div class="col-md-10">
                     <label><input type="checkbox" <?php echo $disabled.' '.$checked_tindak_lanjut; ?> name="aset_perlu_tindak_lanjut" value="1"> Ya / Tidak</label>
@@ -206,7 +212,8 @@
                     "waktu_sewa_akhir": jQuery('input[name="waktu_sewa_akhir"]').val(),
                     "aset_perlu_tindak_lanjut": jQuery('input[name="aset_perlu_tindak_lanjut"]:checked').val(),
                     "ket_aset_perlu_tindak_lanjut": jQuery('textarea[name="ket_aset_perlu_tindak_lanjut"]').val(),
-                    "status_informasi": jQuery('input[name="status_informasi"]:checked').val()
+                    "status_informasi": jQuery('input[name="status_informasi"]:checked').val(),
+                    "ket_penggunaan_aset": jQuery('textarea[name="ket_penggunaan_aset"]').val(),
                 },
                 dataType: "json",
                 success: function(data){
@@ -298,7 +305,7 @@
 
         // Membuat Shape
         var bentuk_bidang1 = new google.maps.Polyline({
-            paths: Coords1,
+            path: Coords1,
             geodesic: true,
             strokeColor: warna_map,
             strokeOpacity: 3,

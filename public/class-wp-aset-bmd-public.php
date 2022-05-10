@@ -421,6 +421,7 @@ class Wp_Aset_Bmd_Public {
 		    $koordinatY = '0';
 		}
 		$polygon = get_post_meta($post->ID, 'polygon', true);
+		$polygon = '[{lat: -7.622122, lng: 111.48428},{lat: -7.620016, lng: 111.483464},{lat: -7.614529, lng: 111.482198},{lat: -7.611615, lng: 111.482348},{lat: -7.610467, lng: 111.481748},{lat: -7.609914, lng: 111.481211},{lat: -7.608403, lng: 111.478057},{lat: -7.605681, lng: 111.476898},{lat: -7.603235, lng: 111.475525},{lat: -7.599343, lng: 111.470954},]';
 		if(empty($polygon)){
 		    $polygon = '[]';
 		}
@@ -452,6 +453,7 @@ class Wp_Aset_Bmd_Public {
 		$waktu_sewa_awal = get_post_meta($post->ID, 'meta_waktu_sewa_awal', true);
 		$waktu_sewa_akhir = get_post_meta($post->ID, 'meta_waktu_sewa_akhir', true);
 		$aset_perlu_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
+		$ket_penggunaan_aset = get_post_meta($post->ID, 'meta_ket_penggunaan_aset', true);
 		$allow_edit_post = $this->cek_edit_post(array(
 		    'Kd_Prov' => $Kd_Prov,
 		    'Kd_Kab_Kota' => $Kd_Kab_Kota,
@@ -917,6 +919,7 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_waktu_sewa_akhir', $_POST['waktu_sewa_akhir']);
 						update_post_meta($post->ID, 'meta_aset_perlu_tindak_lanjut', $_POST['aset_perlu_tindak_lanjut']);
 						update_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', $_POST['ket_aset_perlu_tindak_lanjut']);
+						update_post_meta($post->ID, 'meta_ket_penggunaan_aset', $_POST['ket_penggunaan_aset']);
 						$post_status = 'private';
 						if(
 							!empty($_POST['status_informasi'])

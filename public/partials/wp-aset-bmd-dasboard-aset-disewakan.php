@@ -127,6 +127,8 @@ foreach($query->posts as $post){
     $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
     $nama_jenis_aset = $data_jenis['nama'];
     $table_simda = $data_jenis['table_simda'];
+    $ket_penggunaan_aset = get_post_meta($post->ID, 'meta_ket_penggunaan_aset', true);
+
 
     if ($params['jenis_aset'] == 'tanah') {
         $warna_map = get_option('_crb_warna_tanah');
@@ -236,6 +238,7 @@ foreach($query->posts as $post){
             <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'</td>
             <td>'.$aset[0]->Nm_Aset5.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
+            <td>'.$ket_penggunaan_aset.'</td>
             <td class="text-right" data-sort="'.$aset[0]->Harga.'">'.number_format($aset[0]->Harga,2,",",".").'</td>
             <td>'.$nama_sewa.'</td>
             <td class="text-center">'.$waktu_sewa_awal.'<br>sampai<br>'.$waktu_sewa_akhir.'</td>
@@ -281,6 +284,7 @@ update_option('_crb_jumlah_aset_disewakan', $total_nilai_sewa);
                     <th class="text-center">Kode Barang</th>
                     <th class="text-center">Nama Aset</th>
                     <th class="text-center">Keterangan</th>
+                    <th class="text-center">Keterangan Penggunaan Aset</th>
                     <th class="text-center">Nilai Aset (Rp)</th>
                     <th class="text-center">Penyewa</th>
                     <th class="text-center">Waktu Sewa</th>
@@ -292,7 +296,7 @@ update_option('_crb_jumlah_aset_disewakan', $total_nilai_sewa);
                 <?php echo $body; ?>
             </tbody>
             <tfoot>
-                <th colspan="3" class="text-center">Total Nilai</th>
+                <th colspan="4" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_aset">0</th>
                 <th colspan="3" class="text-right" id="total_sewa">0</th>
                 <th></th>
