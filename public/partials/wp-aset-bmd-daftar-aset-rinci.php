@@ -143,6 +143,15 @@ foreach($aset as $k => $val){
     if(empty($polygon)){
         $polygon = '[]';
     }
+    $kondisi_aset = get_post_meta($link['id'], 'meta_kondisi_aset', true);
+    if(empty($kondisi_aset)){
+        $kondisi_aset = '-';
+    }
+    
+    $keterangan_kondisi_aset = get_post_meta($link['id'], 'meta_keterangan_kondisi_aset', true);
+    if(empty($keterangan_kondisi_aset)){
+        $keterangan_kondisi_aset = '-';
+    }
 
     $map_center = '';
     if(!empty($warna_map)){
@@ -154,6 +163,8 @@ foreach($aset as $k => $val){
             <td class="text-center">'.$kd_barang.'</td>
             <td class="text-center">'.$kd_register.'</td>
             <td>'.$val->Nm_Aset5.'</td>
+            <td>'.$kondisi_aset.'</td>
+            <td>'.$keterangan_kondisi_aset.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
             <td class="text-right" data-sort="'.$val->harga_asli.'">'.number_format($val->harga_asli,2,",",".").'</td>
             <td class="text-center"><a style="margin-bottom: 5px;" target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a>'.$map_center.'</td>
@@ -200,6 +211,8 @@ foreach($aset as $k => $val){
                     <th class="text-center">Kode Barang</th>
                     <th class="text-center">Register</th>
                     <th class="text-center">Nama Aset</th>
+                    <th class="text-center">Kondisi</th>
+                    <th class="text-center">Keterangan Kondisi Aset</th>
                     <th class="text-center">Keterangan</th>
                     <th class="text-center">Nilai (Rupiah)</th>
                     <th class="text-center">Aksi</th>
@@ -209,7 +222,7 @@ foreach($aset as $k => $val){
                 <?php echo $body_skpd; ?>
             </tbody>
             <tfoot>
-                <th colspan="5" class="text-center">Total Nilai</th>
+                <th colspan="7" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_all_skpd"><?php echo number_format($total_nilai,2,",","."); ?></th>
                 <th></th>
             <tfoot>

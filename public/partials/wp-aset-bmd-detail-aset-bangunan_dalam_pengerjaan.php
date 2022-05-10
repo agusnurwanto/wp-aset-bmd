@@ -41,6 +41,24 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label">Kondisi Aset</label>
+                <div class="col-md-10">
+                    <select <?php echo $disabled; ?> name="kondisi_aset" id="kondisi_aset" >
+                        <option value="<?php echo $kondisi_aset; ?>"><?php echo $kondisi_aset; ?></option>
+                        <option value="Baik">Baik</option>
+                        <option value="Rusak Ringan">Rusak Ringan</option>
+                        <option value="Rusak Berat">Rusak Berat</option>
+                        <option value="Hilang">Hilang</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Keterangan Kondisi Aset</label>
+                <div class="col-md-10">
+                    <textarea <?php echo $disabled; ?> class="form-control" name="keterangan_kondisi_aset" placeholder="Keterangan Kondisi Aset Bangunan Dalam Pengerjaan"><?php echo $keterangan_kondisi_aset; ?></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Koordinat Latitude</label>
                 <div class="col-md-4">
                     <input type="text" <?php echo $disabled; ?> class="form-control" name="latitude" value="<?php echo $koordinatX; ?>" placeholder="-7.7524434396470605">
@@ -194,6 +212,8 @@
                     "ket_aset_perlu_tindak_lanjut": jQuery('textarea[name="ket_aset_perlu_tindak_lanjut"]').val(),
                     "status_informasi": jQuery('input[name="status_informasi"]:checked').val(),
                     "ket_penggunaan_aset": jQuery('textarea[name="ket_penggunaan_aset"]').val(),
+                    "kondisi_aset": jQuery('#kondisi_aset option:selected').val(),
+                    "keterangan_kondisi_aset": jQuery('textarea[name="keterangan_kondisi_aset"]').val(),
                 },
                 dataType: "json",
                 success: function(data){

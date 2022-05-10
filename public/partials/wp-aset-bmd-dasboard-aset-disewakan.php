@@ -262,6 +262,7 @@ foreach($query->posts as $post){
         'kd_lokasi' => $params['kd_lokasi'],
         'warna_map' => $warna_map,
         'ikon_map'  => $ikon_map,
+        'ket_penggunaan_aset'  => $ket_penggunaan_aset,
     );
 }
 update_option('_crb_jumlah_aset_disewakan', $total_nilai_sewa);
@@ -352,6 +353,7 @@ var no_sertipikat;
 var penggunaan;
 var keterangan;
 var warna_map;
+var ket_penggunaan_aset;
 var ikon_map;
 
 function initMap() {
@@ -376,9 +378,10 @@ function initMap() {
             });
             
             // Variabel Informasi Data
-            nama_aset      = aset.aset.Nm_Aset5;
-            kode_aset      = aset.kd_barang;
-            keterangan     = aset.aset.Keterangan;
+            nama_aset           = aset.aset.Nm_Aset5;
+            kode_aset           = aset.kd_barang;
+            keterangan          = aset.aset.Keterangan;
+            ket_penggunaan_aset = aset.aset.ket_penggunaan_aset;
 
             // Menampilkan Informasi Data
             var contentString = '<br>' +
@@ -395,6 +398,8 @@ function initMap() {
                 '<tr>' +
                 '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
                 '</tr>' +
+                '<td valign="top" height="25">Keterangan Penggunaan Aset</td><td valign="top"><center>:</center></td><td valign="top">' + ket_penggunaan_aset + '</td>' +
+                '</tr>' +
                 '</table>';
 
             // Define the LatLng coordinates for the shape.
@@ -408,7 +413,8 @@ function initMap() {
                 strokeWeight: 2,
                 fillColor: warna_map,
                 fillOpacity: 0.45,
-                html: contentString
+                html: contentString,
+                map,
             });
 
             bentuk_bidang1.setMap(map);
