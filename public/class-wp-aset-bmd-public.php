@@ -421,7 +421,6 @@ class Wp_Aset_Bmd_Public {
 		    $koordinatY = '0';
 		}
 		$polygon = get_post_meta($post->ID, 'polygon', true);
-		$polygon = '[{lat: -7.622122, lng: 111.48428},{lat: -7.620016, lng: 111.483464},{lat: -7.614529, lng: 111.482198},{lat: -7.611615, lng: 111.482348},{lat: -7.610467, lng: 111.481748},{lat: -7.609914, lng: 111.481211},{lat: -7.608403, lng: 111.478057},{lat: -7.605681, lng: 111.476898},{lat: -7.603235, lng: 111.475525},{lat: -7.599343, lng: 111.470954},]';
 		if(empty($polygon)){
 		    $polygon = '[]';
 		}
