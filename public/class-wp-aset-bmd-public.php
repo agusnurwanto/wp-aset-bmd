@@ -425,6 +425,7 @@ class Wp_Aset_Bmd_Public {
 		    $polygon = '[]';
 		}
 		$meta_sejarah = get_post_meta($post->ID, 'meta_sejarah', true);
+		$meta_kronologi = get_post_meta($post->ID, 'meta_kronologi', true);
 		$meta_foto = get_post_meta($post->ID, 'meta_foto', true);
 		$meta_video = get_post_meta($post->ID, 'meta_video', true);
 		$meta_disewakan = get_post_meta($post->ID, 'meta_disewakan', true);
@@ -452,6 +453,10 @@ class Wp_Aset_Bmd_Public {
 		$waktu_sewa_awal = get_post_meta($post->ID, 'meta_waktu_sewa_awal', true);
 		$waktu_sewa_akhir = get_post_meta($post->ID, 'meta_waktu_sewa_akhir', true);
 		$aset_perlu_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
+		$ket_penggunaan_aset = get_post_meta($post->ID, 'meta_ket_penggunaan_aset', true);
+		$kondisi_aset = get_post_meta($post->ID, 'meta_kondisi_aset', true);
+		$keterangan_kondisi_aset = get_post_meta($post->ID, 'meta_keterangan_kondisi_aset', true);
+		$ket_potensi_penggunaan = get_post_meta($post->ID, 'meta_ket_potensi_penggunaan', true);
 		$allow_edit_post = $this->cek_edit_post(array(
 		    'Kd_Prov' => $Kd_Prov,
 		    'Kd_Kab_Kota' => $Kd_Kab_Kota,
@@ -907,6 +912,7 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'longitude', $_POST['longitude']);
 						update_post_meta($post->ID, 'polygon', $_POST['polygon']);
 						update_post_meta($post->ID, 'meta_sejarah', $_POST['sejarah']);
+						update_post_meta($post->ID, 'meta_kronologi', $_POST['kronologi']);
 						update_post_meta($post->ID, 'meta_foto', $_POST['foto']);
 						update_post_meta($post->ID, 'meta_video', $_POST['video']);
 						update_post_meta($post->ID, 'meta_disewakan', $_POST['disewakan']);
@@ -917,6 +923,10 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_waktu_sewa_akhir', $_POST['waktu_sewa_akhir']);
 						update_post_meta($post->ID, 'meta_aset_perlu_tindak_lanjut', $_POST['aset_perlu_tindak_lanjut']);
 						update_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', $_POST['ket_aset_perlu_tindak_lanjut']);
+						update_post_meta($post->ID, 'meta_ket_penggunaan_aset', $_POST['ket_penggunaan_aset']);
+						update_post_meta($post->ID, 'meta_kondisi_aset', $_POST['kondisi_aset']);
+						update_post_meta($post->ID, 'meta_keterangan_kondisi_aset', $_POST['keterangan_kondisi_aset']);
+						update_post_meta($post->ID, 'meta_ket_potensi_penggunaan', $_POST['ket_potensi_penggunaan']);
 						$post_status = 'private';
 						if(
 							!empty($_POST['status_informasi'])

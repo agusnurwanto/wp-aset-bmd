@@ -265,7 +265,6 @@ foreach($query->posts as $post){
 <div class="cetak">
     <div style="padding: 10px;">
         <h2 class="text-center">Data Aset Yang Perlu Tindak Lanjut<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
-        <!-- <div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div> -->
         <table class="table table-bordered" id="data_aset_aset">
             <thead>
                 <tr>

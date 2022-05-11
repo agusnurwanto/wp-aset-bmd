@@ -143,6 +143,15 @@ foreach($aset as $k => $val){
     if(empty($polygon)){
         $polygon = '[]';
     }
+    $kondisi_aset = get_post_meta($link['id'], 'meta_kondisi_aset', true);
+    if(empty($kondisi_aset)){
+        $kondisi_aset = '-';
+    }
+    
+    $keterangan_kondisi_aset = get_post_meta($link['id'], 'meta_keterangan_kondisi_aset', true);
+    if(empty($keterangan_kondisi_aset)){
+        $keterangan_kondisi_aset = '-';
+    }
 
     $map_center = '';
     if(!empty($warna_map)){

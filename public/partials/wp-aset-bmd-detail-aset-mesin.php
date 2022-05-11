@@ -65,13 +65,37 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label">Kondisi Aset</label>
+                <div class="col-md-10">
+                    <select <?php echo $disabled; ?> name="kondisi_aset" id="kondisi_aset" >
+                        <option value="<?php echo $kondisi_aset; ?>"><?php echo $kondisi_aset; ?></option>
+                        <option value="Baik">Baik</option>
+                        <option value="Rusak Ringan">Rusak Ringan</option>
+                        <option value="Rusak Berat">Rusak Berat</option>
+                        <option value="Hilang">Hilang</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Keterangan Kondisi Aset</label>
+                <div class="col-md-10">
+                    <textarea <?php echo $disabled; ?> class="form-control" name="keterangan_kondisi_aset" placeholder="Keterangan Kondisi Aset Jalan"><?php echo $keterangan_kondisi_aset; ?></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Sejarah</label>
+                <div class="col-md-10">
+                    <textarea <?php echo $disabled; ?> class="form-control" name="sejarah"><?php echo $meta_sejarah; ?></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Kronologi</label>
                 <div class="col-md-10">
                 <?php 
                     if(!empty($params['key']['edit'])){
-                        wp_editor($meta_sejarah,'sejarah',array('textarea_name' => 'sejarah', 'textarea_rows' => 20)); 
+                        wp_editor($meta_kronologi,'kronologi',array('textarea_name' => 'kronologi', 'textarea_rows' => 20)); 
                     }else{
-                        echo $meta_sejarah;
+                        echo $meta_kronologi;
                     }
                 ?>
                 </div>
@@ -112,6 +136,12 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label">Keterangan Potensi Penggunaan</label>
+                <div class="col-md-10">
+                    <textarea <?php echo $disabled; ?> class="form-control" name="ket_potensi_penggunaan"><?php echo $ket_potensi_penggunaan; ?></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Nama Penyewa</label>
                 <div class="col-md-4">
                     <input type="text" <?php echo $disabled; ?> class="form-control" name="nama_sewa" value="<?php echo $nama_sewa; ?>">
@@ -129,6 +159,12 @@
                 <label class="col-md-2 col-form-label">Waktu Akhir Sewa</label>
                 <div class="col-md-4">
                     <input type="date" <?php echo $disabled; ?> class="form-control" name="waktu_sewa_akhir" value="<?php echo $waktu_sewa_akhir; ?>">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Keterangan Penggunaan Aset yang Disewakan</label>
+                <div class="col-md-10">
+                    <textarea <?php echo $disabled; ?> class="form-control" name="ket_penggunaan_aset"><?php echo $ket_penggunaan_aset; ?></textarea>
                 </div>
             </div>
             <div class="form-group row">
@@ -175,7 +211,8 @@
                     "action": "simpan_aset",
                     "api_key": "<?php echo $api_key; ?>",
                     "id_post": "<?php echo $post->ID; ?>",
-                    "sejarah": tinyMCE.get('sejarah').getContent(),
+                    "sejarah": jQuery('textarea[name="sejarah"]').val(),
+                    "kronologi": tinyMCE.get('kronologi').getContent(),
                     "foto": tinyMCE.get('foto').getContent(),
                     "video": tinyMCE.get('video').getContent(),
                     "latitude": jQuery('input[name="latitude"]').val(),
@@ -189,7 +226,12 @@
                     "waktu_sewa_akhir": jQuery('input[name="waktu_sewa_akhir"]').val(),
                     "aset_perlu_tindak_lanjut": jQuery('input[name="aset_perlu_tindak_lanjut"]:checked').val(),
                     "ket_aset_perlu_tindak_lanjut": jQuery('textarea[name="ket_aset_perlu_tindak_lanjut"]').val(),
-                    "status_informasi": jQuery('input[name="status_informasi"]:checked').val()
+                    "status_informasi": jQuery('input[name="status_informasi"]:checked').val(),
+                    "ket_penggunaan_aset": jQuery('textarea[name="ket_penggunaan_aset"]').val(),
+                    "kondisi_aset": jQuery('#kondisi_aset option:selected').val(),
+                    "keterangan_kondisi_aset": jQuery('textarea[name="keterangan_kondisi_aset"]').val(),
+                    "ket_potensi_penggunaan": jQuery('textarea[name="ket_potensi_penggunaan"]').val(),
+
                 },
                 dataType: "json",
                 success: function(data){
