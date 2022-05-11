@@ -10,7 +10,7 @@
     function progressLoading() {
         $.LoadingOverlay('show', { 
             image : '', 
-            custom : '<video style="position: absolute; width: 100%; top: 0" autoplay muted><source <?php echo $src; ?> type="video/mp4">Your browser does not support the video tag.</video>', 
+            custom : '<video style="position: absolute; width: 90%; top: 0; margin: auto;" autoplay muted><source <?php echo $src; ?> type="video/mp4">Your browser does not support the video tag.</video>', 
             imageAnimation : false,
             background : "rgba(0, 0, 0, 1)" 
         });
