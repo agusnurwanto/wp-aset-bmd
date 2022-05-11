@@ -425,6 +425,7 @@ class Wp_Aset_Bmd_Public {
 		    $polygon = '[]';
 		}
 		$meta_sejarah = get_post_meta($post->ID, 'meta_sejarah', true);
+		$meta_kronologi = get_post_meta($post->ID, 'meta_kronologi', true);
 		$meta_foto = get_post_meta($post->ID, 'meta_foto', true);
 		$meta_video = get_post_meta($post->ID, 'meta_video', true);
 		$meta_disewakan = get_post_meta($post->ID, 'meta_disewakan', true);
@@ -911,6 +912,7 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'longitude', $_POST['longitude']);
 						update_post_meta($post->ID, 'polygon', $_POST['polygon']);
 						update_post_meta($post->ID, 'meta_sejarah', $_POST['sejarah']);
+						update_post_meta($post->ID, 'meta_kronologi', $_POST['kronologi']);
 						update_post_meta($post->ID, 'meta_foto', $_POST['foto']);
 						update_post_meta($post->ID, 'meta_video', $_POST['video']);
 						update_post_meta($post->ID, 'meta_disewakan', $_POST['disewakan']);

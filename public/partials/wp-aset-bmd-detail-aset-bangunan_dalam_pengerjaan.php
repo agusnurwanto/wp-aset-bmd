@@ -81,11 +81,17 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Sejarah</label>
                 <div class="col-md-10">
+                    <textarea <?php echo $disabled; ?> class="form-control" name="sejarah"><?php echo $meta_sejarah; ?></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Kronologi</label>
+                <div class="col-md-10">
                 <?php 
                     if(!empty($params['key']['edit'])){
-                        wp_editor($meta_sejarah,'sejarah',array('textarea_name' => 'sejarah', 'textarea_rows' => 20)); 
+                        wp_editor($meta_kronologi,'kronologi',array('textarea_name' => 'kronologi', 'textarea_rows' => 20)); 
                     }else{
-                        echo $meta_sejarah;
+                        echo $meta_kronologi;
                     }
                 ?>
                 </div>
@@ -202,7 +208,8 @@
                     "action": "simpan_aset",
                     "api_key": "<?php echo $api_key; ?>",
                     "id_post": "<?php echo $post->ID; ?>",
-                    "sejarah": tinyMCE.get('sejarah').getContent(),
+                    "sejarah": jQuery('textarea[name="sejarah"]').val(),
+                    "kronologi": tinyMCE.get('kronologi').getContent(),
                     "foto": tinyMCE.get('foto').getContent(),
                     "video": tinyMCE.get('video').getContent(),
                     "latitude": jQuery('input[name="latitude"]').val(),
