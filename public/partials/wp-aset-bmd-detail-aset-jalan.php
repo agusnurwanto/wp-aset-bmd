@@ -135,12 +135,6 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Keterangan Potensi Penggunaan</label>
-                <div class="col-md-10">
-                    <textarea <?php echo $disabled; ?> class="form-control" name="ket_potensi_penggunaan"><?php echo $ket_potensi_penggunaan; ?></textarea>
-                </div>
-            </div>
-            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Disewakan / Tidak</label>
                 <div class="col-md-4">
                     <label><input type="radio" <?php echo $disabled.' '.$checked_sewa; ?> name="disewakan" value="1"> Disewakan</label>
@@ -149,6 +143,12 @@
                 <label class="col-md-2 col-form-label">Nilai Sewa</label>
                 <div class="col-md-4">
                     <input type="number" <?php echo $disabled; ?> class="form-control" name="nilai_sewa" value="<?php echo $nilai_sewa; ?>">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Keterangan Potensi Penggunaan</label>
+                <div class="col-md-10">
+                    <textarea <?php echo $disabled; ?> class="form-control" name="ket_potensi_penggunaan"><?php echo $ket_potensi_penggunaan; ?></textarea>
                 </div>
             </div>
             <div class="form-group row">
