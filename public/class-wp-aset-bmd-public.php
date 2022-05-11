@@ -455,6 +455,7 @@ class Wp_Aset_Bmd_Public {
 		$ket_penggunaan_aset = get_post_meta($post->ID, 'meta_ket_penggunaan_aset', true);
 		$kondisi_aset = get_post_meta($post->ID, 'meta_kondisi_aset', true);
 		$keterangan_kondisi_aset = get_post_meta($post->ID, 'meta_keterangan_kondisi_aset', true);
+		$ket_potensi_penggunaan = get_post_meta($post->ID, 'meta_ket_potensi_penggunaan', true);
 		$allow_edit_post = $this->cek_edit_post(array(
 		    'Kd_Prov' => $Kd_Prov,
 		    'Kd_Kab_Kota' => $Kd_Kab_Kota,
@@ -923,6 +924,7 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_ket_penggunaan_aset', $_POST['ket_penggunaan_aset']);
 						update_post_meta($post->ID, 'meta_kondisi_aset', $_POST['kondisi_aset']);
 						update_post_meta($post->ID, 'meta_keterangan_kondisi_aset', $_POST['keterangan_kondisi_aset']);
+						update_post_meta($post->ID, 'meta_ket_potensi_penggunaan', $_POST['ket_potensi_penggunaan']);
 						$post_status = 'private';
 						if(
 							!empty($_POST['status_informasi'])
