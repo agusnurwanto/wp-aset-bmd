@@ -41,14 +41,22 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Kondisi Aset</label>
+                <label class="col-md-2 col-form-label">Kondisi Aset di Simda</label>
                 <div class="col-md-10">
-                    <select <?php echo $disabled; ?> name="kondisi_aset" id="kondisi_aset" >
-                        <option value="<?php echo $kondisi_aset; ?>"><?php echo $kondisi_aset; ?></option>
-                        <option value="Baik">Baik</option>
-                        <option value="Rusak Ringan">Rusak Ringan</option>
-                        <option value="Rusak Berat">Rusak Berat</option>
-                        <option value="Hilang">Hilang</option>
+                    <select disabled name="kondisi_aset_simda" id="kondisi_aset_simda" >
+                        <option value="<?php echo $kondisi_simda ?>"><?php echo $kondisi_simda; ?></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Kondisi Aset di Simata</label>
+                <div class="col-md-10">
+                    <select <?php echo $disabled; ?> name="kondisi_aset_simata" id="kondisi_aset_simata" >
+                        <option value="<?php echo $kondisi_aset_simata; ?>"><?php echo $kondisi_aset_simata; ?></option>
+                        <option value="1">Baik</option>
+                        <option value="2">Rusak Ringan</option>
+                        <option value="3">Rusak Berat</option>
+                        <option value="4">Hilang</option>
                     </select>
                 </div>
             </div>
@@ -225,7 +233,7 @@
                     "ket_aset_perlu_tindak_lanjut": jQuery('textarea[name="ket_aset_perlu_tindak_lanjut"]').val(),
                     "status_informasi": jQuery('input[name="status_informasi"]:checked').val(),
                     "ket_penggunaan_aset": jQuery('textarea[name="ket_penggunaan_aset"]').val(),
-                    "kondisi_aset": jQuery('#kondisi_aset option:selected').val(),
+                    "kondisi_aset_simata": jQuery('#kondisi_aset_simata option:selected').val(),
                     "keterangan_kondisi_aset": jQuery('textarea[name="keterangan_kondisi_aset"]').val(),
                     "ket_potensi_penggunaan": jQuery('textarea[name="ket_potensi_penggunaan"]').val(),
 

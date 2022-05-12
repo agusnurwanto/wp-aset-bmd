@@ -446,6 +446,36 @@ class Wp_Aset_Bmd_Public {
 		if($meta_tindak_lanjut == '1'){
 			$checked_tindak_lanjut = 'checked';
 		}
+		$kondisi_aset_simata = get_post_meta($post->ID, 'meta_kondisi_aset_simata', true);
+		
+		if($kondisi_aset_simata == '1'){
+			$kondisi_aset_simata = 'Baik';
+		}
+		if($kondisi_aset_simata == '2'){
+			$kondisi_aset_simata = 'Rusak Ringan';
+		}
+		if($kondisi_aset_simata == '3'){
+			$kondisi_aset_simata = 'Rusak Berat';
+		}
+		if($kondisi_aset_simata == '4'){
+			$kondisi_aset_simata = 'Hilang';
+		}
+
+		$kondisi_simda = $aset[0]->Kondisi;
+
+		if ($kondisi_simda == 1) {
+			$kondisi_simda = 'Baik';
+		}
+		if ($kondisi_simda == 2) {
+			$kondisi_simda = 'Rusak Ringan';
+		}
+		if ($kondisi_simda == 3) {
+			$kondisi_simda = 'Rusak Berat';
+		}
+		if ($kondisi_simda == 4) {
+			$kondisi_simda = 'Hilang';
+		}
+		
 
 		$nilai_sewa = get_post_meta($post->ID, 'meta_nilai_sewa', true);
 		$nama_sewa = get_post_meta($post->ID, 'meta_nama_sewa', true);
@@ -454,7 +484,7 @@ class Wp_Aset_Bmd_Public {
 		$waktu_sewa_akhir = get_post_meta($post->ID, 'meta_waktu_sewa_akhir', true);
 		$aset_perlu_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
 		$ket_penggunaan_aset = get_post_meta($post->ID, 'meta_ket_penggunaan_aset', true);
-		$kondisi_aset = get_post_meta($post->ID, 'meta_kondisi_aset', true);
+		
 		$keterangan_kondisi_aset = get_post_meta($post->ID, 'meta_keterangan_kondisi_aset', true);
 		$ket_potensi_penggunaan = get_post_meta($post->ID, 'meta_ket_potensi_penggunaan', true);
 		$allow_edit_post = $this->cek_edit_post(array(
@@ -924,7 +954,7 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_aset_perlu_tindak_lanjut', $_POST['aset_perlu_tindak_lanjut']);
 						update_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', $_POST['ket_aset_perlu_tindak_lanjut']);
 						update_post_meta($post->ID, 'meta_ket_penggunaan_aset', $_POST['ket_penggunaan_aset']);
-						update_post_meta($post->ID, 'meta_kondisi_aset', $_POST['kondisi_aset']);
+						update_post_meta($post->ID, 'meta_kondisi_aset_simata', $_POST['kondisi_aset_simata']);
 						update_post_meta($post->ID, 'meta_keterangan_kondisi_aset', $_POST['keterangan_kondisi_aset']);
 						update_post_meta($post->ID, 'meta_ket_potensi_penggunaan', $_POST['ket_potensi_penggunaan']);
 						$post_status = 'private';
