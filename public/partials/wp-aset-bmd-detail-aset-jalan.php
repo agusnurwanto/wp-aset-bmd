@@ -61,6 +61,14 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label">Kondisi Aset di Simda</label>
+                <div class="col-md-10">
+                    <select disabled name="kondisi_aset_simda" id="kondisi_aset_simda" >
+                        <option value="<?php echo $kondisi_simda ?>"><?php echo $kondisi_simda; ?></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Kondisi Aset</label>
                 <div class="col-md-10">
                     <select <?php echo $disabled; ?> name="kondisi_aset" id="kondisi_aset" >

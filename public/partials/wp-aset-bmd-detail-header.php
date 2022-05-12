@@ -17,6 +17,7 @@ $link_detail_unit = $this->get_link_daftar_aset(
             'jenis_aset' => $params['jenis_aset']
         )
     ));
+
 ?>
 <style type="text/css">
     .warning {
