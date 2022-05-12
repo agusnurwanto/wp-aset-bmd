@@ -1,31 +1,3 @@
-<script type="text/javascript">
-    jQuery(document).ready(function(){
-        jQuery('body').addClass('bg-infinity');
-    });
-</script>
-<!-- CSS Begins-->
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/flaticon.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/bootstrap.part1.min.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/bootstrap.part2.min.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/portfolio.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/animate.min.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/prettyPhoto.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/flexslider.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/tweet-carousel.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/vegas.min.css" rel="stylesheet" type="text/css" />
-<!-- Main Style -->
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/style.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/responsive.css" rel="stylesheet" type="text/css /">
-<!-- Color Panel -->
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/color_panel.css" rel="stylesheet" type="text/css /">
-<!-- Skin Colors -->
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/landing.css" id="changeable-colors" rel="stylesheet" type="text/css" />
-<!-- Custom Styles -->
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/parallax-star.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/floating-cloud.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/infinity.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/css/bgsliding.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
     .page-title {
         background-image:
@@ -80,7 +52,6 @@
     }
     .intro-text h1 {
         font-size: 40px;
-        color: #fff;
     }
     .pull-up {
         transition: all 0.25s ease; 
@@ -92,9 +63,11 @@
         box-shadow: inset 0 0 4px #2e3642;
     }
     .keterangan {
-        color: #000;
         margin-bottom: 25px;
         border-bottom: 1px solid #a9a8a8;
+    }
+    .text-shadow {
+        text-shadow: 2px 2px 4px #fff;
     }
 </style>
 <section id="sewa_aset">
@@ -107,18 +80,27 @@
             </div>
         </div>
     <?php
-        for($i=1; $i<=10; $i++){
+        for($i=1; $i<=5; $i++){
+            $n = $i*2;
+            $_n = $n-1;
             echo '
                 <div class="row">
-                    <div class="col-md-12 text-center">
+                    <div class="col-md-6 text-center">
                         <div class="setbulet bg-info pull-up">
-                            <img src="'.get_option('_crb_menu_logo_'.$i).'">
+                            <img src="'.get_option('_crb_menu_logo_'.$_n).'">
                         </div>
-                        <h3 class="normal text-white text-xbold text-shadow">'.get_option('_crb_menu_text_'.$i).'</h3>
+                        <h3 class="normal text-xbold text-shadow">'.get_option('_crb_menu_text_'.$_n).'</h3>
+                        <div class="normal text-shadow keterangan text-left">
+                            '.get_option('_crb_menu_keterangan_'.$_n).'
+                        </div>
                     </div>
-                    <div class="col-md-12">
-                        <div class="keterangan">
-                            '.get_option('_crb_menu_keterangan_'.$i).'
+                    <div class="col-md-6 text-center">
+                        <div class="setbulet bg-info pull-up">
+                            <img src="'.get_option('_crb_menu_logo_'.$n).'">
+                        </div>
+                        <h3 class="normal text-xbold text-shadow">'.get_option('_crb_menu_text_'.$n).'</h3>
+                        <div class="normal text-shadow keterangan text-left">
+                            '.get_option('_crb_menu_keterangan_'.$n).'
                         </div>
                     </div>
                 </div>';
@@ -126,28 +108,4 @@
     ?>
     </div>
 </section>
-
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/jquery.sticky.js"></script>
-<!-- Slider and Features Canvas -->
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/jquery.flexslider-min.js"></script>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/vegas.min.js"></script>
-<!-- Overlay -->
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/modernizr.js"></script>
-<!-- Screenshot -->
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/jquery.flexisel.js"></script>
-<!-- Portfolio -->
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/jquery.prettyPhoto.js"></script>
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/jquery.mixitup.min.js"></script>
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/jquery.fitvids.js"></script>
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/jquery.easing.1.3.js"></script>
-<!-- Counting Section -->
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/jquery.appear.js"></script>
-<!-- Expertise Circular Progress Bar -->
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/effect.js"></script>
-<!-- Twitter -->
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/carousel.js"></script>
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/custom.js"></script>
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/delaunator.min.js"></script>
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/rainbow-lines.js"></script>
-<!-- Color -->
-<script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/color-panel.js"></script>
