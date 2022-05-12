@@ -120,7 +120,6 @@ window.pieChart = new Chart(document.getElementById('chart_per_jenis_aset'), {
 				        const y = mid_radius * Math.sin(mid_angle);
 
 				        ctx.fillStyle = '#fff';
-				        ctx.fillText(formatRupiah(value), metaData.x + x, metaData.y + y);
 				        ctx.fillText(percent, metaData.x + x, metaData.y + y + 20);
 			      	});
 			    });
@@ -142,7 +141,7 @@ data_skpd.map(function(b, i){
 });
 // console.log('new_data', new_data);
 window.pieChart2 = new Chart(document.getElementById('chart_per_unit'), {
-    type: 'line',
+    type: 'bar',
     data: {
     	labels: labels,
         datasets: [
