@@ -220,8 +220,7 @@ update_option('_crb_total_per_jenis', json_encode(array(
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center" id="title_total">Total Nilai Barang Milik Daerah<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?><br>Rp <?php echo number_format($total_nilai,2,",","."); ?></h2>
-        <h2 class="text-center">Data Barang Milik Daerah Per Jenis Aset</h2>
+        <h2 class="text-center">Data Barang Milik Daerah Per Jenis Aset<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <div class="container counting-inner">
             <div class="row counting-box title-row" style="margin-bottom: 55px;">
                 <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
