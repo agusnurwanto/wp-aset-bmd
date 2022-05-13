@@ -252,6 +252,20 @@ class Wp_Aset_Bmd_Admin {
         	'no_key' => 1,
 			'post_status' => 'publish'
 		));
+		$aset_belum_masuk_neraca = $this->functions->generatePage(array(
+			'nama_page' => 'Aset Belum Masuk Neraca',
+			'content' => '[aset_belum_masuk_neraca]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'publish'
+		));
+		$temuan_bpk = $this->functions->generatePage(array(
+			'nama_page' => 'Temuan BPK',
+			'content' => '[temuan_bpk]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'private'
+		));
 
         $status = $this->get_status_simda();
         $nama_pemda = $status['data']['nama_pemda'];
@@ -321,6 +335,8 @@ class Wp_Aset_Bmd_Admin {
 	            		<li><b>Galeri: <a target="_blank" href="'.$link_dashboard_galeri['url'].'">'.$link_dashboard_galeri['title'].'</a></b></li>
 	            		<li><b>Petunjuk Penggunaan: <a target="_blank" href="'.$petunjuk_penggunaan['url'].'">'.$petunjuk_penggunaan['title'].'</a></b></li>
 	            		<li><b>Dokumentasi Sistem: <a target="_blank" href="'.$dokumentasi_sistem['url'].'">'.$dokumentasi_sistem['title'].'</a></b></li>
+	            		<li><b>Aset Belum Masuk Neraca: <a target="_blank" href="'.$aset_belum_masuk_neraca['url'].'">'.$aset_belum_masuk_neraca['title'].'</a></b></li>
+	            		<li><b>Temuan BPK: <a target="_blank" href="'.$temuan_bpk['url'].'">'.$temuan_bpk['title'].'</a></b></li>
 	            	</ul>
 	            	' ),
 	        	Field::make( 'html', 'crb_simda_bmd_referensi_html' )
@@ -389,7 +405,7 @@ class Wp_Aset_Bmd_Admin {
 			->add_tab( __( 'Icon & Menu' ), array(
 		        Field::make( 'image', 'crb_menu_logo_1', __( 'Gambar Menu 1' ) )
 		        	->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL . 'public/images/money.png'),
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/total-aset.png'),
 		        Field::make( 'text', 'crb_menu_text_1', __( 'Text Menu 1' ) )
         			->set_default_value('Total Aset'),
 		        Field::make( 'text', 'crb_menu_url_1', __( 'URL Menu 1' ) )
@@ -398,7 +414,7 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value('keterangan'),
 		        Field::make( 'image', 'crb_menu_logo_2', __( 'Gambar Menu 2' ) )
 		        	->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL . 'public/images/home.png'),
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/per-opd.png'),
 		        Field::make( 'text', 'crb_menu_text_2', __( 'Text Menu 2' ) )
         			->set_default_value('Aset Per Unit SKPD'),
 		        Field::make( 'text', 'crb_menu_url_2', __( 'URL Menu 2' ) )
@@ -407,7 +423,7 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value('keterangan'),
 		        Field::make( 'image', 'crb_menu_logo_3', __( 'Gambar Menu 3' ) )
 		        	->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL . 'public/images/demografi.png'),
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/peta.png'),
 		        Field::make( 'text', 'crb_menu_text_3', __( 'Text Menu 3' ) )
         			->set_default_value('Peta'),
 		        Field::make( 'text', 'crb_menu_url_3', __( 'URL Menu 3' ) )
@@ -416,7 +432,7 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value('keterangan'),
 		        Field::make( 'image', 'crb_menu_logo_4', __( 'Gambar Menu 4' ) )
 		        	->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL . 'public/images/binwas.png'),
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/disewakan.png'),
 		        Field::make( 'text', 'crb_menu_text_4', __( 'Text Menu 4' ) )
         			->set_default_value('Aset Disewakan'),
 		        Field::make( 'text', 'crb_menu_url_4', __( 'URL Menu 4' ) )
@@ -425,7 +441,7 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value('keterangan'),
 		        Field::make( 'image', 'crb_menu_logo_5', __( 'Gambar Menu 5' ) )
 		        	->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL . 'public/images/monitor.png'),
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/potensi.png'),
 		        Field::make( 'text', 'crb_menu_text_5', __( 'Text Menu 5' ) )
         			->set_default_value('Potensi Aset'),
 		        Field::make( 'text', 'crb_menu_url_5', __( 'URL Menu 5' ) )
@@ -434,7 +450,7 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value('keterangan'),
 		        Field::make( 'image', 'crb_menu_logo_6', __( 'Gambar Menu 6' ) )
 		        	->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL . 'public/images/line.png'),
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/klasifikasi.png'),
 		        Field::make( 'text', 'crb_menu_text_6', __( 'Text Menu 6' ) )
         			->set_default_value('Klasifikasi Aset'),
 		        Field::make( 'text', 'crb_menu_url_6', __( 'URL Menu 6' ) )
@@ -443,7 +459,7 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value('keterangan'),
 		        Field::make( 'image', 'crb_menu_logo_7', __( 'Gambar Menu 7' ) )
 		        	->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL . 'public/images/nasional.png'),
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/sertifikat.png'),
 		        Field::make( 'text', 'crb_menu_text_7', __( 'Text Menu 7' ) )
         			->set_default_value('Tanah Bersertifikat'),
 		        Field::make( 'text', 'crb_menu_url_7', __( 'URL Menu 7' ) )
@@ -452,7 +468,7 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value('keterangan'.'?sertifikat=1'),
 		        Field::make( 'image', 'crb_menu_logo_8', __( 'Gambar Menu 8' ) )
 		        	->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL . 'public/images/geografi.png'),
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/belum-sertifikat.png'),
 		        Field::make( 'text', 'crb_menu_text_8', __( 'Text Menu 8' ) )
         			->set_default_value('Tanah Belum Bersertifikat'),
 		        Field::make( 'text', 'crb_menu_url_8', __( 'URL Menu 8' ) )
@@ -461,7 +477,7 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value('keterangan'),
 		        Field::make( 'image', 'crb_menu_logo_9', __( 'Gambar Menu 9' ) )
 		        	->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL . 'public/images/lppd.png'),
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/perlu-tindak-lanjut.png'),
 		        Field::make( 'text', 'crb_menu_text_9', __( 'Text Menu 9' ) )
         			->set_default_value('Aset Perlu Tindak Lanjut'),
 		        Field::make( 'text', 'crb_menu_url_9', __( 'URL Menu 9' ) )
@@ -486,14 +502,39 @@ class Wp_Aset_Bmd_Admin {
         			->set_default_value($petunjuk_penggunaan['url']),
 		        Field::make( 'rich_text', 'crb_menu_keterangan_11', __( 'Keterangan Menu 11' ) )
 		        	->set_default_value('keterangan'),
+		        Field::make( 'image', 'crb_menu_logo_0', __( 'Gambar Menu Lainya' ) )
+		        	->set_value_type('url')
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/lainnya.png'),
+		        Field::make( 'text', 'crb_menu_text_0', __( 'Text Menu Lainya' ) )
+        			->set_default_value('Lainnya'),
+		        Field::make( 'rich_text', 'crb_menu_keterangan_0', __( 'Keterangan Menu Lainya' ) )
+		        	->set_default_value('keterangan'),
 		        Field::make( 'image', 'crb_menu_logo_12', __( 'Gambar Menu 12' ) )
 		        	->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL . 'public/images/budget.png'),
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/dokumentasi.png'),
 		        Field::make( 'text', 'crb_menu_text_12', __( 'Text Menu 12' ) )
         			->set_default_value('Dokumentasi Sistem'),
 		        Field::make( 'text', 'crb_menu_url_12', __( 'URL Menu 12' ) )
         			->set_default_value($dokumentasi_sistem['url']),
 		        Field::make( 'rich_text', 'crb_menu_keterangan_12', __( 'Keterangan Menu 12' ) )
+		        	->set_default_value('keterangan'),
+		        Field::make( 'image', 'crb_menu_logo_13', __( 'Gambar Menu 13' ) )
+		        	->set_value_type('url')
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/neraca.png'),
+		        Field::make( 'text', 'crb_menu_text_13', __( 'Text Menu 13' ) )
+        			->set_default_value('Aset Belum Masuk Neraca'),
+		        Field::make( 'text', 'crb_menu_url_13', __( 'URL Menu 13' ) )
+        			->set_default_value($aset_belum_masuk_neraca['url']),
+		        Field::make( 'rich_text', 'crb_menu_keterangan_13', __( 'Keterangan Menu 13' ) )
+		        	->set_default_value('keterangan'),
+		        Field::make( 'image', 'crb_menu_logo_14', __( 'Gambar Menu 14' ) )
+		        	->set_value_type('url')
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/temuan-bpk.png'),
+		        Field::make( 'text', 'crb_menu_text_14', __( 'Text Menu 14' ) )
+        			->set_default_value('Temuan BPK'),
+		        Field::make( 'text', 'crb_menu_url_14', __( 'URL Menu 14' ) )
+        			->set_default_value($temuan_bpk['url']),
+		        Field::make( 'rich_text', 'crb_menu_keterangan_14', __( 'Keterangan Menu 14' ) )
 		        	->set_default_value('keterangan')
 		    ) )
 			->add_tab( __( 'Sub Unit' ), array(
