@@ -10,8 +10,12 @@ $api_googlemap = get_option( '_crb_google_api' );
 $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
 
 $where = 'AND a.Sertifikat_Nomor is null';
+$title_sertifikat = 'Belum';
 if(!empty($_GET) && !empty($_GET['sertifikat'])){
     $where = 'AND a.Sertifikat_Nomor is not null';
+    if($_GET['sertifikat'] == 1){
+        $title_sertifikat = 'Sudah';
+    }
 }
 
 $sql = '
@@ -92,11 +96,19 @@ foreach($aset as $k => $val){
         $alamat = '';
     }
     $keterangan = array($val->Keterangan);
+    $tanggal_sertifikat = substr($val->Sertifikat_Tanggal,0,10);
+    $tanggal_sertifikat = $val->Sertifikat_Tanggal == '' ? '-' : date("d-m-Y", strtotime($tanggal_sertifikat));
+    $column_sertifikat = $val->Sertifikat_Nomor.' ('.$tanggal_sertifikat.')';
+    if($val->Sertifikat_Nomor == ''){
+        $column_sertifikat = $tanggal_sertifikat;
+    }
     $body .= '
         <tr>
             <td class="text-center">'.$kd_barang.'.'.$kd_register.'</td>
             <td>'.$val->Nm_Aset5.'</td>
             <td>'.$val->Nm_UPB.' '.$alamat.'</td>
+            <td>'.$val->Alamat.'</td>
+            <td style="width:110px;text-align:center;">'.$column_sertifikat.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
             <td class="text-right" data-sort="'.$val->Harga.'">'.number_format($val->Harga,2,",",".").'</td>
             <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a><br><a style="margin-top: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
@@ -132,7 +144,7 @@ if(!empty($_GET) && !empty($_GET['sertifikat'])){
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Aset Tanah Yang Belum Bersertifikat<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Aset Tanah Yang <?php echo $title_sertifikat ?> Bersertifikat<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div>
         <table class="table table-bordered" id="data_aset_sewa">
             <thead>
@@ -140,6 +152,8 @@ if(!empty($_GET) && !empty($_GET['sertifikat'])){
                     <th class="text-center">Kode Barang</th>
                     <th class="text-center">Nama Aset</th>
                     <th class="text-center">Unit Pengelola Barang</th>
+                    <th class="text-center">Lokasi</th>
+                    <th class="text-center">Nomor Sertifikat</th>
                     <th class="text-center">Keterangan</th>
                     <th class="text-center">Nilai Aset (Rp)</th>
                     <th class="text-center">Aksi</th>
@@ -149,7 +163,7 @@ if(!empty($_GET) && !empty($_GET['sertifikat'])){
                 <?php echo $body; ?>
             </tbody>
             <tfoot>
-                <th colspan="4" class="text-center">Total Nilai</th>
+                <th colspan="6" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_aset">0</th>
                 <th></th>
             <tfoot>
@@ -174,7 +188,7 @@ jQuery(document).on('ready', function(){
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
             var api = this.api();
-            var total_page = api.column( 4, { page: 'current'} )
+            var total_page = api.column( 6, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
