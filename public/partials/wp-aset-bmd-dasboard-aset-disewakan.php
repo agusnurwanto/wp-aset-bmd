@@ -129,7 +129,8 @@ foreach($query->posts as $post){
     $table_simda = $data_jenis['table_simda'];
     $ket_penggunaan_aset = get_post_meta($post->ID, 'meta_ket_penggunaan_aset', true);
 
-
+    $warna_map = '';
+    $ikon_map  = '';
     if ($params['jenis_aset'] == 'tanah') {
         $warna_map = get_option('_crb_warna_tanah');
         $ikon_map  = get_option('_crb_icon_tanah');
@@ -198,13 +199,34 @@ foreach($query->posts as $post){
             AND a.Kd_Unit=%d 
             AND a.Kd_Sub=%d 
             AND a.Kd_UPB=%d
+            AND a.Kd_Aset8=%d
+            AND a.Kd_Aset80=%d
+            AND a.Kd_Aset81=%d
+            AND a.Kd_Aset82=%d
+            AND a.Kd_Aset83=%d
+            AND a.Kd_Aset84=%d
+            AND a.Kd_Aset85=%d
             AND a.No_Reg8=%d
             '.$where.'
-        ', $Kd_Prov, $Kd_Kab_Kota, $Kd_Bidang, $Kd_Unit, $Kd_Sub, $Kd_UPB, $No_Reg8);
+        ',
+        $Kd_Prov,
+        $Kd_Kab_Kota,
+        $Kd_Bidang,
+        $Kd_Unit,
+        $Kd_Sub,
+        $Kd_UPB,
+        $Kd_Aset8,
+        $Kd_Aset80,
+        $Kd_Aset81,
+        $Kd_Aset82,
+        $Kd_Aset83,
+        $Kd_Aset84,
+        $Kd_Aset85,
+        $No_Reg8
+    );
     $aset = $this->functions->CurlSimda(array(
         'query' => $sql 
     ));
-    $no++;
     $kd_register = $this->functions->CekNull($aset[0]->No_Reg8, 6);
     $kd_lokasi = '12.'.$this->functions->CekNull($aset[0]->Kd_Prov).'.'.$this->functions->CekNull($aset[0]->Kd_Kab_Kota).'.'.$this->functions->CekNull($aset[0]->Kd_Bidang).'.'.$this->functions->CekNull($aset[0]->Kd_Unit).'.'.$this->functions->CekNull($aset[0]->Kd_Sub).'.'.$this->functions->CekNull($aset[0]->Kd_UPB).'.'.$this->functions->CekNull($aset[0]->Kd_Kecamatan).'.'.$this->functions->CekNull($aset[0]->Kd_Desa);
     $kd_barang = $aset[0]->Kd_Aset8.'.'.$aset[0]->Kd_Aset80.'.'.$this->functions->CekNull($aset[0]->Kd_Aset81).'.'.$this->functions->CekNull($aset[0]->Kd_Aset82).'.'.$this->functions->CekNull($aset[0]->Kd_Aset83).'.'.$this->functions->CekNull($aset[0]->Kd_Aset84).'.'.$this->functions->CekNull($aset[0]->Kd_Aset85, 3);
@@ -250,6 +272,7 @@ foreach($query->posts as $post){
     ';
     $total_nilai_sewa++;
     $data_aset[] = array(
+        'jenis' => $data_jenis['jenis'],
         'aset' => $aset[0],
         'lng' => $koordinatX,
         'ltd' => $koordinatY,
@@ -408,18 +431,31 @@ function initMap() {
             var Coords1 = JSON.parse(aset.polygon);
 
             // Membuat Shape
-            var bentuk_bidang1 = new google.maps.Polygon({
-                paths: Coords1,
-                strokeColor: aset.warna_map,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: aset.warna_map,
-                fillOpacity: 0.45,
-                html: contentString,
-                map,
-            });
-
-            bentuk_bidang1.setMap(map);
+            if(aset.jenis == 'jalan'){
+                var bentuk_bidang1 = new google.maps.Polyline({
+                    map: map,
+                    path: Coords1,
+                    geodesic: true,
+                    strokeColor: aset.warna_map,
+                    strokeOpacity: 3,
+                    strokeWeight: 6,
+                    fillColor: aset.warna_map,
+                    fillOpacity: 3,
+                    html: contentString
+                });
+            }else{
+                var bentuk_bidang1 = new google.maps.Polygon({
+                    map: map,
+                    paths: Coords1,
+                    strokeColor: aset.warna_map,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: aset.warna_map,
+                    fillOpacity: 0.45,
+                    html: contentString
+                });
+            }
+            
             infoWindow = new google.maps.InfoWindow({
                 content: contentString
             });

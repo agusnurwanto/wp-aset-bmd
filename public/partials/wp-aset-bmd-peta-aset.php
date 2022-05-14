@@ -9,71 +9,114 @@ $data_aset = array();
 $total_nilai = 0;
 $api_googlemap = get_option( '_crb_google_api' );
 $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
-$no=0;
-$nama_jenis_aset = array();
-$filter_sub_unit = $this->functions->get_option_multiselect('_crb_sub_unit_pilihan');
-$all_jenis = array('tanah', 'bangunan', 'jalan');
-foreach($all_jenis as $jenis){
-    $where_prov = array();
-    $where_kab_kota = array();
-    $where_bidang = array();
-    $where_unit = array();
-    $where_sub = array();
-    foreach($filter_sub_unit as $sub){
-        $kd = explode('.', $sub);
-        $where_prov[$kd[1]] = (int) $kd[1];
-        $where_kab_kota[$kd[2]] = (int) $kd[2];
-        $where_bidang[$kd[3]] = (int) $kd[3];
-        $where_unit[$kd[4]] = (int) $kd[4];
-        $where_sub[$kd[5]] = (int) $kd[5];
-    }
-    $where_all = '';
-    if(!empty($where_sub)){
-        $where_all = '
-            AND (
-                a.Kd_Prov IN ('.implode(',', $where_prov).')
-                AND a.Kd_Kab_Kota IN ('.implode(',', $where_kab_kota).')
-                AND a.Kd_Bidang IN ('.implode(',', $where_bidang).')
-                AND a.Kd_Unit IN ('.implode(',', $where_unit).')
-                AND a.Kd_Sub IN ('.implode(',', $where_sub).')
-            )
-        ';
-    }
-    $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis));
-    $nama_jenis_aset[] = $data_jenis['nama'];
-    $table_simda = $data_jenis['table_simda'];
 
-    $limit = '';
-    // $limit = 'TOP 100';
-    $sql = '
-        select '.$limit.'
+$nama_jenis_aset = array();
+$args = array(
+   'meta_key' => 'meta_disewakan',
+   'meta_query' => array(
+       array(
+           'key' => 'polygon',
+           'value' => array(''),
+           'compare' => 'NOT IN',
+       )
+   )
+);
+$total_nilai_sewa = 0;
+$query = new WP_Query($args);
+$data_aset = array();
+foreach($query->posts as $post){
+    $params = shortcode_parse_atts(str_replace('[detail_aset', '', str_replace(']', '', $post->post_content)));
+    $kd_lokasi = explode('.', $params['kd_lokasi']);
+    $Kd_Prov = (int) $kd_lokasi[1];
+    $Kd_Kab_Kota = (int) $kd_lokasi[2];
+    $Kd_Bidang = (int) $kd_lokasi[3];
+    $Kd_Unit = (int) $kd_lokasi[4];
+    $Kd_Sub = (int) $kd_lokasi[5];
+    $Kd_UPB = (int) $kd_lokasi[6];
+    $Kd_Kecamatan = (int) $kd_lokasi[7];
+    $Kd_Desa = (int) $kd_lokasi[8];
+
+    $kd_barang = explode('.', $params['kd_barang']);
+    $Kd_Aset8 = (int) $kd_barang[0];
+    $Kd_Aset80 = (int) $kd_barang[1];
+    $Kd_Aset81 = (int) $kd_barang[2];
+    $Kd_Aset82 = (int) $kd_barang[3];
+    $Kd_Aset83 = (int) $kd_barang[4];
+    $Kd_Aset84 = (int) $kd_barang[5];
+    $Kd_Aset85 = (int) $kd_barang[6];
+    $No_Reg8 = (int) $params['kd_register'];
+
+    $sql = "
+        SELECT 
+            u.Nm_UPB, 
+            k.Nm_Kecamatan,
+            u.Nm_UPB,
+            s.Nm_Sub_Unit,
+            d.Nm_Desa
+        from ref_upb u
+        INNER JOIN ref_sub_unit s ON u.Kd_Prov=s.Kd_Prov
+            AND u.Kd_Kab_Kota = s.Kd_Kab_Kota 
+            AND u.Kd_Bidang = s.Kd_Bidang 
+            AND u.Kd_Unit = s.Kd_Unit 
+            AND u.Kd_Sub = s.Kd_Sub 
+        LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
+            AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
+            AND k.Kd_Kecamatan = u.Kd_Kecamatan
+        LEFT JOIN Ref_Desa d ON d.Kd_Prov=u.Kd_Prov
+            AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
+            AND d.Kd_Kecamatan = u.Kd_Kecamatan
+            AND d.Kd_Desa = u.Kd_Desa
+        where u.Kd_Prov = $Kd_Prov
+        AND u.Kd_Kab_Kota = $Kd_Kab_Kota 
+        AND u.Kd_Bidang = $Kd_Bidang 
+        AND u.Kd_Unit = $Kd_Unit 
+        AND u.Kd_Sub = $Kd_Sub 
+        AND u.Kd_UPB = $Kd_UPB
+        AND (
+            u.Kd_Kecamatan = $Kd_Kecamatan
+            OR u.Kd_Kecamatan is null
+        ) 
+        AND (
+            u.Kd_Desa = $Kd_Desa
+            OR u.Kd_Desa is null
+        )
+    ";
+    $nama_skpd_db = $this->functions->CurlSimda(array(
+        'query' => $sql,
+        'no_debug' => 0
+    ));
+    $alamat = array();
+    if(!empty($nama_skpd_db[0]->Nm_Kecamatan)){
+        $alamat[] = 'Kec. '.$nama_skpd_db[0]->Nm_Kecamatan;
+    }
+    if(!empty($nama_skpd_db[0]->Nm_Desa)){
+        $alamat[] = 'Desa/Kel. '.$nama_skpd_db[0]->Nm_Desa;
+    }
+    if(!empty($alamat)){
+        $alamat = ' ('.implode(', ', $alamat).')';
+    }else{
+        $alamat = '';
+    }
+
+    $nama_skpd = $nama_skpd_db[0]->Nm_UPB.$alamat;
+    $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
+    $nama_jenis_aset[$data_jenis['nama']] = $data_jenis['nama'];
+
+    $where = '';
+    if(!empty($Kd_Kecamatan)){
+        $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
+    }
+    if(!empty($Kd_Desa)){
+        $where .= $wpdb->prepare(' AND a.Kd_Desa=%d', $Kd_Desa);
+    }
+
+    $sql = $wpdb->prepare('
+        select 
             a.*,
             b.Harga as harga_asli,
-            r.Nm_Aset5,
-            u.Nm_UPB,
-            k.Nm_Kecamatan,
-            d.Nm_Desa,
-            s.Nm_Sub_Unit
+            r.Nm_Aset5
         from '.$data_jenis['table_simda'].' a
-        LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda 
-        INNER JOIN ref_sub_unit s ON a.Kd_Prov=s.Kd_Prov
-            AND a.Kd_Kab_Kota = s.Kd_Kab_Kota 
-            AND a.Kd_Bidang = s.Kd_Bidang 
-            AND a.Kd_Unit = s.Kd_Unit 
-            AND a.Kd_Sub = s.Kd_Sub 
-        LEFT JOIN Ref_UPB u on u.Kd_Prov = a.Kd_Prov 
-            and u.Kd_Kab_Kota = a.Kd_Kab_Kota
-            and u.Kd_Bidang = a.Kd_Bidang
-            and u.Kd_Unit = a.Kd_Unit
-            and u.Kd_Sub = a.Kd_Sub
-            and u.Kd_UPB = a.Kd_UPB 
-        LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=a.Kd_Prov
-            AND k.Kd_Kab_Kota = a.Kd_Kab_Kota 
-            AND k.Kd_Kecamatan = a.Kd_Kecamatan
-        LEFT JOIN Ref_Desa d ON d.Kd_Prov=a.Kd_Prov
-            AND d.Kd_Kab_Kota = a.Kd_Kab_Kota 
-            AND d.Kd_Kecamatan = a.Kd_Kecamatan
-            AND d.Kd_Desa = a.Kd_Desa
+        LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda
         LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
             and r.kd_aset0=a.Kd_Aset80 
             and r.kd_aset1=a.Kd_Aset81 
@@ -81,135 +124,118 @@ foreach($all_jenis as $jenis){
             and r.kd_aset3=a.Kd_Aset83 
             and r.kd_aset4=a.Kd_Aset84 
             and r.kd_aset5=a.Kd_Aset85
-        where 
-            a.Kd_Hapus= \'0\' 
-            AND a.Kd_Data != \'3\' 
-            AND a.Kd_KA= \'1\'
-            AND b.Harga > 0
-        '.$where_all;
+        where a.Kd_Prov=%d
+            AND a.Kd_Kab_Kota=%d 
+            AND a.Kd_Bidang=%d 
+            AND a.Kd_Unit=%d 
+            AND a.Kd_Sub=%d 
+            AND a.Kd_UPB=%d
+            AND a.Kd_Aset8=%d
+            AND a.Kd_Aset80=%d
+            AND a.Kd_Aset81=%d
+            AND a.Kd_Aset82=%d
+            AND a.Kd_Aset83=%d
+            AND a.Kd_Aset84=%d
+            AND a.Kd_Aset85=%d
+            AND a.No_Reg8=%d
+            AND a.Kd_Hapus=0
+            AND a.Kd_Data!=3
+            AND a.Kd_KA=1
+            '.$where.'
+        ',
+        $Kd_Prov,
+        $Kd_Kab_Kota,
+        $Kd_Bidang,
+        $Kd_Unit,
+        $Kd_Sub,
+        $Kd_UPB,
+        $Kd_Aset8,
+        $Kd_Aset80,
+        $Kd_Aset81,
+        $Kd_Aset82,
+        $Kd_Aset83,
+        $Kd_Aset84,
+        $Kd_Aset85,
+        $No_Reg8
+    );
     $aset = $this->functions->CurlSimda(array(
         'query' => $sql 
     ));
-    foreach($aset as $k => $val){
-        $no++;
-        $total_nilai += $val->harga_asli;
-        $kd_lokasi = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit).'.'.$this->functions->CekNull($val->Kd_Sub).'.'.$this->functions->CekNull($val->Kd_UPB).'.'.$this->functions->CekNull($val->Kd_Kecamatan).'.'.$this->functions->CekNull($val->Kd_Desa);
-        $kd_barang = $val->Kd_Aset8.'.'.$val->Kd_Aset80.'.'.$this->functions->CekNull($val->Kd_Aset81).'.'.$this->functions->CekNull($val->Kd_Aset82).'.'.$this->functions->CekNull($val->Kd_Aset83).'.'.$this->functions->CekNull($val->Kd_Aset84).'.'.$this->functions->CekNull($val->Kd_Aset85, 3);
-        $kd_register = $this->functions->CekNull($val->No_Reg8, 6);
-        $alamat = array();
-        if(!empty($val->Nm_Kecamatan)){
-            $alamat[] = 'Kec. '.$val->Nm_Kecamatan;
-        }
-        if(!empty($val->Nm_Desa)){
-            $alamat[] = 'Desa/Kel. '.$val->Nm_Desa;
-        }
-        if(!empty($alamat)){
-            $alamat = '('.implode(', ', $alamat).')';
-        }else{
-            $alamat = '';
-        }
-        $nama_skpd = $val->Nm_UPB.' '.$alamat;
-        $link_detail = $this->get_link_daftar_aset(array(
-            'get' => array(
-                'nama_skpd' => $nama_skpd,
-                'kd_barang' => $kd_barang,
-                'kd_register' => $kd_register,
-                'kd_lokasi' => $kd_lokasi,
-                'jenis_aset' => $data_jenis['jenis']
-            )
-        ));
-        $link = $this->functions->generatePage(array(
-            'nama_page' => $data_jenis['jenis'].' '.$kd_lokasi.' '.$kd_barang.' '.$kd_register,
-            'content' => '[detail_aset kd_lokasi="'.$kd_lokasi.'" kd_barang="'.$kd_barang.'" kd_register="'.$kd_register.'" jenis_aset="'.$data_jenis['jenis'].'"]',
-            'post_status' => 'private',
-            'post_type' => 'post',
-            'show_header' => 1,
-            'no_key' => 1
-        ));
-        $keterangan = array($val->Keterangan);
-        if($data_jenis['jenis'] == 'mesin'){
-            $keterangan = array();
-            if(!empty($val->Nomor_Polisi)){
-                $keterangan[] = $val->Nomor_Polisi;
-            }
-            if(!empty($val->Merk)){
-                $keterangan[] = $val->Merk;
-            }
-            if(!empty($val->Type)){
-                $keterangan[] = $val->Type;
-            }
-            if(!empty($val->CC)){
-                $keterangan[] = $val->CC;
-            }
-            if(!empty($val->Keterangan)){
-                $keterangan[] = $val->Keterangan;
-            }
-        }
-
-        $warna_map = '';
-        $ikon_map = '';
-        if ($data_jenis['jenis'] == 'tanah') {
-            $warna_map = get_option('_crb_warna_tanah');
-            $ikon_map  = get_option('_crb_icon_tanah');
-        }
-        if ($data_jenis['jenis'] == 'bangunan') {
-            $warna_map = get_option('_crb_warna_gedung');
-            $ikon_map  = get_option('_crb_icon_gedung');
-        }
-        if ($data_jenis['jenis'] == 'jalan') {
-            $warna_map = get_option('_crb_warna_jalan');
-            $ikon_map  = get_option('_crb_icon_jalan');
-        }
-        $koordinatX = get_post_meta($link['id'], 'latitude', true);
-        if(empty($koordinatX)){
-            $koordinatX = '0';
-        }
-        $koordinatY = get_post_meta($link['id'], 'longitude', true);
-        if(empty($koordinatY)){
-            $koordinatY = '0';
-        }
-        $polygon = get_post_meta($link['id'], 'polygon', true);
-        if(empty($polygon)){
-            // continue;
-            $polygon = '[]';
-        }
-
-        $map_center = '';
-        if(!empty($warna_map)){
-            $map_center = ' <a style="margin-bottom: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a>';
-        }
-        $nama_gabungan = $val->Nm_Sub_Unit.' | '.$nama_skpd;
-        if(strpos($nama_skpd, $val->Nm_Sub_Unit) !== false){
-            $nama_gabungan = $nama_skpd;
-        }
-        $body_skpd .= '
-            <tr>
-                <td>'.$data_jenis['nama'].'</td>
-                <td>'.$nama_gabungan.'</td>
-                <td class="text-center">'.$kd_barang.'.'.$kd_register.'</td>
-                <td>'.$val->Nm_Aset5.'</td>
-                <td>'.implode(' | ', $keterangan).'</td>
-                <td class="text-right" data-sort="'.$val->harga_asli.'">'.number_format($val->harga_asli,2,",",".").'</td>
-                <td class="text-center"><a style="margin-bottom: 5px;" target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a>'.$map_center.'</td>
-            </tr>
-        ';
-
-        $data_aset[] = array(
-            'jenis' => $data_jenis['jenis'],
-            'aset' => $val,
-            'lng' => $koordinatX,
-            'ltd' => $koordinatY,
-            'polygon' => $polygon,
-            'nilai' => number_format($val->harga_asli,2,",","."),
-            'nama_aset' => $val->Nm_Aset5,
-            'keterangan' => implode(' | ', $keterangan),
-            'nama_skpd' => $nama_skpd,
-            'kd_barang' => $kd_barang,
-            'kd_lokasi' => $kd_lokasi,
-            'warna_map' => $warna_map,
-            'ikon_map'  => $ikon_map,
-        );
+    $kd_register = $this->functions->CekNull($aset[0]->No_Reg8, 6);
+    $kd_lokasi = '12.'.$this->functions->CekNull($aset[0]->Kd_Prov).'.'.$this->functions->CekNull($aset[0]->Kd_Kab_Kota).'.'.$this->functions->CekNull($aset[0]->Kd_Bidang).'.'.$this->functions->CekNull($aset[0]->Kd_Unit).'.'.$this->functions->CekNull($aset[0]->Kd_Sub).'.'.$this->functions->CekNull($aset[0]->Kd_UPB).'.'.$this->functions->CekNull($aset[0]->Kd_Kecamatan).'.'.$this->functions->CekNull($aset[0]->Kd_Desa);
+    $kd_barang = $aset[0]->Kd_Aset8.'.'.$aset[0]->Kd_Aset80.'.'.$this->functions->CekNull($aset[0]->Kd_Aset81).'.'.$this->functions->CekNull($aset[0]->Kd_Aset82).'.'.$this->functions->CekNull($aset[0]->Kd_Aset83).'.'.$this->functions->CekNull($aset[0]->Kd_Aset84).'.'.$this->functions->CekNull($aset[0]->Kd_Aset85, 3);
+    $link = $this->functions->generatePage(array(
+        'nama_page' => $params['jenis_aset'].' '.$kd_lokasi.' '.$kd_barang.' '.$kd_register,
+        'content' => '[detail_aset kd_lokasi="'.$kd_lokasi.'" kd_barang="'.$kd_barang.'" kd_register="'.$kd_register.'" jenis_aset="'.$params['jenis_aset'].'"]',
+        'post_status' => 'private',
+        'post_type' => 'post',
+        'show_header' => 1,
+        'no_key' => 1
+    ));
+    $keterangan = array($aset[0]->Keterangan);
+    $warna_map = '';
+    $ikon_map = '';
+    if ($data_jenis['jenis'] == 'tanah') {
+        $warna_map = get_option('_crb_warna_tanah');
+        $ikon_map  = get_option('_crb_icon_tanah');
     }
+    if ($data_jenis['jenis'] == 'bangunan') {
+        $warna_map = get_option('_crb_warna_gedung');
+        $ikon_map  = get_option('_crb_icon_gedung');
+    }
+    if ($data_jenis['jenis'] == 'jalan') {
+        $warna_map = get_option('_crb_warna_jalan');
+        $ikon_map  = get_option('_crb_icon_jalan');
+    }
+    $koordinatX = get_post_meta($link['id'], 'latitude', true);
+    if(empty($koordinatX)){
+        $koordinatX = '0';
+    }
+    $koordinatY = get_post_meta($link['id'], 'longitude', true);
+    if(empty($koordinatY)){
+        $koordinatY = '0';
+    }
+    $polygon = get_post_meta($link['id'], 'polygon', true);
+    if(empty($polygon)){
+        // continue;
+        $polygon = '[]';
+    }
+
+    $map_center = '';
+    if(!empty($warna_map)){
+        $map_center = ' <a style="margin-bottom: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a>';
+    }
+    $nama_gabungan = $nama_skpd_db[0]->Nm_Sub_Unit.' | '.$nama_skpd;
+    if(strpos($nama_skpd, $nama_skpd_db[0]->Nm_Sub_Unit) !== false){
+        $nama_gabungan = $nama_skpd;
+    }
+    $body_skpd .= '
+        <tr>
+            <td class="text-center">'.$data_jenis['nama'].'</td>
+            <td>'.$nama_gabungan.'</td>
+            <td class="text-center">'.$kd_barang.'.'.$kd_register.'</td>
+            <td>'.$aset[0]->Nm_Aset5.'</td>
+            <td>'.implode(' | ', $keterangan).'</td>
+            <td class="text-right" data-sort="'.$aset[0]->harga_asli.'">'.number_format($aset[0]->harga_asli,2,",",".").'</td>
+            <td class="text-center"><a style="margin-bottom: 5px;" target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a>'.$map_center.'</td>
+        </tr>
+    ';
+
+    $data_aset[] = array(
+        'jenis' => $data_jenis['jenis'],
+        'aset' => $aset[0],
+        'lng' => $koordinatX,
+        'ltd' => $koordinatY,
+        'polygon' => $polygon,
+        'nilai' => number_format($aset[0]->harga_asli,2,",","."),
+        'nama_aset' => $aset[0]->Nm_Aset5,
+        'keterangan' => implode(' | ', $keterangan),
+        'nama_skpd' => $nama_skpd,
+        'kd_barang' => $kd_barang,
+        'kd_lokasi' => $kd_lokasi,
+        'warna_map' => $warna_map,
+        'ikon_map'  => $ikon_map,
+    );
 }
 ?>
 <style type="text/css">
@@ -311,7 +337,7 @@ function initMap() {
             var marker1 = new google.maps.Marker({
                 position: lokasi_aset,
                 map: map,
-                icon: ikon_map,
+                icon: aset.ikon_map,
                 title: 'Lokasi Aset'
             });
             
@@ -343,27 +369,29 @@ function initMap() {
             // Membuat Shape
             if(aset.jenis == 'jalan'){
                 var bentuk_bidang1 = new google.maps.Polyline({
-                    paths: Coords1,
-                    strokeColor: warna_map,
-                    strokeOpacity: 0.8,
-                    strokeWeight: 2,
-                    fillColor: warna_map,
-                    fillOpacity: 0.45,
+                    map: map,
+                    path: Coords1,
+                    geodesic: true,
+                    strokeColor: aset.warna_map,
+                    strokeOpacity: 3,
+                    strokeWeight: 6,
+                    fillColor: aset.warna_map,
+                    fillOpacity: 3,
                     html: contentString
                 });
             }else{
                 var bentuk_bidang1 = new google.maps.Polygon({
+                    map: map,
                     paths: Coords1,
-                    strokeColor: warna_map,
+                    strokeColor: aset.warna_map,
                     strokeOpacity: 0.8,
                     strokeWeight: 2,
-                    fillColor: warna_map,
+                    fillColor: aset.warna_map,
                     fillOpacity: 0.45,
                     html: contentString
                 });
             }
 
-            bentuk_bidang1.setMap(map);
             infoWindow = new google.maps.InfoWindow({
                 content: contentString
             });
