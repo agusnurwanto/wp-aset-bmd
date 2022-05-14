@@ -302,7 +302,10 @@ class Wp_Aset_Bmd_Public {
     		'query' => $sql,
 			'no_debug' => 0
 		));
-		$params['nama_skpd'] = $nama_skpd[0]->Nm_UPB;
+		$params['nama_skpd'] = '';
+		if(!empty($nama_skpd) && !empty($nama_skpd[0]->Nm_UPB)){
+			$params['nama_skpd'] = $nama_skpd[0]->Nm_UPB;
+		}
 		if(!empty($Kd_Kecamatan)){
 			$sql = "
 				SELECT 
@@ -461,7 +464,10 @@ class Wp_Aset_Bmd_Public {
 			$kondisi_aset_simata = 'Hilang';
 		}
 
-		$kondisi_simda = $aset[0]->Kondisi;
+		$kondisi_simda = '';
+		if(!empty($aset[0]->Kondisi)){
+			$kondisi_simda = $aset[0]->Kondisi;
+		}
 
 		if ($kondisi_simda == 1) {
 			$kondisi_simda = 'Baik';

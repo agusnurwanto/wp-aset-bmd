@@ -235,8 +235,8 @@ foreach($query->posts as $post){
     }
     $body .= '
         <tr>
-            <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'</td>
-            <td>'.$aset[0]->Nm_Aset5.'</td>
+            <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'<br>'.$aset[0]->Nm_Aset5.'</td>
+            <td>'.$params['nama_skpd'].' '.$alamat.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
             <td>'.$ket_penggunaan_aset.'</td>
             <td class="text-right" data-sort="'.$aset[0]->Harga.'">'.number_format($aset[0]->Harga,2,",",".").'</td>
@@ -282,10 +282,10 @@ update_option('_crb_jumlah_aset_disewakan', $total_nilai_sewa);
         <table class="table table-bordered" id="data_aset_sewa">
             <thead>
                 <tr>
-                    <th class="text-center">Kode Barang</th>
-                    <th class="text-center">Nama Aset</th>
-                    <th class="text-center">Keterangan</th>
-                    <th class="text-center">Keterangan Penggunaan Aset</th>
+                    <th class="text-center">Kode Barang & Nama Barang</th>
+                    <th class="text-center">UPB</th>
+                    <th class="text-center">Keterangan Aset</th>
+                    <th class="text-center">Penggunaan Aset</th>
                     <th class="text-center">Nilai Aset (Rp)</th>
                     <th class="text-center">Penyewa</th>
                     <th class="text-center">Waktu Sewa</th>
@@ -318,19 +318,19 @@ function setCenter(lng, ltd){
 jQuery(document).on('ready', function(){
     jQuery('#data_aset_sewa').dataTable({
         columnDefs: [
-            { "width": "300px", "targets": 2 },
-            { "width": "110px", "targets": 5 }
+            { "width": "200px", "targets": 2 },
+            { "width": "200px", "targets": 3 }
         ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
             var api = this.api();
-            var total_page = api.column( 3, { page: 'current'} )
+            var total_page = api.column( 4, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
                 }, 0 );
             jQuery('#total_aset').text(formatRupiah(total_page));
-            var total_sewa = api.column( 6, { page: 'current'} )
+            var total_sewa = api.column( 7, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
@@ -373,7 +373,7 @@ function initMap() {
             var marker1 = new google.maps.Marker({
                 position: lokasi_aset,
                 map: map,
-                icon: ikon_map,
+                icon: aset.ikon_map,
                 title: 'Lokasi Aset'
             });
             
@@ -408,10 +408,10 @@ function initMap() {
             // Membuat Shape
             var bentuk_bidang1 = new google.maps.Polygon({
                 paths: Coords1,
-                strokeColor: warna_map,
+                strokeColor: aset.warna_map,
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillColor: warna_map,
+                fillColor: aset.warna_map,
                 fillOpacity: 0.45,
                 html: contentString,
                 map,

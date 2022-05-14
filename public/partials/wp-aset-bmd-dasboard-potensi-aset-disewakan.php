@@ -152,6 +152,7 @@ foreach($query->posts as $post){
     if(empty($polygon)){
         $polygon = '[]';
     }
+    $ket_potensi_penggunaan = get_post_meta($post->ID, 'meta_ket_potensi_penggunaan', true);
 
     $alamat = array();
     if(!empty($params['kecamatan'])){
@@ -231,9 +232,10 @@ foreach($query->posts as $post){
     }
     $body .= '
         <tr>
-            <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'</td>
-            <td>'.$aset[0]->Nm_Aset5.'</td>
+            <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'<br>'.$aset[0]->Nm_Aset5.'</td>
+            <td>'.$params['nama_skpd'].' '.$alamat.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
+            <td>'.$ket_potensi_penggunaan.'</td>
             <td class="text-right" data-sort="'.$aset[0]->Harga.'">'.number_format($aset[0]->Harga,2,",",".").'</td>
             <td class="text-right" data-sort="'.$nilai_sewa.'">'.number_format($nilai_sewa,2,",",".").'</td>
             <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
@@ -270,9 +272,10 @@ update_option('_crb_total_potensi_aset', $total_nilai_sewa);
         <table class="table table-bordered" id="data_aset_sewa">
             <thead>
                 <tr>
-                    <th class="text-center">Kode Barang</th>
-                    <th class="text-center">Nama Aset</th>
-                    <th class="text-center">Keterangan</th>
+                    <th class="text-center">Kode Barang &<br>Nama Aset</th>
+                    <th class="text-center">UPB</th>
+                    <th class="text-center">Keterangan Aset</th>
+                    <th class="text-center">Potensi Penggunaan</th>
                     <th class="text-center">Nilai Aset (Rp)</th>
                     <th class="text-center">Nilai Sewa (Rp)</th>
                     <th class="text-center">Aksi</th>
@@ -282,7 +285,7 @@ update_option('_crb_total_potensi_aset', $total_nilai_sewa);
                 <?php echo $body; ?>
             </tbody>
             <tfoot>
-                <th colspan="3" class="text-center">Total Nilai</th>
+                <th colspan="4" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_aset">0</th>
                 <th class="text-right" id="total_sewa">0</th>
                 <th></th>
@@ -303,19 +306,19 @@ function setCenter(lng, ltd){
 jQuery(document).on('ready', function(){
     jQuery('#data_aset_sewa').dataTable({
         columnDefs: [
-            { "width": "300px", "targets": 2 },
-            { "width": "110px", "targets": 5 }
+            { "width": "200px", "targets": 2 },
+            { "width": "200px", "targets": 3 }
         ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
             var api = this.api();
-            var total_page = api.column( 3, { page: 'current'} )
+            var total_page = api.column( 4, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
                 }, 0 );
             jQuery('#total_aset').text(formatRupiah(total_page));
-            var total_sewa = api.column( 4, { page: 'current'} )
+            var total_sewa = api.column( 5, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
@@ -357,7 +360,7 @@ function initMap() {
             var marker1 = new google.maps.Marker({
                 position: lokasi_aset,
                 map: map,
-                icon: ikon_map,
+                icon: aset.ikon_map,
                 title: 'Lokasi Aset'
             });
             
@@ -389,10 +392,10 @@ function initMap() {
             // Membuat Shape
             var bentuk_bidang1 = new google.maps.Polygon({
                 paths: Coords1,
-                strokeColor: warna_map,
+                strokeColor: aset.warna_map,
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillColor: warna_map,
+                fillColor: aset.warna_map,
                 fillOpacity: 0.45,
                 html: contentString
             });
