@@ -178,8 +178,10 @@ foreach($query->posts as $post){
     $sql = $wpdb->prepare('
         select 
             a.*,
+            b.Harga as harga_asli,
             r.Nm_Aset5
         from '.$data_jenis['table_simda'].' a
+        LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda
         LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
             and r.kd_aset0=a.Kd_Aset80 
             and r.kd_aset1=a.Kd_Aset81 
@@ -236,7 +238,7 @@ foreach($query->posts as $post){
             <td>'.$params['nama_skpd'].' '.$alamat.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
             <td>'.$ket_potensi_penggunaan.'</td>
-            <td class="text-right" data-sort="'.$aset[0]->Harga.'">'.number_format($aset[0]->Harga,2,",",".").'</td>
+            <td class="text-right" data-sort="'.$aset[0]->harga_asli.'">'.number_format($aset[0]->harga_asli,2,",",".").'</td>
             <td class="text-right" data-sort="'.$nilai_sewa.'">'.number_format($nilai_sewa,2,",",".").'</td>
             <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
         </tr>

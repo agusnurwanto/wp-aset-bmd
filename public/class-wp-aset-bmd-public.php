@@ -394,8 +394,10 @@ class Wp_Aset_Bmd_Public {
 		$sql = $wpdb->prepare('
 		    select 
 		        a.*,
+        		b.Harga as harga_asli,
 		        r.Nm_Aset5
 		    from '.$data_jenis['table_simda'].' a
+    		LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda
 	        LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
 	            and r.kd_aset0=a.Kd_Aset80 
 	            and r.kd_aset1=a.Kd_Aset81 

@@ -31,7 +31,7 @@
                 </div>
                 <label class="col-md-2 col-form-label">Harga (Rp)</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo number_format($aset[0]->Harga,2,",","."); ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo number_format($aset[0]->harga_asli,2,",","."); ?>">
                 </div>
             </div>
             <div class="form-group row">
