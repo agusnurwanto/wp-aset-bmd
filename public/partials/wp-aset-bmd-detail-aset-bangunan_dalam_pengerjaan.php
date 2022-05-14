@@ -277,14 +277,13 @@
         map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
         // Menampilkan Marker
-        var marker1 = new google.maps.Marker({
+        window.evm = new google.maps.Marker({
             position: lokasi_aset,
             map: map,
         <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
             draggable: true,
         <?php endif; ?>
-            title: 'Lokasi Aset',
-            // icon: baseUrl + 'assets/images/marker-icon/kib-a.png'
+            title: 'Lokasi Aset'
         });
 
         // Define the LatLng coordinates for the shape.
@@ -327,7 +326,7 @@
             '</table>';
 
         // Membuat Shape
-        var bentuk_bidang1 = new google.maps.Polygon({
+        window.evp = new google.maps.Polygon({
             paths: Coords1,
             strokeColor: '#00cc00',
             strokeOpacity: 0.8,
@@ -341,26 +340,80 @@
             html: contentString
         });
 
-        bentuk_bidang1.setMap(map);
+        evp.setMap(map);
         infoWindow = new google.maps.InfoWindow({
             content: contentString
         });
-        google.maps.event.addListener(bentuk_bidang1, 'click', function(event) {
+        google.maps.event.addListener(evp, 'click', function(event) {
             infoWindow.setPosition(event.latLng);
             infoWindow.open(map);
         });
-        google.maps.event.addListener(marker1, 'click', function(event) {
+        google.maps.event.addListener(evm, 'click', function(event) {
             infoWindow.setPosition(event.latLng);
             infoWindow.open(map);
         });
 
     <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
-        google.maps.event.addListener(marker1, 'mouseup', function(event) {
+        google.maps.event.addListener(evm, 'mouseup', function(event) {
             jQuery('input[name="latitude"]').val(event.latLng.lat());
             jQuery('input[name="longitude"]').val(event.latLng.lng());
         });
-        google.maps.event.addListener(bentuk_bidang1, 'mouseup', function(event) {
-            jQuery('textarea[name="polygon"]').val(JSON.stringify(bentuk_bidang1.getPath().getArray()));
+        google.maps.event.addListener(evp, 'mouseup', function(event) {
+            jQuery('textarea[name="polygon"]').val(JSON.stringify(evp.getPath().getArray()));
+        });
+
+        window.drawingManager = new google.maps.drawing.DrawingManager({
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER,
+                drawingModes: [
+                    google.maps.drawing.OverlayType.MARKER,
+                    google.maps.drawing.OverlayType.POLYGON
+                ],
+            },
+            markerOptions: {
+                icon: ikon_map,
+                draggable: true
+            },
+            polygonOptions: {
+                strokeColor: warna_map,
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: warna_map,
+                fillOpacity: 0.45,
+                editable: true,
+                draggable: true,
+                zIndex: 1
+            }
+        });
+        drawingManager.setMap(map);
+
+        google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event_draw) {
+            if(event_draw.type == 'marker'){
+                evm.setMap(null);
+                evm = event_draw.overlay;
+                google.maps.event.addListener(evm, 'mouseup', function(event) {
+                    jQuery('input[name="latitude"]').val(event.latLng.lat());
+                    jQuery('input[name="longitude"]').val(event.latLng.lng());
+                });
+                google.maps.event.addListener(evm, 'click', function(event) {
+                    infoWindow.setPosition(event.latLng);
+                    infoWindow.open(map);
+                });
+                jQuery('input[name="latitude"]').val(evm.position.lat());
+                jQuery('input[name="longitude"]').val(evm.position.lng());
+            }else if(event_draw.type == 'polygon'){
+                evp.setMap(null);
+                evp = event_draw.overlay;
+                google.maps.event.addListener(evp, 'mouseup', function(event) {
+                    jQuery('textarea[name="polygon"]').val(JSON.stringify(evp.getPath().getArray()));
+                });
+                google.maps.event.addListener(evp, 'click', function(event) {
+                    infoWindow.setPosition(event.latLng);
+                    infoWindow.open(map);
+                });
+                jQuery('textarea[name="polygon"]').val(JSON.stringify(evp.getPath().getArray()));
+            }
         });
 
         // cek jika koordinat kosong maka lokasi center di setting ke alamat pemda
@@ -369,8 +422,9 @@
             || <?php echo $koordinatY; ?> == 0
             || '<?php echo $polygon; ?>' == '[]'
         ){
+
             geocoder = new google.maps.Geocoder();
-            geocoder.geocode( { 'address': '<?php echo $nama_pemda.' '.$params['nama_skpd'].' '.$alamat.' '.$aset[0]->Keterangan.' '.$aset[0]->Lokasi; ?>'}, function(results, status) {
+            geocoder.geocode( { 'address': '<?php echo $nama_pemda.' '.$params['nama_skpd'].' '.$alamat.' '.$aset[0]->Keterangan; ?>'}, function(results, status) {
                 if (status == 'OK') {
                     if(
                         <?php echo $koordinatX; ?> == 0 
@@ -378,34 +432,6 @@
                     ){
                         // ganti center map
                         map.setCenter(results[0].geometry.location);
-                        // ganti center maker
-                        marker1.setPosition(results[0].geometry.location);
-                        // ganti value latitude
-                        jQuery('input[name="latitude"]').val(results[0].geometry.location.lat());
-                        // ganti value longitude
-                        jQuery('input[name="longitude"]').val(results[0].geometry.location.lng());
-                    }
-                    if('<?php echo $polygon; ?>' == '[]'){
-                        // ganti value dari polygon
-                        bentuk_bidang1.setPath([
-                            {
-                                lat: results[0].geometry.location.lat()-0.0004, 
-                                lng: results[0].geometry.location.lng()-0.0004
-                            },
-                            {
-                                lat: results[0].geometry.location.lat()-0.0004, 
-                                lng: results[0].geometry.location.lng()+0.0004
-                            },
-                            {
-                                lat: results[0].geometry.location.lat()+0.0004, 
-                                lng: results[0].geometry.location.lng()+0.0004
-                            },
-                            {
-                                lat: results[0].geometry.location.lat()+0.0004, 
-                                lng: results[0].geometry.location.lng()-0.0004
-                            }
-                        ]);
-                        jQuery('textarea[name="polygon"]').val(JSON.stringify(bentuk_bidang1.getPath().getArray()));
                     }
                 } else {
                     alert('Geocode was not successful for the following reason: ' + status);

@@ -538,6 +538,7 @@ class Wp_Aset_Bmd_Public {
 		    $link_edit = $this->functions->get_link_post($post);
 		    if(!empty($params['key']['edit'])){
 		        $disabled = '';
+		    	$api_googlemap .= '&libraries=drawing';
 		    }
 		}
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-header.php';

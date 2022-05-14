@@ -155,7 +155,7 @@ foreach($aset as $k => $val){
 
     $map_center = '';
     if(!empty($warna_map)){
-        $map_center = ' <a style="margin-bottom: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a>';
+        $map_center = ' <a style="margin-bottom: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\'); return false;" href="#" class="btn btn-danger">Map</a>';
     }
     $body_skpd .= '
         <tr>
@@ -288,7 +288,7 @@ function initMap() {
             var marker1 = new google.maps.Marker({
                 position: lokasi_aset,
                 map: map,
-                icon: ikon_map,
+                icon: aset.ikon_map,
                 title: 'Lokasi Aset'
             });
             
@@ -307,48 +307,56 @@ function initMap() {
                 '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
                 '</tr>' +
                 '<tr>' +
-                '<td valign="top" height="25">Nilai Sewa</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">Rp ' + aset.nilai_sewa + '</td>' +
+                '<td valign="top" height="25">Nilai Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">Rp ' + aset.nilai + '</td>' +
                 '</tr>' +
                 '<tr>' +
                 '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
                 '</tr>' +
                 '</table>';
 
+            infoWindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            google.maps.event.addListener(marker1, 'click', function(event) {
+                infoWindow.setPosition(event.latLng);
+                infoWindow.open(map);
+            });
+
+            if(aset.polygon == '[]'){
+                return;
+            }
+
             // Define the LatLng coordinates for the shape.
             var Coords1 = JSON.parse(aset.polygon);
 
             // Membuat Shape
             if(aset.jenis == 'jalan'){
-                var bentuk_bidang1 = new google.maps.Polyline({
-                    paths: Coords1,
-                    strokeColor: warna_map,
-                    strokeOpacity: 0.8,
-                    strokeWeight: 2,
-                    fillColor: warna_map,
-                    fillOpacity: 0.45,
+                var opsi = {
+                    map: map,
+                    path: Coords1,
+                    geodesic: true,
+                    strokeColor: aset.warna_map,
+                    strokeOpacity: 3,
+                    strokeWeight: 6,
+                    fillColor: aset.warna_map,
+                    fillOpacity: 3,
                     html: contentString
-                });
+                };
+                window.bentuk_bidang1 = new google.maps.Polyline(opsi);
             }else{
-                var bentuk_bidang1 = new google.maps.Polygon({
+                var opsi = {
+                    map: map,
                     paths: Coords1,
-                    strokeColor: warna_map,
+                    strokeColor: aset.warna_map,
                     strokeOpacity: 0.8,
                     strokeWeight: 2,
-                    fillColor: warna_map,
+                    fillColor: aset.warna_map,
                     fillOpacity: 0.45,
                     html: contentString
-                });
+                };
+                window.bentuk_bidang1 = new google.maps.Polygon(opsi);
             }
-
-            bentuk_bidang1.setMap(map);
-            infoWindow = new google.maps.InfoWindow({
-                content: contentString
-            });
             google.maps.event.addListener(bentuk_bidang1, 'click', function(event) {
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(map);
-            });
-            google.maps.event.addListener(marker1, 'click', function(event) {
                 infoWindow.setPosition(event.latLng);
                 infoWindow.open(map);
             });
