@@ -8,7 +8,6 @@ $api_googlemap = get_option( '_crb_google_api' );
 $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
 
 $args = array(
-   'meta_key' => 'meta_disewakan',
    'meta_query' => array(
        array(
            'key' => 'meta_disewakan',
@@ -439,7 +438,7 @@ function initMap() {
                     html: contentString
                 });
             }
-            
+
             infoWindow = new google.maps.InfoWindow({
                 content: contentString
             });

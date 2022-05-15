@@ -12,7 +12,6 @@ $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&cal
 
 $nama_jenis_aset = array();
 $args = array(
-   'meta_key' => 'meta_disewakan',
    'meta_query' => array(
        array(
            'key' => 'polygon',
@@ -356,7 +355,7 @@ function initMap() {
                 '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
                 '</tr>' +
                 '<tr>' +
-                '<td valign="top" height="25">Nilai Sewa</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">Rp ' + aset.nilai_sewa + '</td>' +
+                '<td valign="top" height="25">Nilai</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">Rp ' + aset.nilai + '</td>' +
                 '</tr>' +
                 '<tr>' +
                 '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +

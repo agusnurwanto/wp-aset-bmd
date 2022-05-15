@@ -475,38 +475,11 @@ class Wp_Aset_Bmd_Public {
 			$checked_tindak_lanjut = 'checked';
 		}
 		$kondisi_aset_simata = get_post_meta($post->ID, 'meta_kondisi_aset_simata', true);
-		
-		if($kondisi_aset_simata == '1'){
-			$kondisi_aset_simata = 'Baik';
-		}
-		if($kondisi_aset_simata == '2'){
-			$kondisi_aset_simata = 'Rusak Ringan';
-		}
-		if($kondisi_aset_simata == '3'){
-			$kondisi_aset_simata = 'Rusak Berat';
-		}
-		if($kondisi_aset_simata == '4'){
-			$kondisi_aset_simata = 'Hilang';
-		}
 
 		$kondisi_simda = '';
 		if(!empty($aset[0]->Kondisi)){
-			$kondisi_simda = $aset[0]->Kondisi;
+			$kondisi_simda = $this->get_kondisi_simda($aset[0]->Kondisi);
 		}
-
-		if ($kondisi_simda == 1) {
-			$kondisi_simda = 'Baik';
-		}
-		if ($kondisi_simda == 2) {
-			$kondisi_simda = 'Rusak Ringan';
-		}
-		if ($kondisi_simda == 3) {
-			$kondisi_simda = 'Rusak Berat';
-		}
-		if ($kondisi_simda == 4) {
-			$kondisi_simda = 'Hilang';
-		}
-		
 
 		$nilai_sewa = get_post_meta($post->ID, 'meta_nilai_sewa', true);
 		$nama_sewa = get_post_meta($post->ID, 'meta_nama_sewa', true);
@@ -595,6 +568,65 @@ class Wp_Aset_Bmd_Public {
             $Kd_Desa = (int) $kd_lokasi[8];
 			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset-rinci.php';
 		}
+	}
+
+	function get_kondisi($kode, $html=false){
+		$selected_1 = '';
+		$selected_2 = '';
+		$selected_3 = '';
+		$selected_4 = '';
+		$selected_5 = '';
+		$selected_6 = '';
+		$color = '';
+		if ($kode == 1) {
+			$color = 'red';
+			$kondisi = 'Baik';
+			$selected_1 = 'selected';
+		}else if ($kode == 2) {
+			$color = 'green';
+			$kondisi = 'Rusak Ringan';
+			$selected_2 = 'selected';
+		}else if ($kode == 3) {
+			$color = 'blue';
+			$kondisi = 'Rusak Berat';
+			$selected_3 = 'selected';
+		}else if ($kode == 4) {
+			$color = 'orange';
+			$kondisi = 'Hilang';
+			$selected_4 = 'selected';
+		}else if ($kode == 5) {
+			$color = 'purple';
+			$kondisi = 'Tidak Diketemukan';
+			$selected_5 = 'selected';
+		}else{
+			$color = 'pink';
+			$kondisi = 'Lainnya';
+			$selected_6 = 'selected';
+		}
+		if(!$html){
+			return array(
+				'uraian' => $kondisi,
+				'color' => $color
+			);
+		}else{
+			return '
+				<option value="">Pilih Kondisi</option>
+				<option value="1" '.$selected_1.'>Baik</option>
+                <option value="2" '.$selected_2.'>Rusak Ringan</option>
+                <option value="3" '.$selected_3.'>Rusak Berat</option>
+                <option value="4" '.$selected_4.'>Hilang</option>
+			';
+		}
+	}
+
+	function get_kondisi_simda($kode){
+		global $wpdb;
+		$kondisi = $this->functions->CurlSimda(array(
+		    'query' => $wpdb->prepare("
+		    	SELECT Uraian FROM ref_kondisi where Kd_Kondisi=%d
+		    ", $kode)
+		));
+		return $kondisi[0]->Uraian;
 	}
 
 	function get_link_daftar_aset($options=array('get' => array())){
@@ -873,7 +905,7 @@ class Wp_Aset_Bmd_Public {
 		    $nama_jenis_aset = 'Jalan, Jaringan dan Irigrasi';
 		    $table_simda = 'Ta_KIB_D';
 		    $table_simda_harga = 'Ta_Fn_KIB_D';
-			$color = 'black';
+			$color = 'orange';
 		}else if($options['jenis_aset'] == 'aset_tetap'){
 		    $nama_jenis_aset = 'Aset Tetap Lainnya';
 		    $table_simda = 'Ta_KIB_E';
@@ -883,7 +915,7 @@ class Wp_Aset_Bmd_Public {
 		    $nama_jenis_aset = 'Kontruksi Dalam Pengerjaan';
 		    $table_simda = 'Ta_KIB_F';
 		    $table_simda_harga = 'Ta_Fn_KIB_A';
-			$color = 'orange';
+			$color = 'pink';
 		}
 		return array(
 			'jenis' => $options['jenis_aset'],
