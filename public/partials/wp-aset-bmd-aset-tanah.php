@@ -11,10 +11,12 @@ $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&cal
 
 $where = 'AND a.Sertifikat_Nomor is null';
 $title_sertifikat = 'Belum';
+$thead_sertifikat = '';
 if(!empty($_GET) && !empty($_GET['sertifikat'])){
     $where = 'AND a.Sertifikat_Nomor is not null';
     if($_GET['sertifikat'] == 1){
         $title_sertifikat = 'Sudah';
+        $thead_sertifikat = '<th class="text-center">Nomor Sertifikat</th>';
     }
 }
 
@@ -98,9 +100,9 @@ foreach($aset as $k => $val){
     $keterangan = array($val->Keterangan);
     $tanggal_sertifikat = substr($val->Sertifikat_Tanggal,0,10);
     $tanggal_sertifikat = $val->Sertifikat_Tanggal == '' ? '-' : date("d-m-Y", strtotime($tanggal_sertifikat));
-    $column_sertifikat = $val->Sertifikat_Nomor.' ('.$tanggal_sertifikat.')';
-    if($val->Sertifikat_Nomor == ''){
-        $column_sertifikat = $tanggal_sertifikat;
+    $column_sertifikat = '';
+    if($title_sertifikat == 'Sudah'){
+        $column_sertifikat = '<td style="width:110px;text-align:center;">'.$val->Sertifikat_Nomor.' ('.$tanggal_sertifikat.')</td>';
     }
     $body .= '
         <tr>
@@ -108,7 +110,7 @@ foreach($aset as $k => $val){
             <td>'.$val->Nm_Aset5.'</td>
             <td>'.$val->Nm_UPB.' '.$alamat.'</td>
             <td>'.$val->Alamat.'</td>
-            <td style="width:110px;text-align:center;">'.$column_sertifikat.'</td>
+            '.$column_sertifikat.'
             <td>'.implode(' | ', $keterangan).'</td>
             <td class="text-right" data-sort="'.$val->Harga.'">'.number_format($val->Harga,2,",",".").'</td>
             <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a><br><a style="margin-top: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
@@ -153,7 +155,7 @@ if(!empty($_GET) && !empty($_GET['sertifikat'])){
                     <th class="text-center">Nama Aset</th>
                     <th class="text-center">Unit Pengelola Barang</th>
                     <th class="text-center">Lokasi</th>
-                    <th class="text-center">Nomor Sertifikat</th>
+                    <?php echo $thead_sertifikat; ?>
                     <th class="text-center">Keterangan</th>
                     <th class="text-center">Nilai Aset (Rp)</th>
                     <th class="text-center">Aksi</th>
@@ -237,7 +239,7 @@ function initMap() {
             // Variabel Informasi Data
             nama_aset      = aset.aset.Nm_Aset5;
             kode_aset      = aset.kd_barang;
-            keterangan     = aset.aset.Keterangan;
+            keterangan     = aset.aset.Keterangan; //test
 
             // Menampilkan Informasi Data
             var contentString = '<br>' +
