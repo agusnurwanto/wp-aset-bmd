@@ -49,7 +49,6 @@ foreach($query->posts as $post){
         SELECT 
             u.Nm_UPB, 
             k.Nm_Kecamatan,
-            u.Nm_UPB,
             s.Nm_Sub_Unit,
             d.Nm_Desa
         from ref_upb u
@@ -222,6 +221,7 @@ foreach($query->posts as $post){
 
     $data_aset[] = array(
         'jenis' => $data_jenis['jenis'],
+        'zIndex' => $data_jenis['zIndex'],
         'aset' => $aset[0],
         'lng' => $koordinatX,
         'ltd' => $koordinatY,
@@ -376,6 +376,7 @@ function initMap() {
                     strokeWeight: 6,
                     fillColor: aset.warna_map,
                     fillOpacity: 3,
+                    zIndex: aset.zIndex,
                     html: contentString
                 });
             }else{
@@ -387,6 +388,7 @@ function initMap() {
                     strokeWeight: 2,
                     fillColor: aset.warna_map,
                     fillOpacity: 0.45,
+                    zIndex: aset.zIndex,
                     html: contentString
                 });
             }

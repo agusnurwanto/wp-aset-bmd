@@ -162,7 +162,7 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-total-aset-pemda.php';
 	}
 
 	function dashboard_aset_tanah(){
@@ -554,8 +554,13 @@ class Wp_Aset_Bmd_Public {
 		){
 		    $limit = 'top '.$_GET['limit'];
 		}
+		
 		if(!empty($params['daftar_aset'])){
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset.php';
+			if(!empty($params['kondisi_simata'])){
+				require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset-meta.php';
+			}else{
+				require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset.php';
+			}
 		}else{
 			$kd_lokasi = explode('.', $params['kd_lokasi']);
 			$Kd_Prov = (int) $kd_lokasi[1];
@@ -566,7 +571,11 @@ class Wp_Aset_Bmd_Public {
             $Kd_UPB = (int) $kd_lokasi[6];
             $Kd_Kecamatan = (int) $kd_lokasi[7];
             $Kd_Desa = (int) $kd_lokasi[8];
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset-rinci.php';
+			if(!empty($params['kondisi_simata'])){
+				require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset-meta-rinci.php';
+			}else{
+				require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset-rinci.php';
+			}
 		}
 	}
 
@@ -886,43 +895,66 @@ class Wp_Aset_Bmd_Public {
 		$table_simda = '';
 		$table_simda_harga = '';
 		$color = '';
+		$satuan = '';
+		$satuan_rinci = '';
+		$zIndex = 1;
 		if($options['jenis_aset'] == 'tanah'){
 		    $nama_jenis_aset = 'Tanah';
 		    $table_simda = 'Ta_KIB_A';
 		    $table_simda_harga = 'Ta_Fn_KIB_A';
 			$color = 'red';
+			$zIndex = 2;
+			$satuan = 'Bidang Tanah';
+			$satuan_rinci = 'Meter Persegi';
 		}else if($options['jenis_aset'] == 'mesin'){
 		    $nama_jenis_aset = 'Peralatan dan Mesin';
 		    $table_simda = 'Ta_KIB_B';
 		    $table_simda_harga = 'Ta_Fn_KIB_B';
 			$color = 'green';
+			$satuan = 'Aset';
+			$satuan_rinci = 'Pcs';
 		}else if($options['jenis_aset'] == 'bangunan'){
 		    $nama_jenis_aset = 'Gedung dan Bangunan';
 		    $table_simda = 'Ta_KIB_C';
 		    $table_simda_harga = 'Ta_Fn_KIB_C';
 			$color = 'blue';
+			$zIndex = 3;
+			$satuan = 'Gedung';
+			$satuan_rinci = $satuan;
 		}else if($options['jenis_aset'] == 'jalan'){
 		    $nama_jenis_aset = 'Jalan, Jaringan dan Irigrasi';
 		    $table_simda = 'Ta_KIB_D';
 		    $table_simda_harga = 'Ta_Fn_KIB_D';
 			$color = 'orange';
+			$zIndex = 1;
+			$satuan = 'Aset';
+			$satuan_rinci = 'Meter (Panjang)';
 		}else if($options['jenis_aset'] == 'aset_tetap'){
 		    $nama_jenis_aset = 'Aset Tetap Lainnya';
 		    $table_simda = 'Ta_KIB_E';
 		    $table_simda_harga = 'Ta_Fn_KIB_E';
 			$color = 'purple';
+			$zIndex = 4;
+			$satuan = 'Aset';
+			$satuan_rinci = 'Meter (Panjang)';
 		}else if($options['jenis_aset'] == 'bangunan_dalam_pengerjaan'){
 		    $nama_jenis_aset = 'Kontruksi Dalam Pengerjaan';
 		    $table_simda = 'Ta_KIB_F';
 		    $table_simda_harga = 'Ta_Fn_KIB_A';
 			$color = 'pink';
+			$zIndex = 5;
+			$satuan = 'Gedung';
+			$satuan_rinci = $satuan;
 		}
 		return array(
 			'jenis' => $options['jenis_aset'],
 			'nama' => $nama_jenis_aset,
 			'table_simda' => $table_simda,
 			'table_simda_harga' => $table_simda_harga,
-			'color' => $color
+			'color' => $color,
+			'satuan' => $satuan,
+			'satuan_rinci' => $satuan_rinci,
+			'zIndex' => $zIndex
 		);
 	}
 

@@ -266,7 +266,7 @@ foreach($query->posts as $post){
             <td>'.$nama_sewa.'</td>
             <td class="text-center">'.$waktu_sewa_awal.'<br>sampai<br>'.$waktu_sewa_akhir.'</td>
             <td class="text-right" data-sort="'.$nilai_sewa.'">'.number_format($nilai_sewa,2,",",".").'</td>
-            <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a style="margin-top: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
+            <td class="text-center"><a href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a style="margin-top: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
         </tr>
     ';
     $total_nilai_sewa++;
