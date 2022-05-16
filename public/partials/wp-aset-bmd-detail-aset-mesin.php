@@ -55,7 +55,7 @@
                 </div>
                 <label class="col-md-2 col-form-label">Harga (Rp)</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo number_format($aset[0]->Harga,2,",","."); ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo number_format($aset[0]->harga_asli,2,",","."); ?>">
                 </div>
             </div>
             <div class="form-group row">
@@ -65,29 +65,23 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Kondisi Aset di Simda</label>
-                <div class="col-md-10">
-                    <select disabled name="kondisi_aset_simda" id="kondisi_aset_simda" >
-                        <option value="<?php echo $kondisi_simda ?>"><?php echo $kondisi_simda; ?></option>
+                <label class="col-md-2 col-form-label">Kondisi Aset</label>
+                <div class="col-md-4">
+                    <select class="form-control" <?php echo $disabled; ?> name="kondisi_aset_simata" id="kondisi_aset_simata" >
+                        <?php echo $this->get_kondisi($kondisi_aset_simata, 1); ?>
                     </select>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label">Kondisi Aset di Simata</label>
-                <div class="col-md-10">
-                    <select <?php echo $disabled; ?> name="kondisi_aset_simata" id="kondisi_aset_simata" >
-                        <option value="<?php echo $kondisi_aset_simata; ?>"><?php echo $kondisi_aset_simata; ?></option>
-                        <option value="1">Baik</option>
-                        <option value="2">Rusak Ringan</option>
-                        <option value="3">Rusak Berat</option>
-                        <option value="4">Hilang</option>
+                <label class="col-md-2 col-form-label">Kondisi Aset SIMDA BMD</label>
+                <div class="col-md-4">
+                    <select class="form-control" disabled name="kondisi_aset_simda" id="kondisi_aset_simda" >
+                        <option value="<?php echo $kondisi_simda ?>"><?php echo $kondisi_simda; ?></option>
                     </select>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Keterangan Kondisi Aset</label>
                 <div class="col-md-10">
-                    <textarea <?php echo $disabled; ?> class="form-control" name="keterangan_kondisi_aset" placeholder="Keterangan Kondisi Aset Jalan"><?php echo $keterangan_kondisi_aset; ?></textarea>
+                    <textarea <?php echo $disabled; ?> class="form-control" name="keterangan_kondisi_aset" placeholder="Keterangan Kondisi Aset Perlatan Mesin"><?php echo $keterangan_kondisi_aset; ?></textarea>
                 </div>
             </div>
             <div class="form-group row">

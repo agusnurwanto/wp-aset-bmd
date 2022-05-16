@@ -45,3 +45,7 @@
 .media-menu-item {
     color: inherit;
 }
+
+.table thead th {
+    vertical-align: middle !important;
+}
