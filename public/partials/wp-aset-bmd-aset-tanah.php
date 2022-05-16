@@ -212,6 +212,7 @@ var penggunaan;
 var keterangan;
 var warna_map;
 var ikon_map;
+var infoWindow = {};
 
 function initMap() {
     geocoder = new google.maps.Geocoder();
@@ -271,16 +272,16 @@ function initMap() {
             });
 
             bentuk_bidang1.setMap(map);
-            infoWindow = new google.maps.InfoWindow({
+            infoWindow[i] = new google.maps.InfoWindow({
                 content: contentString
             });
             google.maps.event.addListener(bentuk_bidang1, 'click', function(event) {
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(map);
+                infoWindow[i].setPosition(event.latLng);
+                infoWindow[i].open(map);
             });
             google.maps.event.addListener(marker1, 'click', function(event) {
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(map);
+                infoWindow[i].setPosition(event.latLng);
+                infoWindow[i].open(map);
             });
         });
     });
