@@ -461,21 +461,22 @@ class Wp_Aset_Bmd_Public {
 			$kondisi_aset_simata = 'Hilang';
 		}
 
-		$kondisi_simda = $aset[0]->Kondisi;
-
-		if ($kondisi_simda == 1) {
-			$kondisi_simda = 'Baik';
+		$kondisi_simda = '-';
+		if ($params['jenis_aset'] != 'tanah') {
+			$kondisi_simda = $aset[0]->Kondisi;
+			if ($kondisi_simda == 1) {
+				$kondisi_simda = 'Baik';
+			}
+			if ($kondisi_simda == 2) {
+				$kondisi_simda = 'Rusak Ringan';
+			}
+			if ($kondisi_simda == 3) {
+				$kondisi_simda = 'Rusak Berat';
+			}
+			if ($kondisi_simda == 4) {
+				$kondisi_simda = 'Hilang';
+			}
 		}
-		if ($kondisi_simda == 2) {
-			$kondisi_simda = 'Rusak Ringan';
-		}
-		if ($kondisi_simda == 3) {
-			$kondisi_simda = 'Rusak Berat';
-		}
-		if ($kondisi_simda == 4) {
-			$kondisi_simda = 'Hilang';
-		}
-		
 
 		$nilai_sewa = get_post_meta($post->ID, 'meta_nilai_sewa', true);
 		$nama_sewa = get_post_meta($post->ID, 'meta_nama_sewa', true);
