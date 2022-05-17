@@ -109,19 +109,28 @@
         z-index: 999;
         box-shadow: inset 0 0 4px #2e3642;
     }
+    #hide-menu {
+        display: none;
+    }
+    #hide-menu.show {
+        display: inherit;
+    }
+    .site-logo {
+        max-width: 500px;
+    }
 </style>
 <section id="sewa_aset">
     <div class="container intro-text">
         <div class="row text-center">
             <div class="col-md-12" style="margin-top: 35px;">
-                <a class="main animated" data-animation="fadeInTop" data-animation-delay="1000" href="<?php echo site_url(); ?>">
+                <a class="main animated" data-animation="fadeInUp" data-animation-delay="1000" href="<?php echo site_url(); ?>">
                     <img class="site-logo" src="<?php echo get_option('_crb_menu_logo_dashboard'); ?>" alt="SIMATA" />
                 </a>
             </div>
         </div>
         <div class="row text-center">
             <div class="col-md-12">
-                <div class="main animated" data-animation="fadeInTop" data-animation-delay="1000">
+                <div class="main animated" data-animation="fadeInUp" data-animation-delay="1000">
                     <h1 class="text-shadow" style="padding-top: 0 !important;padding-bottom: 50px; margin-top: 20px !important;"><?php echo get_option('_crb_judul_header'); ?></h1>
                 </div>
             </div>
@@ -147,7 +156,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_2'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInTop" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInUp" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_3'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_3'); ?>">
@@ -157,7 +166,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_3'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInTop" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInUp" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_4'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_4'); ?>">
@@ -209,7 +218,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_8'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInBottom" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInUp" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_9'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_9'); ?>">
@@ -219,7 +228,7 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_9'); ?></h3>
                 </a>
             </div>
-            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInBottom" data-animation-delay="1000">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInUp" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_10'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_10'); ?>">
@@ -241,12 +250,44 @@
             </div>
             <div class="col-md-2 col-xs-6 animated" data-animation="fadeInRight" data-animation-delay="1000">
                 <div class="setbulet bg-info pull-up">
+                    <a href="#hide-menu" onclick="show_more(); return false;">
+                        <img src="<?php echo get_option('_crb_menu_logo_0'); ?>">
+                    </a>
+                </div>
+                <a href="#hide-menu" onclick="show_more(); return false;">
+                    <h3 class="normal text-white text-xbold text-shadow" id="text-lainya"><?php echo get_option('_crb_menu_text_0'); ?></h3>
+                </a>
+            </div>
+        </div>
+        <div id="hide-menu" class="row counting-box text-center title-row">
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInUp" data-animation-delay="200">
+                <div class="setbulet bg-info pull-up">
                     <a href="<?php echo get_option('_crb_menu_url_12'); ?>" target="_blank">
                         <img src="<?php echo get_option('_crb_menu_logo_12'); ?>">
                     </a>
                 </div>
                 <a href="<?php echo get_option('_crb_menu_url_12'); ?>" target="_blank">
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_12'); ?></h3>
+                </a>
+            </div>
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInUp" data-animation-delay="200">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_13'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_13'); ?>">
+                    </a>
+                </div>
+                <a href="<?php echo get_option('_crb_menu_url_13'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_13'); ?></h3>
+                </a>
+            </div>
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInUp" data-animation-delay="200">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_14'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_14'); ?>">
+                    </a>
+                </div>
+                <a href="<?php echo get_option('_crb_menu_url_14'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_14'); ?></h3>
                 </a>
             </div>
         </div>
@@ -286,7 +327,21 @@
     }
     echo 'var background_header = '.json_encode($background_header).';';
 ?>
-    $('body').vegas({
+    jQuery('body').vegas({
         slides: background_header
     });
+
+    function show_more(){
+        if(jQuery('#hide-menu').hasClass('show')){
+            jQuery('#hide-menu').removeClass('show');
+            jQuery('#text-lainya').text(jQuery('#hide-menu').attr('text-asli'));
+        }else{
+            jQuery('#hide-menu').addClass('show');
+            jQuery('#hide-menu').attr('text-asli', jQuery('#text-lainya').text());
+            jQuery('#text-lainya').text('Sembunyikan');
+            jQuery("html, body").animate({ 
+                scrollTop: jQuery(document).height()
+            }, 1000);
+        }
+    }
 </script>

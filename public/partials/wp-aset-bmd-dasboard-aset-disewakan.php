@@ -8,7 +8,6 @@ $api_googlemap = get_option( '_crb_google_api' );
 $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
 
 $args = array(
-   'meta_key' => 'meta_disewakan',
    'meta_query' => array(
        array(
            'key' => 'meta_disewakan',
@@ -129,7 +128,8 @@ foreach($query->posts as $post){
     $table_simda = $data_jenis['table_simda'];
     $ket_penggunaan_aset = get_post_meta($post->ID, 'meta_ket_penggunaan_aset', true);
 
-
+    $warna_map = '';
+    $ikon_map  = '';
     if ($params['jenis_aset'] == 'tanah') {
         $warna_map = get_option('_crb_warna_tanah');
         $ikon_map  = get_option('_crb_icon_tanah');
@@ -181,8 +181,10 @@ foreach($query->posts as $post){
     $sql = $wpdb->prepare('
         select 
             a.*,
+            b.Harga as harga_asli,
             r.Nm_Aset5
         from '.$data_jenis['table_simda'].' a
+        LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda
         LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
             and r.kd_aset0=a.Kd_Aset80 
             and r.kd_aset1=a.Kd_Aset81 
@@ -196,13 +198,34 @@ foreach($query->posts as $post){
             AND a.Kd_Unit=%d 
             AND a.Kd_Sub=%d 
             AND a.Kd_UPB=%d
+            AND a.Kd_Aset8=%d
+            AND a.Kd_Aset80=%d
+            AND a.Kd_Aset81=%d
+            AND a.Kd_Aset82=%d
+            AND a.Kd_Aset83=%d
+            AND a.Kd_Aset84=%d
+            AND a.Kd_Aset85=%d
             AND a.No_Reg8=%d
             '.$where.'
-        ', $Kd_Prov, $Kd_Kab_Kota, $Kd_Bidang, $Kd_Unit, $Kd_Sub, $Kd_UPB, $No_Reg8);
+        ',
+        $Kd_Prov,
+        $Kd_Kab_Kota,
+        $Kd_Bidang,
+        $Kd_Unit,
+        $Kd_Sub,
+        $Kd_UPB,
+        $Kd_Aset8,
+        $Kd_Aset80,
+        $Kd_Aset81,
+        $Kd_Aset82,
+        $Kd_Aset83,
+        $Kd_Aset84,
+        $Kd_Aset85,
+        $No_Reg8
+    );
     $aset = $this->functions->CurlSimda(array(
         'query' => $sql 
     ));
-    $no++;
     $kd_register = $this->functions->CekNull($aset[0]->No_Reg8, 6);
     $kd_lokasi = '12.'.$this->functions->CekNull($aset[0]->Kd_Prov).'.'.$this->functions->CekNull($aset[0]->Kd_Kab_Kota).'.'.$this->functions->CekNull($aset[0]->Kd_Bidang).'.'.$this->functions->CekNull($aset[0]->Kd_Unit).'.'.$this->functions->CekNull($aset[0]->Kd_Sub).'.'.$this->functions->CekNull($aset[0]->Kd_UPB).'.'.$this->functions->CekNull($aset[0]->Kd_Kecamatan).'.'.$this->functions->CekNull($aset[0]->Kd_Desa);
     $kd_barang = $aset[0]->Kd_Aset8.'.'.$aset[0]->Kd_Aset80.'.'.$this->functions->CekNull($aset[0]->Kd_Aset81).'.'.$this->functions->CekNull($aset[0]->Kd_Aset82).'.'.$this->functions->CekNull($aset[0]->Kd_Aset83).'.'.$this->functions->CekNull($aset[0]->Kd_Aset84).'.'.$this->functions->CekNull($aset[0]->Kd_Aset85, 3);
@@ -235,19 +258,20 @@ foreach($query->posts as $post){
     }
     $body .= '
         <tr>
-            <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'</td>
-            <td>'.$aset[0]->Nm_Aset5.'</td>
+            <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'<br>'.$aset[0]->Nm_Aset5.'</td>
+            <td>'.$params['nama_skpd'].' '.$alamat.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
             <td>'.$ket_penggunaan_aset.'</td>
-            <td class="text-right" data-sort="'.$aset[0]->Harga.'">'.number_format($aset[0]->Harga,2,",",".").'</td>
+            <td class="text-right" data-sort="'.$aset[0]->harga_asli.'">'.number_format($aset[0]->harga_asli,2,",",".").'</td>
             <td>'.$nama_sewa.'</td>
             <td class="text-center">'.$waktu_sewa_awal.'<br>sampai<br>'.$waktu_sewa_akhir.'</td>
             <td class="text-right" data-sort="'.$nilai_sewa.'">'.number_format($nilai_sewa,2,",",".").'</td>
-            <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a style="margin-top: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
+            <td class="text-center"><a href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a style="margin-top: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
         </tr>
     ';
     $total_nilai_sewa++;
     $data_aset[] = array(
+        'jenis' => $data_jenis['jenis'],
         'aset' => $aset[0],
         'lng' => $koordinatX,
         'ltd' => $koordinatY,
@@ -282,10 +306,10 @@ update_option('_crb_jumlah_aset_disewakan', $total_nilai_sewa);
         <table class="table table-bordered" id="data_aset_sewa">
             <thead>
                 <tr>
-                    <th class="text-center">Kode Barang</th>
-                    <th class="text-center">Nama Aset</th>
-                    <th class="text-center">Keterangan</th>
-                    <th class="text-center">Keterangan Penggunaan Aset</th>
+                    <th class="text-center">Kode Barang & Nama Barang</th>
+                    <th class="text-center">UPB</th>
+                    <th class="text-center">Keterangan Aset</th>
+                    <th class="text-center">Penggunaan Aset</th>
                     <th class="text-center">Nilai Aset (Rp)</th>
                     <th class="text-center">Penyewa</th>
                     <th class="text-center">Waktu Sewa</th>
@@ -318,19 +342,19 @@ function setCenter(lng, ltd){
 jQuery(document).on('ready', function(){
     jQuery('#data_aset_sewa').dataTable({
         columnDefs: [
-            { "width": "300px", "targets": 2 },
-            { "width": "110px", "targets": 5 }
+            { "width": "200px", "targets": 2 },
+            { "width": "200px", "targets": 3 }
         ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
             var api = this.api();
-            var total_page = api.column( 3, { page: 'current'} )
+            var total_page = api.column( 4, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
                 }, 0 );
             jQuery('#total_aset').text(formatRupiah(total_page));
-            var total_sewa = api.column( 6, { page: 'current'} )
+            var total_sewa = api.column( 7, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
@@ -355,6 +379,7 @@ var keterangan;
 var warna_map;
 var ket_penggunaan_aset;
 var ikon_map;
+var infoWindow = {};
 
 function initMap() {
     geocoder = new google.maps.Geocoder();
@@ -373,7 +398,7 @@ function initMap() {
             var marker1 = new google.maps.Marker({
                 position: lokasi_aset,
                 map: map,
-                icon: ikon_map,
+                icon: aset.ikon_map,
                 title: 'Lokasi Aset'
             });
             
@@ -406,28 +431,39 @@ function initMap() {
             var Coords1 = JSON.parse(aset.polygon);
 
             // Membuat Shape
-            var bentuk_bidang1 = new google.maps.Polygon({
-                paths: Coords1,
-                strokeColor: warna_map,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: warna_map,
-                fillOpacity: 0.45,
-                html: contentString,
-                map,
-            });
+            if(aset.jenis == 'jalan'){
+                var bentuk_bidang1 = new google.maps.Polyline({
+                    map: map,
+                    path: Coords1,
+                    geodesic: true,
+                    strokeColor: aset.warna_map,
+                    strokeOpacity: 3,
+                    strokeWeight: 6,
+                    fillColor: aset.warna_map,
+                    fillOpacity: 3
+                });
+            }else{
+                var bentuk_bidang1 = new google.maps.Polygon({
+                    map: map,
+                    paths: Coords1,
+                    strokeColor: aset.warna_map,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: aset.warna_map,
+                    fillOpacity: 0.45
+                });
+            }
 
-            bentuk_bidang1.setMap(map);
-            infoWindow = new google.maps.InfoWindow({
+            infoWindow[i] = new google.maps.InfoWindow({
                 content: contentString
             });
             google.maps.event.addListener(bentuk_bidang1, 'click', function(event) {
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(map);
+                infoWindow[i].setPosition(event.latLng);
+                infoWindow[i].open(map);
             });
             google.maps.event.addListener(marker1, 'click', function(event) {
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(map);
+                infoWindow[i].setPosition(event.latLng);
+                infoWindow[i].open(map);
             });
         });
     });

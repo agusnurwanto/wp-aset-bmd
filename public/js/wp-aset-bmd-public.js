@@ -48,6 +48,31 @@ function to_number(text){
 	return text;
 }
 
+function cek_simpan(){
+	return new Promise(function(resolve, reject){
+		var kondisi = jQuery('#kondisi_aset_simata').val();
+        if(kondisi == ''){
+            return reject('Kondisi Aset harus diisi!');
+        }
+        var ket_kondisi = jQuery('textarea[name="keterangan_kondisi_aset"]').val();
+        if(ket_kondisi == ''){
+            return reject('Keterangan Kondisi Aset harus diisi!');
+        }
+        if(confirm("Apakah anda yakin untuk menimpan data ini. Data lama akan diupdate sesuai perubahan terbaru!")){
+        	resolve({
+        		kondisi: kondisi,
+        		ket_kondisi: ket_kondisi
+        	});
+        }
+	})
+	.catch(function(msg){
+		if(msg){
+			alert(msg);
+		}
+		return Promise.reject();
+	});
+}
+
 jQuery(document).ready(function(){
 	var loading = ''
 		+'<div id="wrap-loading">'

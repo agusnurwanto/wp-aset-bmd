@@ -16,6 +16,7 @@
     h3.normal {
         font-weight: bold;
         font-size: 15px;
+        margin-bottom: 7px;
     }
     .factor {
         word-break: break-all;
@@ -63,11 +64,7 @@
         box-shadow: inset 0 0 4px #2e3642;
     }
     .keterangan {
-        margin-bottom: 25px;
-        border-bottom: 1px solid #a9a8a8;
-    }
-    .text-shadow {
-        text-shadow: 2px 2px 4px #fff;
+        margin-bottom: 45px;
     }
 </style>
 <section id="sewa_aset">
@@ -75,12 +72,12 @@
         <div class="row text-center">
             <div class="col-md-12">
                 <div class="main animated" data-animation="fadeInTop" data-animation-delay="1000">
-                    <h1 class="text-shadow" style="padding-top: 0 !important;padding-bottom: 50px; margin-top: 20px !important;">Petunjuk Penggunaan</h1>
+                    <h1 style="padding-top: 0 !important;padding-bottom: 50px; margin-top: 20px !important;">Petunjuk Penggunaan</h1>
                 </div>
             </div>
         </div>
     <?php
-        for($i=1; $i<=5; $i++){
+        for($i=1; $i<=7; $i++){
             $n = $i*2;
             $_n = $n-1;
             echo '
@@ -89,8 +86,8 @@
                         <div class="setbulet bg-info pull-up">
                             <img src="'.get_option('_crb_menu_logo_'.$_n).'">
                         </div>
-                        <h3 class="normal text-xbold text-shadow">'.get_option('_crb_menu_text_'.$_n).'</h3>
-                        <div class="normal text-shadow keterangan text-left">
+                        <h3 class="normal text-white text-xbold text-shadow">'.get_option('_crb_menu_text_'.$_n).'</h3>
+                        <div class="normal keterangan text-left">
                             '.get_option('_crb_menu_keterangan_'.$_n).'
                         </div>
                     </div>
@@ -98,8 +95,8 @@
                         <div class="setbulet bg-info pull-up">
                             <img src="'.get_option('_crb_menu_logo_'.$n).'">
                         </div>
-                        <h3 class="normal text-xbold text-shadow">'.get_option('_crb_menu_text_'.$n).'</h3>
-                        <div class="normal text-shadow keterangan text-left">
+                        <h3 class="normal text-white text-xbold text-shadow">'.get_option('_crb_menu_text_'.$n).'</h3>
+                        <div class="normal keterangan text-left">
                             '.get_option('_crb_menu_keterangan_'.$n).'
                         </div>
                     </div>

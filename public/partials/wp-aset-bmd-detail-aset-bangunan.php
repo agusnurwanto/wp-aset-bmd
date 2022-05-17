@@ -31,7 +31,7 @@
                 </div>
                 <label class="col-md-2 col-form-label">Harga (Rp)</label>
                 <div class="col-md-4">
-                    <input type="text" disabled class="form-control" name="" value="<?php echo number_format($aset[0]->Harga,2,",","."); ?>">
+                    <input type="text" disabled class="form-control" name="" value="<?php echo number_format($aset[0]->harga_asli,2,",","."); ?>">
                 </div>
             </div>
             <div class="form-group row">
@@ -41,29 +41,23 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Kondisi Aset di Simda</label>
-                <div class="col-md-10">
-                    <select disabled name="kondisi_aset_simda" id="kondisi_aset_simda" >
-                        <option value="<?php echo $kondisi_simda ?>"><?php echo $kondisi_simda; ?></option>
+                <label class="col-md-2 col-form-label">Kondisi Aset</label>
+                <div class="col-md-4">
+                    <select class="form-control" <?php echo $disabled; ?> name="kondisi_aset_simata" id="kondisi_aset_simata" >
+                        <?php echo $this->get_kondisi($kondisi_aset_simata, 1); ?>
                     </select>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label">Kondisi Aset di Simata</label>
-                <div class="col-md-10">
-                    <select <?php echo $disabled; ?> name="kondisi_aset_simata" id="kondisi_aset_simata" >
-                        <option value="<?php echo $kondisi_aset_simata; ?>"><?php echo $kondisi_aset_simata; ?></option>
-                        <option value="1">Baik</option>
-                        <option value="2">Rusak Ringan</option>
-                        <option value="3">Rusak Berat</option>
-                        <option value="4">Hilang</option>
+                <label class="col-md-2 col-form-label">Kondisi Aset SIMDA BMD</label>
+                <div class="col-md-4">
+                    <select class="form-control" disabled name="kondisi_aset_simda" id="kondisi_aset_simda" >
+                        <option value="<?php echo $kondisi_simda ?>"><?php echo $kondisi_simda; ?></option>
                     </select>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Keterangan Kondisi Aset</label>
                 <div class="col-md-10">
-                    <textarea <?php echo $disabled; ?> class="form-control" name="keterangan_kondisi_aset" placeholder="Keterangan Kondisi Aset Bangunan"><?php echo $keterangan_kondisi_aset; ?></textarea>
+                    <textarea <?php echo $disabled; ?> class="form-control" name="keterangan_kondisi_aset" placeholder="Keterangan Kondisi Gedung Bangunan"><?php echo $keterangan_kondisi_aset; ?></textarea>
                 </div>
             </div>
             <div class="form-group row">
@@ -189,25 +183,26 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
                 <div class="col-md-10">
-                    <a target="_blank" href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a>
+                    <a href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a>
                 </div>
             </div>
         <?php elseif(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
                 <div class="col-md-10">
-                    <a target="_blank" onclick="simpan_aset(); return false;" href="#" class="btn btn-primary">Simpan</a> <a style="margin-left: 10px;" href="<?php echo $link_post; ?>" class="btn btn-danger">Kembali</a>
+                    <a onclick="simpan_aset(); return false;" href="#" class="btn btn-primary">Simpan</a> <a style="margin-left: 10px;" href="<?php echo $link_post; ?>" class="btn btn-danger">Kembali</a>
                 </div>
             </div>
         <?php endif; ?>
         </form>
     </div>
 </div>
-<script async defer src<?php echo $api_googlemap ?>"></script>
+<script async defer src="<?php echo $api_googlemap ?>"></script>
 <script>
 <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
     function simpan_aset(){
-        if(confirm("Apakah anda yakin untuk menimpan data ini. Data lama akan diupdate sesuai perubahan terbaru!")){
+        cek_simpan()
+        .then(function(res){
             jQuery('#wrap-loading').show();
             jQuery.ajax({
                 url: ajax.url,
@@ -233,8 +228,8 @@
                     "ket_aset_perlu_tindak_lanjut": jQuery('textarea[name="ket_aset_perlu_tindak_lanjut"]').val(),
                     "status_informasi": jQuery('input[name="status_informasi"]:checked').val(),
                     "ket_penggunaan_aset": jQuery('textarea[name="ket_penggunaan_aset"]').val(),
-                    "kondisi_aset_simata": jQuery('#kondisi_aset_simata option:selected').val(),
-                    "keterangan_kondisi_aset": jQuery('textarea[name="keterangan_kondisi_aset"]').val(),
+                    "kondisi_aset_simata": res.kondisi,
+                    "keterangan_kondisi_aset": res.ket_kondisi,
                     "ket_potensi_penggunaan": jQuery('textarea[name="ket_potensi_penggunaan"]').val(),
 
                 },
@@ -248,7 +243,7 @@
                     return alert(data.message);
                 }
             });
-        }
+        });
     }
 <?php endif; ?>
 
@@ -295,7 +290,7 @@
         ikon_map     = '<?php echo $ikon_map; ?>';
 
         // Menampilkan Marker
-        var marker1 = new google.maps.Marker({
+        window.evm = new google.maps.Marker({
             position: lokasi_aset,
             map,
             icon: ikon_map,
@@ -334,7 +329,7 @@
             '</table>';
 
         // Membuat Shape
-        var bentuk_bidang1 = new google.maps.Polygon({
+        window.evp = new google.maps.Polygon({
             paths: Coords1,
             strokeColor: warna_map,
             strokeOpacity: 0.8,
@@ -348,26 +343,80 @@
             html: contentString
         });
 
-        bentuk_bidang1.setMap(map);
+        evp.setMap(map);
         infoWindow = new google.maps.InfoWindow({
             content: contentString
         });
-        google.maps.event.addListener(bentuk_bidang1, 'click', function(event) {
+        google.maps.event.addListener(evp, 'click', function(event) {
             infoWindow.setPosition(event.latLng);
             infoWindow.open(map);
         });
-        google.maps.event.addListener(marker1, 'click', function(event) {
+        google.maps.event.addListener(evm, 'click', function(event) {
             infoWindow.setPosition(event.latLng);
             infoWindow.open(map);
         });
 
     <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
-        google.maps.event.addListener(marker1, 'mouseup', function(event) {
+        google.maps.event.addListener(evm, 'mouseup', function(event) {
             jQuery('input[name="latitude"]').val(event.latLng.lat());
             jQuery('input[name="longitude"]').val(event.latLng.lng());
         });
-        google.maps.event.addListener(bentuk_bidang1, 'mouseup', function(event) {
-            jQuery('textarea[name="polygon"]').val(JSON.stringify(bentuk_bidang1.getPath().getArray()));
+        google.maps.event.addListener(evp, 'mouseup', function(event) {
+            jQuery('textarea[name="polygon"]').val(JSON.stringify(evp.getPath().getArray()));
+        });
+
+        window.drawingManager = new google.maps.drawing.DrawingManager({
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER,
+                drawingModes: [
+                    google.maps.drawing.OverlayType.MARKER,
+                    google.maps.drawing.OverlayType.POLYGON
+                ],
+            },
+            markerOptions: {
+                icon: ikon_map,
+                draggable: true
+            },
+            polygonOptions: {
+                strokeColor: warna_map,
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: warna_map,
+                fillOpacity: 0.45,
+                editable: true,
+                draggable: true,
+                zIndex: 1
+            }
+        });
+        drawingManager.setMap(map);
+
+        google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event_draw) {
+            if(event_draw.type == 'marker'){
+                evm.setMap(null);
+                evm = event_draw.overlay;
+                google.maps.event.addListener(evm, 'mouseup', function(event) {
+                    jQuery('input[name="latitude"]').val(event.latLng.lat());
+                    jQuery('input[name="longitude"]').val(event.latLng.lng());
+                });
+                google.maps.event.addListener(evm, 'click', function(event) {
+                    infoWindow.setPosition(event.latLng);
+                    infoWindow.open(map);
+                });
+                jQuery('input[name="latitude"]').val(evm.position.lat());
+                jQuery('input[name="longitude"]').val(evm.position.lng());
+            }else if(event_draw.type == 'polygon'){
+                evp.setMap(null);
+                evp = event_draw.overlay;
+                google.maps.event.addListener(evp, 'mouseup', function(event) {
+                    jQuery('textarea[name="polygon"]').val(JSON.stringify(evp.getPath().getArray()));
+                });
+                google.maps.event.addListener(evp, 'click', function(event) {
+                    infoWindow.setPosition(event.latLng);
+                    infoWindow.open(map);
+                });
+                jQuery('textarea[name="polygon"]').val(JSON.stringify(evp.getPath().getArray()));
+            }
         });
 
         // cek jika koordinat kosong maka lokasi center di setting ke alamat pemda
@@ -376,8 +425,9 @@
             || <?php echo $koordinatY; ?> == 0
             || '<?php echo $polygon; ?>' == '[]'
         ){
+
             geocoder = new google.maps.Geocoder();
-            geocoder.geocode( { 'address': '<?php echo $nama_pemda.' '.$params['nama_skpd'].' '.$alamat.' '.$aset[0]->Keterangan.' '.$aset[0]->Lokasi; ?>'}, function(results, status) {
+            geocoder.geocode( { 'address': '<?php echo $nama_pemda.' '.$params['nama_skpd'].' '.$alamat.' '.$aset[0]->Keterangan; ?>'}, function(results, status) {
                 if (status == 'OK') {
                     if(
                         <?php echo $koordinatX; ?> == 0 
@@ -385,34 +435,6 @@
                     ){
                         // ganti center map
                         map.setCenter(results[0].geometry.location);
-                        // ganti center maker
-                        marker1.setPosition(results[0].geometry.location);
-                        // ganti value latitude
-                        jQuery('input[name="latitude"]').val(results[0].geometry.location.lat());
-                        // ganti value longitude
-                        jQuery('input[name="longitude"]').val(results[0].geometry.location.lng());
-                    }
-                    if('<?php echo $polygon; ?>' == '[]'){
-                        // ganti value dari polygon
-                        bentuk_bidang1.setPath([
-                            {
-                                lat: results[0].geometry.location.lat()-0.0004, 
-                                lng: results[0].geometry.location.lng()-0.0004
-                            },
-                            {
-                                lat: results[0].geometry.location.lat()-0.0004, 
-                                lng: results[0].geometry.location.lng()+0.0004
-                            },
-                            {
-                                lat: results[0].geometry.location.lat()+0.0004, 
-                                lng: results[0].geometry.location.lng()+0.0004
-                            },
-                            {
-                                lat: results[0].geometry.location.lat()+0.0004, 
-                                lng: results[0].geometry.location.lng()-0.0004
-                            }
-                        ]);
-                        jQuery('textarea[name="polygon"]').val(JSON.stringify(bentuk_bidang1.getPath().getArray()));
                     }
                 } else {
                     alert('Geocode was not successful for the following reason: ' + status);
