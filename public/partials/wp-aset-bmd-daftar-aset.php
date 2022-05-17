@@ -195,7 +195,7 @@ foreach($skpd as $k => $val){
             <td class="text-right" data-sort="'.$val->jml.'">'.$jumlah.'</td>
             <td class="text-center">'.$satuan.'</td>
             <td class="text-right" data-kd_lokasi="'.$kd_lokasi.'" data-sort="'.$val->harga.'">'.number_format($val->harga,2,",",".").'</td>
-            <td class="text-center"><a target="_blank" href="'.$link_detail.'" class="btn btn-primary">Detail</a></td>
+            <td class="text-center"><a href="'.$link_detail.'" class="btn btn-primary">Detail</a></td>
         </tr>
     ';
 }

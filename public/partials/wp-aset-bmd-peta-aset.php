@@ -49,7 +49,6 @@ foreach($query->posts as $post){
         SELECT 
             u.Nm_UPB, 
             k.Nm_Kecamatan,
-            u.Nm_UPB,
             s.Nm_Sub_Unit,
             d.Nm_Desa
         from ref_upb u
@@ -222,6 +221,7 @@ foreach($query->posts as $post){
 
     $data_aset[] = array(
         'jenis' => $data_jenis['jenis'],
+        'zIndex' => $data_jenis['zIndex'],
         'aset' => $aset[0],
         'lng' => $koordinatX,
         'ltd' => $koordinatY,
@@ -318,6 +318,7 @@ var penggunaan;
 var keterangan;
 var warna_map;
 var ikon_map;
+var infoWindow = {};
 
 function initMap() {
     geocoder = new google.maps.Geocoder();
@@ -349,10 +350,16 @@ function initMap() {
             var contentString = '<br>' +
                 '<table width="100%" border="0">' +
                 '<tr>' +
-                '<td width="33%" valign="top" height="25">Nama Aset</td><td valign="top"><center>:</center></td><td valign="top"><b>' + nama_aset + '</b></td>' +
+                '<td valign="top" height="25">Kode UPB</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + aset.kd_lokasi + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td valign="top" height="25">UPB</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + aset.nama_skpd + '</td>' +
                 '</tr>' +
                 '<tr>' +
                 '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                    '<td width="33%" valign="top" height="25">Nama Aset</td><td valign="top"><center>:</center></td><td valign="top"><b>' + nama_aset + '</b></td>' +
                 '</tr>' +
                 '<tr>' +
                 '<td valign="top" height="25">Nilai</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">Rp ' + aset.nilai + '</td>' +
@@ -376,7 +383,7 @@ function initMap() {
                     strokeWeight: 6,
                     fillColor: aset.warna_map,
                     fillOpacity: 3,
-                    html: contentString
+                    zIndex: aset.zIndex
                 });
             }else{
                 var bentuk_bidang1 = new google.maps.Polygon({
@@ -387,20 +394,20 @@ function initMap() {
                     strokeWeight: 2,
                     fillColor: aset.warna_map,
                     fillOpacity: 0.45,
-                    html: contentString
+                    zIndex: aset.zIndex
                 });
             }
 
-            infoWindow = new google.maps.InfoWindow({
+            infoWindow[i] = new google.maps.InfoWindow({
                 content: contentString
             });
             google.maps.event.addListener(bentuk_bidang1, 'click', function(event) {
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(map);
+                infoWindow[i].setPosition(event.latLng);
+                infoWindow[i].open(map);
             });
             google.maps.event.addListener(marker1, 'click', function(event) {
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(map);
+                infoWindow[i].setPosition(event.latLng);
+                infoWindow[i].open(map);
             });
         });
     });

@@ -173,14 +173,14 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
                 <div class="col-md-10">
-                    <a target="_blank" href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a>
+                    <a href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a>
                 </div>
             </div>
         <?php elseif(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
                 <div class="col-md-10">
-                    <a target="_blank" onclick="simpan_aset(); return false;" href="#" class="btn btn-primary">Simpan</a> <a style="margin-left: 10px;" href="<?php echo $link_post; ?>" class="btn btn-danger">Kembali</a>
+                    <a onclick="simpan_aset(); return false;" href="#" class="btn btn-primary">Simpan</a> <a style="margin-left: 10px;" href="<?php echo $link_post; ?>" class="btn btn-danger">Kembali</a>
                 </div>
             </div>
         <?php endif; ?>

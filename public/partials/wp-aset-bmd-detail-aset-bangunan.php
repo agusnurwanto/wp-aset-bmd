@@ -183,14 +183,14 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
                 <div class="col-md-10">
-                    <a target="_blank" href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a>
+                    <a href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a>
                 </div>
             </div>
         <?php elseif(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
                 <div class="col-md-10">
-                    <a target="_blank" onclick="simpan_aset(); return false;" href="#" class="btn btn-primary">Simpan</a> <a style="margin-left: 10px;" href="<?php echo $link_post; ?>" class="btn btn-danger">Kembali</a>
+                    <a onclick="simpan_aset(); return false;" href="#" class="btn btn-primary">Simpan</a> <a style="margin-left: 10px;" href="<?php echo $link_post; ?>" class="btn btn-danger">Kembali</a>
                 </div>
             </div>
         <?php endif; ?>
@@ -201,7 +201,8 @@
 <script>
 <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
     function simpan_aset(){
-        if(confirm("Apakah anda yakin untuk menimpan data ini. Data lama akan diupdate sesuai perubahan terbaru!")){
+        cek_simpan()
+        .then(function(res){
             jQuery('#wrap-loading').show();
             jQuery.ajax({
                 url: ajax.url,
@@ -227,8 +228,8 @@
                     "ket_aset_perlu_tindak_lanjut": jQuery('textarea[name="ket_aset_perlu_tindak_lanjut"]').val(),
                     "status_informasi": jQuery('input[name="status_informasi"]:checked').val(),
                     "ket_penggunaan_aset": jQuery('textarea[name="ket_penggunaan_aset"]').val(),
-                    "kondisi_aset_simata": jQuery('#kondisi_aset_simata option:selected').val(),
-                    "keterangan_kondisi_aset": jQuery('textarea[name="keterangan_kondisi_aset"]').val(),
+                    "kondisi_aset_simata": res.kondisi,
+                    "keterangan_kondisi_aset": res.ket_kondisi,
                     "ket_potensi_penggunaan": jQuery('textarea[name="ket_potensi_penggunaan"]').val(),
 
                 },
@@ -242,7 +243,7 @@
                     return alert(data.message);
                 }
             });
-        }
+        });
     }
 <?php endif; ?>
 

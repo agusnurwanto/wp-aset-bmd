@@ -261,7 +261,7 @@ foreach($query->posts as $post){
             <td>'.$ket_potensi_penggunaan.'</td>
             <td class="text-right" data-sort="'.$aset[0]->harga_asli.'">'.number_format($aset[0]->harga_asli,2,",",".").'</td>
             <td class="text-right" data-sort="'.$nilai_sewa.'">'.number_format($nilai_sewa,2,",",".").'</td>
-            <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
+            <td class="text-center"><a href="'.$link['url'].'" class="btn btn-primary">Detail</a> <a onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
         </tr>
     ';
     $total_nilai_sewa++;
@@ -366,6 +366,7 @@ var penggunaan;
 var keterangan;
 var warna_map;
 var ikon_map;
+var infoWindow = {};
 
 function initMap() {
     geocoder = new google.maps.Geocoder();
@@ -423,8 +424,7 @@ function initMap() {
                     strokeOpacity: 3,
                     strokeWeight: 6,
                     fillColor: aset.warna_map,
-                    fillOpacity: 3,
-                    html: contentString
+                    fillOpacity: 3
                 });
             }else{
                 var bentuk_bidang1 = new google.maps.Polygon({
@@ -434,21 +434,20 @@ function initMap() {
                     strokeOpacity: 0.8,
                     strokeWeight: 2,
                     fillColor: aset.warna_map,
-                    fillOpacity: 0.45,
-                    html: contentString
+                    fillOpacity: 0.45
                 });
             }
 
-            infoWindow = new google.maps.InfoWindow({
+            infoWindow[i] = new google.maps.InfoWindow({
                 content: contentString
             });
             google.maps.event.addListener(bentuk_bidang1, 'click', function(event) {
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(map);
+                infoWindow[i].setPosition(event.latLng);
+                infoWindow[i].open(map);
             });
             google.maps.event.addListener(marker1, 'click', function(event) {
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(map);
+                infoWindow[i].setPosition(event.latLng);
+                infoWindow[i].open(map);
             });
         });
     });

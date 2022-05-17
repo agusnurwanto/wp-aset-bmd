@@ -1,88 +1,195 @@
 <?php
+global $wpdb;
 
-$body = '';
+$nama_pemda = get_option('_crb_bmd_nama_pemda');
+$tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
+$api_key = get_option( '_crb_apikey_simda_bmd' );
+$body_skpd = '';
+$data_aset = array();
 $total_nilai = 0;
-$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
-$nama_jenis_aset = $data_jenis['nama'];
-$table_simda = $data_jenis['table_simda'];
 $api_googlemap = get_option( '_crb_google_api' );
 $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
 
-if(empty($nama_jenis_aset)){
-    die('Jenis Aset tidak ditemukan!');
-}
-
-$kd_lokasi_unit = '12.'.$this->functions->CekNull($Kd_Prov).'.'.$this->functions->CekNull($Kd_Kab_Kota).'.'.$this->functions->CekNull($Kd_Bidang).'.'.$this->functions->CekNull($Kd_Unit);
-$kd_lokasi_upb = '.'.$this->functions->CekNull($Kd_Sub).'.'.$this->functions->CekNull($Kd_UPB).'.'.$this->functions->CekNull($Kd_Kecamatan).'.'.$this->functions->CekNull($Kd_Desa);
-$link_detail_unit = $this->get_link_daftar_aset(
-    array('get' => 
-        array(
-            'kd_lokasi' => $kd_lokasi_unit, 
-            'nama_skpd' => $params['nama_skpd'], 
-            'daftar_aset' => 1
-        )
-    )
+$datasets_awal = array();
+$all_jenis = array('mesin', 'bangunan', 'jalan', 'aset_tetap');
+$args = array(
+   'meta_query' => array(
+       array(
+           'key' => 'meta_kondisi_aset_simata',
+           'value' => $params['kondisi_simata'],
+           'compare' => '='
+       )
+   )
 );
-
-$where = '';
-if(!empty($Kd_Kecamatan)){
-    $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
-}else{
-    $where .= ' AND a.Kd_Kecamatan is null';
-}
-if(!empty($Kd_Desa)){
-    $where .= $wpdb->prepare(' AND a.Kd_Desa=%d', $Kd_Desa);
-}else{
-    $where .= ' AND a.Kd_Desa is null';
-}
-
-$body_skpd = '';
-$sql = $wpdb->prepare('
-    select 
-        a.*,
-        b.Harga as harga_asli,
-        r.Nm_Aset5
-    from '.$data_jenis['table_simda'].' a
-    LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda
-    LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
-        and r.kd_aset0=a.Kd_Aset80 
-        and r.kd_aset1=a.Kd_Aset81 
-        and r.kd_aset2=a.Kd_Aset82 
-        and r.kd_aset3=a.Kd_Aset83 
-        and r.kd_aset4=a.Kd_Aset84 
-        and r.kd_aset5=a.Kd_Aset85
-    where a.Kd_Prov=%d
-        AND a.Kd_Kab_Kota=%d 
-        AND a.Kd_Bidang=%d 
-        AND a.Kd_Unit=%d 
-        AND a.Kd_Sub=%d 
-        AND a.Kd_UPB=%d
-        AND a.Kd_Hapus= \'0\' 
-        AND a.Kd_Data != \'3\' 
-        AND a.Kd_KA= \'1\'
-        AND b.Harga > 0
-        '.$where.'
-    ', $Kd_Prov, $Kd_Kab_Kota, $Kd_Bidang, $Kd_Unit, $Kd_Sub, $Kd_UPB);
-$aset = $this->functions->CurlSimda(array(
-    'query' => $sql 
-));
-$no=0;
+$total_nilai_sewa = 0;
+$query = new WP_Query($args);
+$data_aset = array();
+$link_detail_unit = false;
+$nama_unit = '';
+$dt_kondisi = $this->get_kondisi($params['kondisi_simata']);
+$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
+$nama_jenis_aset = $data_jenis['nama'];
 $show_map = false;
-foreach($aset as $k => $val){
-    $no++;
-    $total_nilai += $val->harga_asli;
-    $kd_lokasi = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit).'.'.$this->functions->CekNull($val->Kd_Sub).'.'.$this->functions->CekNull($val->Kd_UPB).'.'.$this->functions->CekNull($val->Kd_Kecamatan).'.'.$this->functions->CekNull($val->Kd_Desa);
-    $kd_barang = $val->Kd_Aset8.'.'.$val->Kd_Aset80.'.'.$this->functions->CekNull($val->Kd_Aset81).'.'.$this->functions->CekNull($val->Kd_Aset82).'.'.$this->functions->CekNull($val->Kd_Aset83).'.'.$this->functions->CekNull($val->Kd_Aset84).'.'.$this->functions->CekNull($val->Kd_Aset85, 3);
-    $kd_register = $this->functions->CekNull($val->No_Reg8, 6);
-    $link_detail = $this->get_link_daftar_aset(array(
-        'get' => array(
-            'nama_skpd' => $params['nama_skpd'],
-            'kd_barang' => $kd_barang,
-            'kd_register' => $kd_register,
-            'kd_lokasi' => $kd_lokasi,
-            'jenis_aset' => $params['jenis_aset']
-        )
+foreach($query->posts as $post){
+    $params_post = shortcode_parse_atts(str_replace('[detail_aset', '', str_replace(']', '', $post->post_content)));
+    $kd_lokasi = explode('.', $params_post['kd_lokasi']);
+    $Kd_Prov = (int) $kd_lokasi[1];
+    $Kd_Kab_Kota = (int) $kd_lokasi[2];
+    $Kd_Bidang = (int) $kd_lokasi[3];
+    $Kd_Unit = (int) $kd_lokasi[4];
+    $kd_lokasi_unit = '12.'.$this->functions->CekNull($Kd_Prov).'.'.$this->functions->CekNull($Kd_Kab_Kota).'.'.$this->functions->CekNull($Kd_Bidang).'.'.$this->functions->CekNull($Kd_Unit);
+    $Kd_Sub = (int) $kd_lokasi[5];
+    $Kd_UPB = (int) $kd_lokasi[6];
+    $Kd_Kecamatan = (int) $kd_lokasi[7];
+    $Kd_Desa = (int) $kd_lokasi[8];
+    $kd_lokasi_upb = '.'.$this->functions->CekNull($Kd_Sub).'.'.$this->functions->CekNull($Kd_UPB).'.'.$this->functions->CekNull($Kd_Kecamatan).'.'.$this->functions->CekNull($Kd_Desa);
+    $kd_lokasi = $params_post['kd_lokasi'];
+    $kondisi = get_post_meta($post->ID, 'meta_kondisi_aset_simata', true);
+
+    // filter untuk menampilkan hanya aset yang sesuai unitnya
+    if(
+        $kd_lokasi != $params['kd_lokasi']
+        || $kondisi != $params['kondisi_simata']
+        || $params_post['jenis_aset'] != $params['jenis_aset']
+    ){
+        continue;
+    }
+
+    $where = '';
+    if(!empty($Kd_Kecamatan)){
+        $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
+    }
+    if(!empty($Kd_Desa)){
+        $where .= $wpdb->prepare(' AND a.Kd_Desa=%d', $Kd_Desa);
+    }
+
+    $kd_barang = explode('.', $params_post['kd_barang']);
+    $Kd_Aset8 = (int) $kd_barang[0];
+    $Kd_Aset80 = (int) $kd_barang[1];
+    $Kd_Aset81 = (int) $kd_barang[2];
+    $Kd_Aset82 = (int) $kd_barang[3];
+    $Kd_Aset83 = (int) $kd_barang[4];
+    $Kd_Aset84 = (int) $kd_barang[5];
+    $Kd_Aset85 = (int) $kd_barang[6];
+
+    $kd_barang = $params_post['kd_barang'];
+    $No_Reg8 = (int) $params_post['kd_register'];
+
+    $sql = $wpdb->prepare('
+        select 
+            a.*,
+            un.Nm_Unit,
+            s.Nm_Sub_Unit,
+            u.Nm_UPB, 
+            k.Nm_Kecamatan,
+            d.Nm_Desa,
+            b.Harga as harga_asli,
+            r.Nm_Aset5
+        from '.$data_jenis['table_simda'].' a
+        LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda
+        INNER JOIN ref_unit un ON a.Kd_Prov = un.Kd_Prov
+            AND a.Kd_Kab_Kota = un.Kd_Kab_Kota 
+            AND a.Kd_Bidang = un.Kd_Bidang 
+            AND a.Kd_Unit = un.Kd_Unit 
+        INNER JOIN ref_sub_unit s ON a.Kd_Prov=s.Kd_Prov
+            AND a.Kd_Kab_Kota = s.Kd_Kab_Kota 
+            AND a.Kd_Bidang = s.Kd_Bidang 
+            AND a.Kd_Unit = s.Kd_Unit 
+            AND a.Kd_Sub = s.Kd_Sub 
+        LEFT JOIN ref_upb u ON u.Kd_Prov=a.Kd_Prov
+            AND u.Kd_Kab_Kota=a.Kd_Kab_Kota
+            AND u.Kd_Bidang=a.Kd_Bidang
+            AND u.Kd_Unit=a.Kd_Unit
+            AND u.Kd_Sub = a.Kd_Sub 
+            AND u.Kd_UPB = a.Kd_UPB 
+            AND ( u.Kd_Kecamatan = a.Kd_Kecamatan OR u.Kd_Kecamatan is null ) 
+            AND ( u.Kd_Desa = a.Kd_Desa OR u.Kd_Desa is null )
+        LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=a.Kd_Prov
+            AND k.Kd_Kab_Kota = a.Kd_Kab_Kota 
+            AND ( k.Kd_Kecamatan = a.Kd_Kecamatan OR k.Kd_Kecamatan is null )
+        LEFT JOIN Ref_Desa d ON d.Kd_Prov=a.Kd_Prov
+            AND d.Kd_Kab_Kota = a.Kd_Kab_Kota 
+            AND ( d.Kd_Kecamatan = a.Kd_Kecamatan OR d.Kd_Kecamatan is null )
+            AND ( d.Kd_Desa = a.Kd_Desa OR d.Kd_Desa is null )
+        LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
+            and r.kd_aset0=a.Kd_Aset80 
+            and r.kd_aset1=a.Kd_Aset81 
+            and r.kd_aset2=a.Kd_Aset82 
+            and r.kd_aset3=a.Kd_Aset83 
+            and r.kd_aset4=a.Kd_Aset84 
+            and r.kd_aset5=a.Kd_Aset85
+        where a.Kd_Prov=%d
+            AND a.Kd_Kab_Kota=%d 
+            AND a.Kd_Bidang=%d 
+            AND a.Kd_Unit=%d 
+            AND a.Kd_Sub=%d 
+            AND a.Kd_UPB=%d
+            AND a.Kd_Aset8=%d
+            AND a.Kd_Aset80=%d
+            AND a.Kd_Aset81=%d
+            AND a.Kd_Aset82=%d
+            AND a.Kd_Aset83=%d
+            AND a.Kd_Aset84=%d
+            AND a.Kd_Aset85=%d
+            AND a.No_Reg8=%d
+            AND a.Kd_Hapus=0
+            AND a.Kd_Data!=3
+            AND a.Kd_KA=1
+            '.$where.'
+        ',
+        $Kd_Prov,
+        $Kd_Kab_Kota,
+        $Kd_Bidang,
+        $Kd_Unit,
+        $Kd_Sub,
+        $Kd_UPB,
+        $Kd_Aset8,
+        $Kd_Aset80,
+        $Kd_Aset81,
+        $Kd_Aset82,
+        $Kd_Aset83,
+        $Kd_Aset84,
+        $Kd_Aset85,
+        $No_Reg8
+    );
+    $aset = $this->functions->CurlSimda(array(
+        'query' => $sql 
     ));
+    $val = $aset[0];
+    $kd_register = $this->functions->CekNull($val->No_Reg8, 6);
+
+    if(empty($link_detail_unit)){
+        $link_detail_unit = $this->get_link_daftar_aset(
+            array('get' => 
+                array(
+                    'kd_lokasi' => $kd_lokasi_unit, 
+                    'nama_skpd' => $val->Nm_Unit, 
+                    'daftar_aset' => 1
+                )
+            )
+        );
+    }
+
+    $alamat = array();
+    if(!empty($val->Nm_Kecamatan)){
+        $alamat[] = 'Kec. '.$val->Nm_Kecamatan;
+    }
+    if(!empty($val->Nm_Desa)){
+        $alamat[] = 'Desa/Kel. '.$val->Nm_Desa;
+    }
+    if(!empty($alamat)){
+        $alamat = ' ('.implode(', ', $alamat).')';
+    }else{
+        $alamat = '';
+    }
+
+    $nama_unit = $val->Nm_Unit;
+    $nama_skpd = $val->Nm_UPB.$alamat;
+    $nama_gabungan = $val->Nm_Sub_Unit.' | '.$nama_skpd;
+    if(strpos($nama_skpd, $val->Nm_Sub_Unit) !== false){
+        $nama_gabungan = $nama_skpd;
+    }
+
     $link = $this->functions->generatePage(array(
         'nama_page' => $params['jenis_aset'].' '.$kd_lokasi.' '.$kd_barang.' '.$kd_register,
         'content' => '[detail_aset kd_lokasi="'.$kd_lokasi.'" kd_barang="'.$kd_barang.'" kd_register="'.$kd_register.'" jenis_aset="'.$params['jenis_aset'].'"]',
@@ -143,27 +250,20 @@ foreach($aset as $k => $val){
     if(empty($polygon)){
         $polygon = '[]';
     }
-    $kondisi_aset = get_post_meta($link['id'], 'meta_kondisi_aset', true);
-    if(empty($kondisi_aset)){
-        $kondisi_aset = '-';
-    }
     
     $keterangan_kondisi_aset = get_post_meta($link['id'], 'meta_keterangan_kondisi_aset', true);
-    if(empty($keterangan_kondisi_aset)){
-        $keterangan_kondisi_aset = '-';
-    }
 
     $map_center = '';
     if(!empty($warna_map)){
         $map_center = ' <a style="margin-bottom: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\'); return false;" href="#" class="btn btn-danger">Map</a>';
     }
+    
     $body_skpd .= '
         <tr>
-            <td class="text-center">'.$no.'</td>
-            <td class="text-center">'.$kd_barang.'</td>
-            <td class="text-center">'.$kd_register.'</td>
+            <td class="text-center">'.$kd_barang.'.'.$kd_register.'</td>
             <td>'.$val->Nm_Aset5.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
+            <td>'.$keterangan_kondisi_aset.'</td>
             <td class="text-right" data-sort="'.$val->harga_asli.'">'.number_format($val->harga_asli,2,",",".").'</td>
             <td class="text-center"><a style="margin-bottom: 5px;" href="'.$link['url'].'" class="btn btn-primary">Detail</a>'.$map_center.'</td>
         </tr>
@@ -178,6 +278,7 @@ foreach($aset as $k => $val){
             'polygon' => $polygon,
             'nilai' => number_format($val->harga_asli,2,",","."),
             'nama_aset' => $val->Nm_Aset5,
+            'keterangan_kondisi_aset' => $keterangan_kondisi_aset,
             'keterangan' => implode(' | ', $keterangan),
             'nama_skpd' => $params['nama_skpd'],
             'kd_barang' => $kd_barang,
@@ -198,7 +299,7 @@ foreach($aset as $k => $val){
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Barang Milik Daerah<br><a href="<?php echo $link_detail_unit; ?>"><?php echo $kd_lokasi_unit; ?></a><?php echo $kd_lokasi_upb.'<br>'; ?><?php echo $params['nama_skpd']; ?><br><?php echo $nama_jenis_aset; ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Barang Milik Daerah<br><a href="<?php echo $link_detail_unit; ?>"><?php echo $kd_lokasi_unit; ?></a><?php echo $kd_lokasi_upb.'<br>'; ?><?php echo $params['nama_skpd']; ?><br><?php echo $nama_jenis_aset; ?><br><?php echo $dt_kondisi['uraian']; ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
     <?php
         if($show_map){
             echo '<div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div>';
@@ -207,11 +308,10 @@ foreach($aset as $k => $val){
         <table class="table table-bordered" id="table-aset-skpd">
             <thead id="data_header">
                 <tr>
-                    <th class="text-center">No</th>
                     <th class="text-center">Kode Barang</th>
-                    <th class="text-center">Register</th>
                     <th class="text-center">Nama Aset</th>
-                    <th class="text-center">Keterangan</th>
+                    <th class="text-center">Keterangan Aset</th>
+                    <th class="text-center">Keterangan Kondisi</th>
                     <th class="text-center">Nilai (Rupiah)</th>
                     <th class="text-center">Aksi</th>
                 </tr>
@@ -220,7 +320,7 @@ foreach($aset as $k => $val){
                 <?php echo $body_skpd; ?>
             </tbody>
             <tfoot>
-                <th colspan="5" class="text-center">Total Nilai</th>
+                <th colspan="4" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_all_skpd"><?php echo number_format($total_nilai,2,",","."); ?></th>
                 <th></th>
             <tfoot>
@@ -242,12 +342,13 @@ function setCenter(lng, ltd){
 jQuery(document).on('ready', function(){
     jQuery('#table-aset-skpd').dataTable({
         columnDefs: [
-            { "width": "500px", "targets": 4 }
+            { "width": "200px", "targets": 2 },
+            { "width": "200px", "targets": 3 }
         ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
             var api = this.api();
-            var total_page = api.column( 5, { page: 'current'} )
+            var total_page = api.column( 4, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
@@ -342,7 +443,8 @@ function initMap() {
                     strokeOpacity: 3,
                     strokeWeight: 6,
                     fillColor: aset.warna_map,
-                    fillOpacity: 3
+                    fillOpacity: 3,
+                    html: contentString
                 };
                 window.bentuk_bidang1 = new google.maps.Polyline(opsi);
             }else{
@@ -353,7 +455,8 @@ function initMap() {
                     strokeOpacity: 0.8,
                     strokeWeight: 2,
                     fillColor: aset.warna_map,
-                    fillOpacity: 0.45
+                    fillOpacity: 0.45,
+                    html: contentString
                 };
                 window.bentuk_bidang1 = new google.maps.Polygon(opsi);
             }
@@ -364,6 +467,4 @@ function initMap() {
         });
     });
 }
-
-
 </script>

@@ -29,7 +29,7 @@ $link_detail_unit = $this->get_link_daftar_aset(
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Barang Milik Daerah<br><a href="<?php echo $link_detail_unit; ?>" target="_blank"><?php echo $kd_lokasi_unit; ?></a><?php echo $kd_lokasi_upb.'<br>'; ?><a href="<?php echo $link_detail; ?>" target="_blank"><?php echo $params['nama_skpd'].' '.$alamat; ?></a><br><?php echo $nama_jenis_aset; ?> ( <?php echo $aset[0]->Nm_Aset5; ?> )<br><?php echo $params['kd_barang'].' '.$params['kd_register']; ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Barang Milik Daerah<br><a href="<?php echo $link_detail_unit; ?>"><?php echo $kd_lokasi_unit; ?></a><?php echo $kd_lokasi_upb.'<br>'; ?><a href="<?php echo $link_detail; ?>"><?php echo $params['nama_skpd'].' '.$alamat; ?></a><br><?php echo $nama_jenis_aset; ?> ( <?php echo $aset[0]->Nm_Aset5; ?> )<br><?php echo $params['kd_barang'].' '.$params['kd_register']; ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <form>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Kode UPB</label>
