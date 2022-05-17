@@ -223,10 +223,32 @@ foreach($query->posts as $post){
     $polygon = get_post_meta($post->ID, 'polygon', true);
     $keterangan_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
 
+    $data_upb = $this->get_total_aset_upb($data_jenis['table_simda'], $params);
+    if(!empty($aset[0]->Alamat)){
+        $column_lokasi = $data_upb[0]->Nm_Sub_Unit.', '.$data_upb[0]->Nm_UPB;
+        if($data_upb[0]->Nm_Sub_Unit == $data_upb[0]->Nm_UPB){
+            $column_lokasi = $data_upb[0]->Nm_Sub_Unit;
+        }
+        $new_alamat = str_replace('(','',$alamat);
+        $new_alamat = str_replace(')','',$new_alamat);
+        $column_lokasi = !empty($alamat) ? $column_lokasi.', '.$new_alamat.', '.$aset[0]->Alamat : $column_lokasi.', '.$aset[0]->Alamat;
+    }else if(!empty($aset[0]->Lokasi)){
+        $column_lokasi = $data_upb[0]->Nm_Sub_Unit.', '.$data_upb[0]->Nm_UPB;
+        if($data_upb[0]->Nm_Sub_Unit == $data_upb[0]->Nm_UPB){
+            $column_lokasi = $data_upb[0]->Nm_Sub_Unit;
+        }
+        $new_alamat = str_replace('(','',$alamat);
+        $new_alamat = str_replace(')','',$new_alamat);
+        $column_lokasi = !empty($alamat) ? $column_lokasi.', '.$new_alamat.', '.$aset[0]->Lokasi : $column_lokasi.', '.$aset[0]->Lokasi;
+    }else{
+        $column_lokasi = '-';
+    }
+
     $body .= '
         <tr>
             <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'</td>
             <td>'.$aset[0]->Nm_Aset5.'</td>
+            <td>'.$column_lokasi.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
             <td>'.$keterangan_tindak_lanjut.'</td>
             <td class="text-right" data-sort="'.$nilai_aset.'">'.number_format($nilai_aset,2,",",".").'</td>
@@ -270,6 +292,7 @@ foreach($query->posts as $post){
                 <tr>
                     <th class="text-center">Kode Barang</th>
                     <th class="text-center">Nama Aset</th>
+                    <th class="text-center">Lokasi</th>
                     <th class="text-center">Keterangan Aset</th>
                     <th class="text-center">Keterangan Tidak Lanjut</th>
                     <th class="text-center">Nilai Aset (Rp)</th>
