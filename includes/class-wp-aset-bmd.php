@@ -206,6 +206,7 @@ class Wp_Aset_Bmd {
 		add_shortcode('klasifikasi_aset',  array($plugin_public, 'klasifikasi_aset'));
 		add_shortcode('aset_perlu_tindak_lanjut',  array($plugin_public, 'aset_perlu_tindak_lanjut'));
 		add_shortcode('petunjuk_penggunaan',  array($plugin_public, 'petunjuk_penggunaan'));
+		add_shortcode('aset_belum_masuk_neraca',  array($plugin_public, 'aset_belum_masuk_neraca'));
 	}
 
 	/**

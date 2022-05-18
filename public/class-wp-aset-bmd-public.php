@@ -113,6 +113,13 @@ class Wp_Aset_Bmd_Public {
 
 	}
 
+	function aset_belum_masuk_neraca(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-belum-masuk-neraca.php';
+	}
+
 	function petunjuk_penggunaan(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
