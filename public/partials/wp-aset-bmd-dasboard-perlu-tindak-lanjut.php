@@ -223,19 +223,31 @@ foreach($query->posts as $post){
     $polygon = get_post_meta($post->ID, 'polygon', true);
     $keterangan_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
 
+    $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
+    $params['nama_aset'] = $data_jenis['nama'];
     $data_upb = $this->get_total_aset_upb($data_jenis['table_simda'], $params);
+    $Nama_Sub_Unit = '';
+    $Nama_UPB = '';
+    foreach ($data_upb as $key_upb => $val_upb) {
+        $kode = explode('.', $params['kd_lokasi']);
+        if($val_upb->Kd_Sub == $Kd_Sub && $val_upb->Kd_UPB == $Kd_UPB){
+            $Nama_Sub_Unit = $val_upb->Nm_Sub_Unit;
+            $Nama_UPB = $val_upb->Nm_UPB;
+        }
+    }
+
     if(!empty($aset[0]->Alamat)){
-        $column_lokasi = $data_upb[0]->Nm_Sub_Unit.', '.$data_upb[0]->Nm_UPB;
-        if($data_upb[0]->Nm_Sub_Unit == $data_upb[0]->Nm_UPB){
-            $column_lokasi = $data_upb[0]->Nm_Sub_Unit;
+        $column_lokasi = $Nama_Sub_Unit.', '.$Nama_UPB;
+        if($Nama_Sub_Unit == $Nama_UPB){
+            $column_lokasi = $Nama_Sub_Unit;
         }
         $new_alamat = str_replace('(','',$alamat);
         $new_alamat = str_replace(')','',$new_alamat);
         $column_lokasi = !empty($alamat) ? $column_lokasi.', '.$new_alamat.', '.$aset[0]->Alamat : $column_lokasi.', '.$aset[0]->Alamat;
     }else if(!empty($aset[0]->Lokasi)){
-        $column_lokasi = $data_upb[0]->Nm_Sub_Unit.', '.$data_upb[0]->Nm_UPB;
-        if($data_upb[0]->Nm_Sub_Unit == $data_upb[0]->Nm_UPB){
-            $column_lokasi = $data_upb[0]->Nm_Sub_Unit;
+        $column_lokasi = $Nama_Sub_Unit.', '.$Nama_UPB;
+        if($Nama_Sub_Unit == $Nama_UPB){
+            $column_lokasi = $Nama_Sub_Unit;
         }
         $new_alamat = str_replace('(','',$alamat);
         $new_alamat = str_replace(')','',$new_alamat);
@@ -303,7 +315,7 @@ foreach($query->posts as $post){
                 <?php echo $body; ?>
             </tbody>
             <tfoot>
-                <th colspan="4" class="text-center">Total Nilai</th>
+                <th colspan="5" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_aset">0</th>
                 <th></th>
             <tfoot>
@@ -321,7 +333,7 @@ jQuery(document).on('ready', function(){
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
             var api = this.api();
-            var total_page = api.column( 4, { page: 'current'} )
+            var total_page = api.column( 5, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
