@@ -228,6 +228,9 @@ var lokasi;
 var asal_usul;
 var nilai_aset;
 var infoWindow = {};
+var td_sertifikat;
+var column_sertifikat;
+column_sertifikat = "<?php echo $title_sertifikat; ?>";
 
 function initMap() {
     geocoder = new google.maps.Geocoder();
@@ -263,6 +266,10 @@ function initMap() {
             asal_usul               = aset.asal_usul;
             luas                    = aset.luas;
 
+            if(column_sertifikat == "Sudah"){
+                td_sertifikat = '<tr><td valign="top" height="25">Nomor Sertifikat</td><td valign="top"><center>:</center></td><td valign="top">' + sertifikat_nomor + '</td></tr>';
+            }
+
             // Menampilkan Informasi Data
             var contentString = '<br>' +
                 '<table width="100%" border="0">' +
@@ -278,9 +285,7 @@ function initMap() {
                 '<tr>' +
                 '<td valign="top" height="25">Lokasi</td><td valign="top"><center>:</center></td><td valign="top">' + lokasi + '</td>' +
                 '</tr>' +
-                '<tr>' +
-                '<td valign="top" height="25">Nomor Sertifikat</td><td valign="top"><center>:</center></td><td valign="top">' + sertifikat_nomor + '</td>' +
-                '</tr>' +
+                td_sertifikat +
                 '<tr>' +
                 '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
                 '</tr>' +
