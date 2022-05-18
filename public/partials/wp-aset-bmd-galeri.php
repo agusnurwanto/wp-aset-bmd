@@ -536,7 +536,7 @@
                 <div class="col-md-12 text-center">
                     <!-- Title -->
                     <div class="title">
-                        <h2><span>Blog SIMAN</span></h2>
+                        <h2><span><?php echo get_option('_crb_judul_blog'); ?></span></h2>
                     </div>
                 </div>
             </div>
@@ -546,10 +546,11 @@
 
                 
                 <?php
+                    $kategori = get_option('_crb_kategori_blog');
 
                     // get data posts
                     $the_query = new WP_Query( array(
-                        'category_name' => 'gallery',
+                        'category_name' => $kategori,
                         'posts_per_page' => 3,
                     )); 
 
