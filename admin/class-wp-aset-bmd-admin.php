@@ -164,7 +164,7 @@ class Wp_Aset_Bmd_Admin {
 		$categories = get_categories();
 		$category_name = [];
 		foreach ($categories as $key => $value) {
-			$category_name[] = $value->name;
+			$category_name[$value->slug] = $value->name;
 		}
 
 		return $category_name;
@@ -579,6 +579,7 @@ class Wp_Aset_Bmd_Admin {
 						.'<li class=""><a href="#testimoni" class="scroll">Testimoni</a></li>'
 						.'<li class=""><a href="#fitur" class="scroll">Fitur</a></li>'
 						.'<li class=""><a href="#pratinjau" class="scroll">Pratinjau</a></li>'
+						.'<li class=""><a href="#blog" class="scroll">Blog</a></li>'
 						.'<li class=""><a href="#demo-video" class="scroll">Video</i></a></li>'
 						.'<li class=""><a href="#monitoring" class="scroll">Monitoring</a></li>'),
 		    ) )

@@ -958,6 +958,12 @@ class Wp_Aset_Bmd_Public {
 		);
 	}
 
+	function get_all_posts($kategori){
+		
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public\partials\wp-aset-bmd-posts.php';
+
+	}
+
 	function cek_edit_post($options){
 		$cek_edit = false;
 		if(is_user_logged_in()){
