@@ -11,10 +11,12 @@ $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&cal
 
 $where = 'AND a.Sertifikat_Nomor is null';
 $title_sertifikat = 'Belum';
+$thead_sertifikat = '';
 if(!empty($_GET) && !empty($_GET['sertifikat'])){
     $where = 'AND a.Sertifikat_Nomor is not null';
     if($_GET['sertifikat'] == 1){
         $title_sertifikat = 'Sudah';
+        $thead_sertifikat = '<th class="text-center">Nomor Sertifikat</th>';
     }
 }
 
@@ -98,9 +100,9 @@ foreach($aset as $k => $val){
     $keterangan = array($val->Keterangan);
     $tanggal_sertifikat = substr($val->Sertifikat_Tanggal,0,10);
     $tanggal_sertifikat = $val->Sertifikat_Tanggal == '' ? '-' : date("d-m-Y", strtotime($tanggal_sertifikat));
-    $column_sertifikat = $val->Sertifikat_Nomor.' ('.$tanggal_sertifikat.')';
-    if($val->Sertifikat_Nomor == ''){
-        $column_sertifikat = $tanggal_sertifikat;
+    $column_sertifikat = '';
+    if($title_sertifikat == 'Sudah'){
+        $column_sertifikat = '<td style="width:110px;text-align:center;">'.$val->Sertifikat_Nomor.' ('.$tanggal_sertifikat.')</td>';
     }
     $body .= '
         <tr>
@@ -108,7 +110,7 @@ foreach($aset as $k => $val){
             <td>'.$val->Nm_Aset5.'</td>
             <td>'.$val->Nm_UPB.' '.$alamat.'</td>
             <td>'.$val->Alamat.'</td>
-            <td style="width:110px;text-align:center;">'.$column_sertifikat.'</td>
+            '.$column_sertifikat.'
             <td>'.implode(' | ', $keterangan).'</td>
             <td class="text-right" data-sort="'.$val->Harga.'">'.number_format($val->Harga,2,",",".").'</td>
             <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a><br><a style="margin-top: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
@@ -116,6 +118,7 @@ foreach($aset as $k => $val){
     ';
     $data_aset[] = array(
         'aset' => $aset[0],
+        'nama_aset' => $val->Nm_Aset5,
         'lng' => $koordinatX,
         'ltd' => $koordinatY,
         'polygon' => $polygon,
@@ -125,6 +128,14 @@ foreach($aset as $k => $val){
         'kd_lokasi' => $kd_lokasi,
         'warna_map' => $warna_map,
         'ikon_map'  => $ikon_map,
+        'unit_pengelola_barang' => $val->Nm_UPB,
+        'lokasi' => $val->Alamat,
+        'hak' => $val->Hak_Tanah,
+        'sertifikat_nomor' => $val->Sertifikat_Nomor,
+        'asal_usul' => $val->Asal_usul,
+        'luas' => $val->Luas_M2,
+        'penggunaan' => $val->Penggunaan
+
     );
     $total_nilai++;
 }
@@ -153,7 +164,7 @@ if(!empty($_GET) && !empty($_GET['sertifikat'])){
                     <th class="text-center">Nama Aset</th>
                     <th class="text-center">Unit Pengelola Barang</th>
                     <th class="text-center">Lokasi</th>
-                    <th class="text-center">Nomor Sertifikat</th>
+                    <?php echo $thead_sertifikat; ?>
                     <th class="text-center">Keterangan</th>
                     <th class="text-center">Nilai Aset (Rp)</th>
                     <th class="text-center">Aksi</th>
@@ -207,12 +218,19 @@ var luas;
 var alamat;
 var hak_tanah;
 var tgl_sertipikat;
-var no_sertipikat;
+var sertifikat_nomor;
 var penggunaan;
 var keterangan;
 var warna_map;
 var ikon_map;
+var unit_pengelola_barang;
+var lokasi;
+var asal_usul;
+var nilai_aset;
 var infoWindow = {};
+var td_sertifikat;
+var column_sertifikat;
+column_sertifikat = "<?php echo $title_sertifikat; ?>";
 
 function initMap() {
     geocoder = new google.maps.Geocoder();
@@ -236,9 +254,21 @@ function initMap() {
             });
             
             // Variabel Informasi Data
-            nama_aset      = aset.aset.Nm_Aset5;
-            kode_aset      = aset.kd_barang;
-            keterangan     = aset.aset.Keterangan;
+            nama_aset               = aset.nama_aset;
+            kode_aset               = aset.kd_barang;
+            keterangan              = aset.aset.Keterangan;
+            unit_pengelola_barang   = aset.unit_pengelola_barang;
+            lokasi                  = aset.lokasi;
+            sertifikat_nomor        = aset.sertifikat_nomor;
+            nilai_aset              = aset.nilai;
+            penggunaan              = aset.penggunaan;
+            hak_tanah               = aset.hak;
+            asal_usul               = aset.asal_usul;
+            luas                    = aset.luas;
+
+            if(column_sertifikat == "Sudah"){
+                td_sertifikat = '<tr><td valign="top" height="25">Nomor Sertifikat</td><td valign="top"><center>:</center></td><td valign="top">' + sertifikat_nomor + '</td></tr>';
+            }
 
             // Menampilkan Informasi Data
             var contentString = '<br>' +
@@ -250,10 +280,29 @@ function initMap() {
                 '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
                 '</tr>' +
                 '<tr>' +
-                '<td valign="top" height="25">Nilai Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">Rp ' + aset.nilai + '</td>' +
+                '<td valign="top" height="25">Unit Pengelola Barang</td><td valign="top"><center>:</center></td><td valign="top">' + unit_pengelola_barang + '</td>' +
                 '</tr>' +
                 '<tr>' +
+                '<td valign="top" height="25">Lokasi</td><td valign="top"><center>:</center></td><td valign="top">' + lokasi + '</td>' +
+                '</tr>' +
+                td_sertifikat +
+                '<tr>' +
                 '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td valign="top" height="25">Nilai Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">Rp ' + nilai_aset + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td valign="top" height="25">Penggunaan</td><td valign="top"><center>:</center></td><td valign="top">' + penggunaan + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td valign="top" height="25">Hak</td><td valign="top"><center>:</center></td><td valign="top">' + hak_tanah + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td valign="top" height="25">Asal usul</td><td valign="top"><center>:</center></td><td valign="top">' + asal_usul + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td valign="top" height="25">Luas</td><td valign="top"><center>:</center></td><td valign="top">' + luas + ' M<sup>2</sup></td>' +
                 '</tr>' +
                 '</table>';
 

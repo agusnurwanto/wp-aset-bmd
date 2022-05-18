@@ -159,6 +159,16 @@ class Wp_Aset_Bmd_Admin {
 			'data' => $data
 		);
 	}
+	
+	function get_categories_posts(){
+		$categories = get_categories();
+		$category_name = [];
+		foreach ($categories as $key => $value) {
+			$category_name[] = $value->name;
+		}
+
+		return $category_name;
+	}
 
 	function crb_attach_simda_options(){
 		global $wpdb;
@@ -314,6 +324,8 @@ class Wp_Aset_Bmd_Admin {
 		        continue;
 		    }
 		}
+
+		$kategori_post = $this->get_categories_posts();
 
 		$basic_options_container = Container::make( 'theme_options', __( 'Aset BMD' ) )
 			->set_page_menu_position( 4 )
@@ -676,6 +688,12 @@ class Wp_Aset_Bmd_Admin {
 				    ) )
         			->set_default_value('1')
         			->set_help_text('Jika dipilih iya, maka video akan otomatis dinyalakan ketika user melakukan event klik pada halaman.')
+		    ) )
+			->add_tab( __( 'Blog' ), array(
+		        Field::make( 'textarea', 'crb_judul_blog', __( 'Judul' ) )
+        			->set_default_value('<span>Monitoring</span> <span style="color: #000">SIMATA</span>'),
+		        Field::make( 'select', 'crb_kategori_blog' )
+            		->add_options($kategori_post)
 		    ) )
 		    ->add_tab( __( 'Monitoring Data' ), array(
 		        Field::make( 'textarea', 'crb_judul_monitoring', __( 'Judul' ) )
