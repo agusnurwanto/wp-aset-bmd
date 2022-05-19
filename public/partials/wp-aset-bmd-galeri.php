@@ -27,7 +27,7 @@
         'show_header' => 1,
         'no_key' => 1,
         'post_status' => 'publish'
-    ));
+    ));     
 ?>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/loadingoverlay.min.js"></script>
 <script type="text/javascript">
@@ -523,8 +523,85 @@
             </div>
         </div>
     </div>
+
+
 </section>
 <!-- End Demo Video Section -->
+<!-- Blog Section Begins-->
+<section id="blog" class="blog">
+        <div class="container blog-inner">
+        	<!--<canvas id="c" class="rainbowbg rainbowcover" width="" height=""></canvas>-->
+            <!-- Title & Desc Row Begins -->
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <!-- Title -->
+                    <div class="title">
+                        <h2><span><?php echo get_option('_crb_judul_blog'); ?></span></h2>
+                    </div>
+                </div>
+            </div>
+            <!-- Title & Desc Row Ends -->
+            <!-- Blog Inner Begins -->
+            <div class="blog-scroll-section">
+
+                
+                <?php
+                    $kategori = get_option('_crb_kategori_blog');
+
+                    // get data posts
+                    $the_query = new WP_Query( array(
+                        'category_name' => $kategori,
+                        'posts_per_page' => 3,
+                    )); 
+
+                    if ( $the_query->have_posts() ): 
+                        while ( $the_query->have_posts() ) : $the_query->the_post();
+                            if( is_singular() && post_type_supports( get_post_type(), 'comments' ) ):
+                                // Remove the comment form
+                                add_filter( 'comments_open', '__return_false' ); 
+                                // Remove the list of comments
+                                add_filter( 'comments_array', '__return_empty_array' );
+                                // $id = the_ID();
+                                $image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'single-post-thumbnail' ); 
+                                if(!empty($image)):
+                                    $image = $image[0];
+                                else:
+                                    $image = plugin_dir_url(dirname(__FILE__)).'/images/no-image.jpg';
+                                endif;
+                ?>
+                        <div class="col-md-4 animated fadeInUp visible" data-animation="fadeInUp" data-animation-delay="400">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <img class="blog-img img-responsive" alt="<?php echo the_title(); ?>" src="<?php echo $image; ?>">
+                                </div>
+                                <div class="panel-body">
+                                    <a href="<?php echo get_post_permalink(); ?>">
+                                        <h3><?php echo the_title(); ?></h3>
+                                    </a>
+                                    <p>
+                                        <span class="label label-default">Gallery</span>
+                                        <span><i class="fa fa-calendar"></i>&nbsp;<?php echo get_the_date('l j F Y'); ?></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                <?php
+                            endif;
+                        endwhile;
+                    endif;
+                ?>
+                <!-- Load More Post Button -->
+                
+                <div class="col-md-12 load-post text-center">
+                    <a href="https://www.djkn.kemenkeu.go.id/websiman/blog" class="btn slide-btn" type="button">Selengkapnya<i class="flaticon-arrow209"></i></a>
+                </div>
+                <!-- Load More Button Ends -->
+            </div>
+            <!-- Blog Inner Ends -->
+        </div>
+        <!-- Container Ends -->
+    </section>
+<!-- Blog Section Ends-->
 
 <!-- Monitoring Section Begins -->
 <section id="monitoring">
