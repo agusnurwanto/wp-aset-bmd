@@ -692,9 +692,12 @@ class Wp_Aset_Bmd_Admin {
 		    ) )
 			->add_tab( __( 'Blog' ), array(
 		        Field::make( 'textarea', 'crb_judul_blog', __( 'Judul' ) )
-        			->set_default_value('<span>Monitoring</span> <span style="color: #000">SIMATA</span>'),
+        			->set_default_value('<span>Blog</span> <span style="color: #000">SIMATA</span>'),
 		        Field::make( 'select', 'crb_kategori_blog' )
-            		->add_options($kategori_post)
+            		->add_options($kategori_post),
+		        Field::make( 'text', 'crb_number_blog', 'Jumlah Post yang ingin ditampilkan di menu utama' )
+					->set_attribute('type', 'number')
+            		->set_default_value(6)
 		    ) )
 		    ->add_tab( __( 'Monitoring Data' ), array(
 		        Field::make( 'textarea', 'crb_judul_monitoring', __( 'Judul' ) )

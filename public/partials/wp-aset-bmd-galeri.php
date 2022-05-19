@@ -547,7 +547,10 @@
                 
                 <?php
                 
-                    $kategori = get_option('_crb_kategori_blog');
+                    $jmlh_post = get_option('_crb_number_blog');
+                    $kategori  = get_option('_crb_kategori_blog');
+                    $kategori_name = ucwords(str_replace('-', ' ', $kategori));
+
                     $link_posts = $this->functions->generatePage(array(
                         'nama_page' => 'Daftar Post',
                         'content' => '[get_all_posts]',
@@ -559,7 +562,7 @@
                     // get data posts
                     $the_query = new WP_Query( array(
                         'category_name' => $kategori,
-                        'posts_per_page' => 3,
+                        'posts_per_page' => $jmlh_post,
                     )); 
 
                     if ( $the_query->have_posts() ): 
@@ -587,7 +590,7 @@
                                         <h3><?php echo the_title(); ?></h3>
                                     </a>
                                     <p>
-                                        <span class="label label-default">Gallery</span>
+                                        <span class="label label-default"><?php echo $kategori_name ?></span>
                                         <span><i class="fa fa-calendar"></i>&nbsp;<?php echo get_the_date('l j F Y'); ?></span>
                                     </p>
                                 </div>
