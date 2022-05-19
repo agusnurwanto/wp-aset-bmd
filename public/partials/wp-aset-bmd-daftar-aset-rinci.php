@@ -157,12 +157,78 @@ foreach($aset as $k => $val){
     if(!empty($warna_map)){
         $map_center = ' <a style="margin-bottom: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\'); return false;" href="#" class="btn btn-danger">Map</a>';
     }
+
+    if(!empty($Kd_Kecamatan)){
+        $sql = "
+            SELECT 
+                k.Nm_Kecamatan
+            from Ref_Kecamatan k 
+            where k.Kd_Prov = $Kd_Prov
+            AND k.Kd_Kab_Kota = $Kd_Kab_Kota 
+            AND k.Kd_Kecamatan = $Kd_Kecamatan
+        ";
+        $kecamatan = $this->functions->CurlSimda(array(
+            'query' => $sql,
+            'no_debug' => 0
+        ));
+        $nama_kecamatan = $kecamatan[0]->Nm_Kecamatan;
+    }else{
+        $nama_kecamatan = '';
+    }
+    if(!empty($Kd_Kecamatan) && !empty($Kd_Desa)){
+        $sql = "
+            SELECT 
+                d.Nm_Desa
+            from Ref_Desa d 
+            where d.Kd_Prov = $Kd_Prov
+            AND d.Kd_Kab_Kota = $Kd_Kab_Kota 
+            AND d.Kd_Kecamatan = $Kd_Kecamatan
+            AND d.Kd_Desa = $Kd_Desa
+        ";
+        $desa = $this->functions->CurlSimda(array(
+            'query' => $sql,
+            'no_debug' => 0
+        ));
+        $nama_desa = $desa[0]->Nm_Desa;
+    }else{
+        $nama_kecamatan = '';
+        $nama_desa = '';
+    }
+
+    $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
+    $params['nama_aset'] = $data_jenis['nama'];
+    $data_upb = $this->get_total_aset_upb($data_jenis['table_simda'], $params);
+    $Nama_Sub_Unit = '';
+    $Nama_UPB = '';
+    foreach ($data_upb as $key_upb => $val_upb) {
+        $kode = explode('.', $params['kd_lokasi']);
+        if($val_upb->Kd_Sub == $Kd_Sub && $val_upb->Kd_UPB == $Kd_UPB){
+            $Nama_Sub_Unit = $val_upb->Nm_Sub_Unit;
+            $Nama_UPB = $val_upb->Nm_UPB;
+        }
+    }
+
+    if(!empty($val->Alamat)){
+        $column_lokasi = $Nama_Sub_Unit.', '.$Nama_UPB;
+        if($Nama_Sub_Unit == $Nama_UPB){
+            $column_lokasi = $Nama_Sub_Unit;
+        }
+        $column_lokasi = !empty($nama_kecamatan) && !empty($nama_desa) ? $column_lokasi.', Kec. '.$nama_kecamatan.', Desa/Kel. '.$nama_desa.', '.$val->Alamat : $column_lokasi.', '.$val->Alamat;
+    }else if(!empty($val->Lokasi)){
+        $column_lokasi = $Nama_Sub_Unit.', '.$Nama_UPB;
+        if($Nama_Sub_Unit == $Nama_UPB){
+            $column_lokasi = $Nama_Sub_Unit;
+        }
+        $column_lokasi = !empty($nama_kecamatan) && !empty($nama_desa) ? $column_lokasi.', Kec. '.$nama_kecamatan.', Desa/Kel. '.$nama_desa.', '.$val->Lokasi : $column_lokasi.', '.$val->Lokasi;
+    }else{
+        $column_lokasi = '-';
+    }
+
     $body_skpd .= '
         <tr>
-            <td class="text-center">'.$no.'</td>
-            <td class="text-center">'.$kd_barang.'</td>
-            <td class="text-center">'.$kd_register.'</td>
+            <td class="text-center">'.$kd_barang.'.'.$kd_register.'</td>
             <td>'.$val->Nm_Aset5.'</td>
+            <td>'.$column_lokasi.'</td>
             <td>'.implode(' | ', $keterangan).'</td>
             <td class="text-right" data-sort="'.$val->harga_asli.'">'.number_format($val->harga_asli,2,",",".").'</td>
             <td class="text-center"><a style="margin-bottom: 5px;" href="'.$link['url'].'" class="btn btn-primary">Detail</a>'.$map_center.'</td>
@@ -207,10 +273,9 @@ foreach($aset as $k => $val){
         <table class="table table-bordered" id="table-aset-skpd">
             <thead id="data_header">
                 <tr>
-                    <th class="text-center">No</th>
                     <th class="text-center">Kode Barang</th>
-                    <th class="text-center">Register</th>
                     <th class="text-center">Nama Aset</th>
+                    <th class="text-center">Lokasi</th>
                     <th class="text-center">Keterangan</th>
                     <th class="text-center">Nilai (Rupiah)</th>
                     <th class="text-center">Aksi</th>
@@ -220,7 +285,7 @@ foreach($aset as $k => $val){
                 <?php echo $body_skpd; ?>
             </tbody>
             <tfoot>
-                <th colspan="5" class="text-center">Total Nilai</th>
+                <th colspan="4" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_all_skpd"><?php echo number_format($total_nilai,2,",","."); ?></th>
                 <th></th>
             <tfoot>
@@ -242,12 +307,12 @@ function setCenter(lng, ltd){
 jQuery(document).on('ready', function(){
     jQuery('#table-aset-skpd').dataTable({
         columnDefs: [
-            { "width": "500px", "targets": 4 }
+            { "width": "500px", "targets": 3 }
         ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
             var api = this.api();
-            var total_page = api.column( 5, { page: 'current'} )
+            var total_page = api.column( 4, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
