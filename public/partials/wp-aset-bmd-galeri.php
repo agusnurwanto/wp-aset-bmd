@@ -557,6 +557,7 @@
                         'post_status' => 'publish',
                         'show_header' => 1,
                         'no_key' => 1,
+                        'template' => 'theme',
                     ));
 
                     // get data posts
