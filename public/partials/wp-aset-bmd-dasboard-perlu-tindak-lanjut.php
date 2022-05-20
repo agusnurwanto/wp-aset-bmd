@@ -47,7 +47,8 @@ foreach($query->posts as $post){
         SELECT 
             u.Nm_UPB, 
             k.Nm_Kecamatan,
-            d.Nm_Desa
+            d.Nm_Desa,
+            s.Nm_Sub_Unit
         from ref_upb u
         LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
             AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
@@ -56,6 +57,11 @@ foreach($query->posts as $post){
             AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
             AND d.Kd_Kecamatan = u.Kd_Kecamatan
             AND d.Kd_Desa = u.Kd_Desa
+        LEFT JOIN ref_sub_unit s ON s.Kd_Prov=u.Kd_Prov
+            AND s.Kd_Kab_Kota = u.Kd_Kab_Kota 
+            AND s.Kd_Bidang = u.Kd_Bidang 
+            AND s.Kd_Unit = u.Kd_Unit 
+            AND s.Kd_Sub = u.Kd_Sub 
         where u.Kd_Prov = $Kd_Prov
         AND u.Kd_Kab_Kota = $Kd_Kab_Kota 
         AND u.Kd_Bidang = $Kd_Bidang 
@@ -223,37 +229,19 @@ foreach($query->posts as $post){
     $polygon = get_post_meta($post->ID, 'polygon', true);
     $keterangan_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
 
-    $params['nama_aset'] = $nama_jenis_aset;
-    $data_upb = $this->get_total_aset_upb($data_jenis['table_simda'], $params);
-    $Nama_Sub_Unit = '';
-    $Nama_UPB = '';
-    foreach ($data_upb as $key_upb => $val_upb) {
-        $kode = explode('.', $params['kd_lokasi']);
-        if($val_upb->Kd_Sub == $Kd_Sub && $val_upb->Kd_UPB == $Kd_UPB){
-            $Nama_Sub_Unit = $val_upb->Nm_Sub_Unit;
-            $Nama_UPB = $val_upb->Nm_UPB;
-        }
+    $data_params_upb['lokasi'] = '';
+    if(!empty($aset[0]->Alamat)){
+        $data_params_upb['lokasi'] = $aset[0]->Alamat;
+    }else if(!empty($aset[0]->Lokasi)){
+        $data_params_upb['lokasi'] = $aset[0]->Lokasi;
     }
 
-    if(!empty($aset[0]->Alamat)){
-        $column_lokasi = $Nama_Sub_Unit.', '.$Nama_UPB;
-        if($Nama_Sub_Unit == $Nama_UPB){
-            $column_lokasi = $Nama_Sub_Unit;
-        }
-        $new_alamat = str_replace('(','',$alamat);
-        $new_alamat = str_replace(')','',$new_alamat);
-        $column_lokasi = !empty($alamat) ? $column_lokasi.', '.$new_alamat.', '.$aset[0]->Alamat : $column_lokasi.', '.$aset[0]->Alamat;
-    }else if(!empty($aset[0]->Lokasi)){
-        $column_lokasi = $Nama_Sub_Unit.', '.$Nama_UPB;
-        if($Nama_Sub_Unit == $Nama_UPB){
-            $column_lokasi = $Nama_Sub_Unit;
-        }
-        $new_alamat = str_replace('(','',$alamat);
-        $new_alamat = str_replace(')','',$new_alamat);
-        $column_lokasi = !empty($alamat) ? $column_lokasi.', '.$new_alamat.', '.$aset[0]->Lokasi : $column_lokasi.', '.$aset[0]->Lokasi;
-    }else{
-        $column_lokasi = '-';
-    }
+    $data_params_upb['nama_upb'] = $nama_skpd[0]->Nm_UPB;
+    $data_params_upb['nama_sub_unit'] = $nama_skpd[0]->Nm_Sub_Unit;
+    $data_params_upb['kecamatan'] = $params['kecamatan'];
+    $data_params_upb['desa'] = $params['desa'];
+    
+    $column_lokasi = $this->set_lokasi_sub_unit_upb($data_params_upb);
 
     $body .= '
         <tr>

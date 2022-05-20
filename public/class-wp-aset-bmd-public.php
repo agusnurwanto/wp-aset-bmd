@@ -1164,4 +1164,23 @@ class Wp_Aset_Bmd_Public {
         ));
         return $skpd;
 	}
+
+	function set_lokasi_sub_unit_upb($params = array()){
+		$set_lokasi = '';
+
+		$nama_lokasi = !empty($params['lokasi']) ? $params['lokasi'] : '';
+		$nama_upb = !empty($params['nama_upb']) ? $params['nama_upb'].', ' : '';
+		$nama_sub_unit = !empty($params['nama_sub_unit']) ? $params['nama_sub_unit'].', ' : '';
+		$nama_kecamatan = !empty($params['kecamatan']) ? 'Kec. '.$params['kecamatan'].', ' : '';
+		$nama_desa = !empty($params['desa']) ? 'Desa/Kel. '.$params['desa'].', ' : '';
+
+		$set_upb_sub_unit = $nama_upb.$nama_sub_unit;
+		$perbandingan_upb_sub_unit = strpos($params['nama_upb'], $params['nama_sub_unit']);
+		if($perbandingan_upb_sub_unit !== false ){
+			$set_upb_sub_unit = $nama_upb;
+		}
+		$set_lokasi = $nama_lokasi === ''  || $nama_lokasi === '-' ? '-' : $set_upb_sub_unit.$nama_kecamatan.$nama_desa.$nama_lokasi;
+		
+		return $set_lokasi;
+	}
 }
