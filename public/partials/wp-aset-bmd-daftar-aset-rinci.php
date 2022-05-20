@@ -41,7 +41,11 @@ $sql = $wpdb->prepare('
     select 
         a.*,
         b.Harga as harga_asli,
-        r.Nm_Aset5
+        r.Nm_Aset5,
+        s.Nm_Sub_Unit,
+        u.Nm_UPB,
+        k.Nm_Kecamatan,
+        d.Nm_Desa
     from '.$data_jenis['table_simda'].' a
     LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda
     LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
@@ -51,6 +55,24 @@ $sql = $wpdb->prepare('
         and r.kd_aset3=a.Kd_Aset83 
         and r.kd_aset4=a.Kd_Aset84 
         and r.kd_aset5=a.Kd_Aset85
+    LEFT JOIN ref_sub_unit s ON a.Kd_Prov=s.Kd_Prov
+        AND a.Kd_Kab_Kota = s.Kd_Kab_Kota 
+        AND a.Kd_Bidang = s.Kd_Bidang 
+        AND a.Kd_Unit = s.Kd_Unit 
+        AND a.Kd_Sub = s.Kd_Sub
+    LEFT JOIN ref_upb u ON a.Kd_Prov=u.Kd_Prov
+        AND a.Kd_Kab_Kota = u.Kd_Kab_Kota 
+        AND a.Kd_Bidang = u.Kd_Bidang 
+        AND a.Kd_Unit = u.Kd_Unit 
+        AND a.Kd_Sub = u.Kd_Sub 
+        AND a.Kd_UPB = u.Kd_UPB
+    LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=a.Kd_Prov
+        AND k.Kd_Kab_Kota = a.Kd_Kab_Kota 
+        AND k.Kd_Kecamatan = a.Kd_Kecamatan
+    LEFT JOIN Ref_Desa d ON d.Kd_Prov=a.Kd_Prov
+        AND d.Kd_Kab_Kota = a.Kd_Kab_Kota 
+        AND d.Kd_Kecamatan = a.Kd_Kecamatan
+        AND d.Kd_Desa = a.Kd_Desa
     where a.Kd_Prov=%d
         AND a.Kd_Kab_Kota=%d 
         AND a.Kd_Bidang=%d 
@@ -158,71 +180,19 @@ foreach($aset as $k => $val){
         $map_center = ' <a style="margin-bottom: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\'); return false;" href="#" class="btn btn-danger">Map</a>';
     }
 
-    if(!empty($Kd_Kecamatan)){
-        $sql = "
-            SELECT 
-                k.Nm_Kecamatan
-            from Ref_Kecamatan k 
-            where k.Kd_Prov = $Kd_Prov
-            AND k.Kd_Kab_Kota = $Kd_Kab_Kota 
-            AND k.Kd_Kecamatan = $Kd_Kecamatan
-        ";
-        $kecamatan = $this->functions->CurlSimda(array(
-            'query' => $sql,
-            'no_debug' => 0
-        ));
-        $nama_kecamatan = $kecamatan[0]->Nm_Kecamatan;
-    }else{
-        $nama_kecamatan = '';
-    }
-    if(!empty($Kd_Kecamatan) && !empty($Kd_Desa)){
-        $sql = "
-            SELECT 
-                d.Nm_Desa
-            from Ref_Desa d 
-            where d.Kd_Prov = $Kd_Prov
-            AND d.Kd_Kab_Kota = $Kd_Kab_Kota 
-            AND d.Kd_Kecamatan = $Kd_Kecamatan
-            AND d.Kd_Desa = $Kd_Desa
-        ";
-        $desa = $this->functions->CurlSimda(array(
-            'query' => $sql,
-            'no_debug' => 0
-        ));
-        $nama_desa = $desa[0]->Nm_Desa;
-    }else{
-        $nama_kecamatan = '';
-        $nama_desa = '';
-    }
-
-    $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
-    $params['nama_aset'] = $data_jenis['nama'];
-    $data_upb = $this->get_total_aset_upb($data_jenis['table_simda'], $params);
-    $Nama_Sub_Unit = '';
-    $Nama_UPB = '';
-    foreach ($data_upb as $key_upb => $val_upb) {
-        $kode = explode('.', $params['kd_lokasi']);
-        if($val_upb->Kd_Sub == $Kd_Sub && $val_upb->Kd_UPB == $Kd_UPB){
-            $Nama_Sub_Unit = $val_upb->Nm_Sub_Unit;
-            $Nama_UPB = $val_upb->Nm_UPB;
-        }
-    }
-
+    $data_params_upb['lokasi'] = '';
     if(!empty($val->Alamat)){
-        $column_lokasi = $Nama_Sub_Unit.', '.$Nama_UPB;
-        if($Nama_Sub_Unit == $Nama_UPB){
-            $column_lokasi = $Nama_Sub_Unit;
-        }
-        $column_lokasi = !empty($nama_kecamatan) && !empty($nama_desa) ? $column_lokasi.', Kec. '.$nama_kecamatan.', Desa/Kel. '.$nama_desa.', '.$val->Alamat : $column_lokasi.', '.$val->Alamat;
+        $data_params_upb['lokasi'] = $val->Alamat;
     }else if(!empty($val->Lokasi)){
-        $column_lokasi = $Nama_Sub_Unit.', '.$Nama_UPB;
-        if($Nama_Sub_Unit == $Nama_UPB){
-            $column_lokasi = $Nama_Sub_Unit;
-        }
-        $column_lokasi = !empty($nama_kecamatan) && !empty($nama_desa) ? $column_lokasi.', Kec. '.$nama_kecamatan.', Desa/Kel. '.$nama_desa.', '.$val->Lokasi : $column_lokasi.', '.$val->Lokasi;
-    }else{
-        $column_lokasi = '-';
+        $data_params_upb['lokasi'] = $val->Lokasi;
     }
+
+    $data_params_upb['nama_upb'] = $val->Nm_UPB;
+    $data_params_upb['nama_sub_unit'] = $val->Nm_Sub_Unit;
+    $data_params_upb['kecamatan'] = $val->Nm_Kecamatan;
+    $data_params_upb['desa'] = $val->Nm_Desa;
+    
+    $column_lokasi = $this->set_lokasi_sub_unit_upb($data_params_upb);
 
     $body_skpd .= '
         <tr>
