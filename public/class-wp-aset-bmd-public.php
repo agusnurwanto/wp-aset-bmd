@@ -113,6 +113,33 @@ class Wp_Aset_Bmd_Public {
 
 	}
 
+	function tambah_aset_belum_masuk_neraca(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		$params['key'] = $this->functions->decode_key($_GET['key']);
+		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['key']['jenis_aset']));
+		$aset_belum_masuk_neraca = $this->functions->generatePage(array(
+			'nama_page' => 'Aset Belum Masuk Neraca',
+			'content' => '[aset_belum_masuk_neraca]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'publish'
+		));
+		if($params['key']['jenis_aset'] == 'tanah'){
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-tambah-tanah-belum-masuk-neraca.php';
+		}else{
+			echo "Jenis aset tidak ditemukan!";
+		}
+	}
+
+	function aset_belum_masuk_neraca(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-belum-masuk-neraca.php';
+	}
+
 	function petunjuk_penggunaan(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
@@ -962,7 +989,7 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public\partials\wp-aset-bmd-posts.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-posts.php';
 
 	}
 	
@@ -1171,5 +1198,24 @@ class Wp_Aset_Bmd_Public {
                     d.Nm_Desa'
         ));
         return $skpd;
+	}
+
+	function set_lokasi_sub_unit_upb($params = array()){
+		$set_lokasi = '';
+
+		$nama_lokasi = !empty($params['lokasi']) ? $params['lokasi'] : '';
+		$nama_upb = !empty($params['nama_upb']) ? $params['nama_upb'].', ' : '';
+		$nama_sub_unit = !empty($params['nama_sub_unit']) ? $params['nama_sub_unit'].', ' : '';
+		$nama_kecamatan = !empty($params['kecamatan']) ? 'Kec. '.$params['kecamatan'].', ' : '';
+		$nama_desa = !empty($params['desa']) ? 'Desa/Kel. '.$params['desa'].', ' : '';
+
+		$set_upb_sub_unit = $nama_upb.$nama_sub_unit;
+		$perbandingan_upb_sub_unit = strpos($params['nama_upb'], $params['nama_sub_unit']);
+		if($perbandingan_upb_sub_unit !== false ){
+			$set_upb_sub_unit = $nama_upb;
+		}
+		$set_lokasi = $nama_lokasi === ''  || $nama_lokasi === '-' ? '-' : $set_upb_sub_unit.$nama_kecamatan.$nama_desa.$nama_lokasi;
+		
+		return $set_lokasi;
 	}
 }

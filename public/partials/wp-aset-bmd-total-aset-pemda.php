@@ -188,28 +188,6 @@ update_option('_crb_total_per_jenis', json_encode(array(
     )
 )));
 ?>
-<div class="modal fade" id="mod-aset" role="dialog" data-backdrop="static" aria-hidden="true">'
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header bgpanel-theme">
-                <h4 style="margin: 0;" class="modal-title" id="">Modal Aset</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span><i class="dashicons dashicons-dismiss"></i></span></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group" id="wrap-realisasi">
-                        <label class="control-label" style="display: block;">tes</label>
-                        <input type="number" style="width: 100%;" id="tes"/>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="components-button btn btn-success" id="set-mapping">Simpan</button>
-                <button type="button" class="components-button btn btn-default" data-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
 <style type="text/css">
     .warning {
         background: #f1a4a4;
