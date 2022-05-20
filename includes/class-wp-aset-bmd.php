@@ -208,6 +208,7 @@ class Wp_Aset_Bmd {
 		add_shortcode('petunjuk_penggunaan',  array($plugin_public, 'petunjuk_penggunaan'));
 		add_shortcode('aset_belum_masuk_neraca',  array($plugin_public, 'aset_belum_masuk_neraca'));
 		add_shortcode('tambah_aset_belum_masuk_neraca',  array($plugin_public, 'tambah_aset_belum_masuk_neraca'));
+		add_shortcode('get_all_posts',  array($plugin_public, 'get_all_posts'));
 	}
 
 	/**

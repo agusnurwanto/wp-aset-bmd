@@ -223,8 +223,7 @@ foreach($query->posts as $post){
     $polygon = get_post_meta($post->ID, 'polygon', true);
     $keterangan_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
 
-    $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
-    $params['nama_aset'] = $data_jenis['nama'];
+    $params['nama_aset'] = $nama_jenis_aset;
     $data_upb = $this->get_total_aset_upb($data_jenis['table_simda'], $params);
     $Nama_Sub_Unit = '';
     $Nama_UPB = '';

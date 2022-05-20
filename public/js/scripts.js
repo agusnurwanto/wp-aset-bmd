@@ -61,7 +61,7 @@ if(typeof chart_jenis_aset == 'undefined'){
 	})
 }
 window.pieChart = new Chart(document.getElementById('chart_per_jenis_aset'), {
-    type: 'pie',
+    type: 'bar',
     data: {
         labels: chart_jenis_aset.label,
         datasets: [

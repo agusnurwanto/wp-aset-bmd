@@ -164,7 +164,7 @@ class Wp_Aset_Bmd_Admin {
 		$categories = get_categories();
 		$category_name = [];
 		foreach ($categories as $key => $value) {
-			$category_name[] = $value->name;
+			$category_name[$value->slug] = $value->name;
 		}
 
 		return $category_name;
@@ -579,6 +579,7 @@ class Wp_Aset_Bmd_Admin {
 						.'<li class=""><a href="#testimoni" class="scroll">Testimoni</a></li>'
 						.'<li class=""><a href="#fitur" class="scroll">Fitur</a></li>'
 						.'<li class=""><a href="#pratinjau" class="scroll">Pratinjau</a></li>'
+						.'<li class=""><a href="#blog" class="scroll">Blog</a></li>'
 						.'<li class=""><a href="#demo-video" class="scroll">Video</i></a></li>'
 						.'<li class=""><a href="#monitoring" class="scroll">Monitoring</a></li>'),
 		    ) )
@@ -691,9 +692,12 @@ class Wp_Aset_Bmd_Admin {
 		    ) )
 			->add_tab( __( 'Blog' ), array(
 		        Field::make( 'textarea', 'crb_judul_blog', __( 'Judul' ) )
-        			->set_default_value('<span>Monitoring</span> <span style="color: #000">SIMATA</span>'),
+        			->set_default_value('<span>Blog</span> <span style="color: #000">SIMATA</span>'),
 		        Field::make( 'select', 'crb_kategori_blog' )
-            		->add_options($kategori_post)
+            		->add_options($kategori_post),
+		        Field::make( 'text', 'crb_number_blog', 'Jumlah Post yang ingin ditampilkan di menu utama' )
+					->set_attribute('type', 'number')
+            		->set_default_value(6)
 		    ) )
 		    ->add_tab( __( 'Monitoring Data' ), array(
 		        Field::make( 'textarea', 'crb_judul_monitoring', __( 'Judul' ) )
