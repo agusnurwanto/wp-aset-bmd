@@ -1000,6 +1000,14 @@ class Wp_Aset_Bmd_Public {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public\partials\wp-aset-bmd-temuan-bpk.php';
 
 	}
+	
+	function tambah_temuan_bpk(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public\partials\wp-aset-bmd-tambah-temuan-bpk.php';
+
+	}
 
 	function cek_edit_post($options){
 		$cek_edit = false;
