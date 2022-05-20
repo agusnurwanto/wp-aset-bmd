@@ -113,6 +113,26 @@ class Wp_Aset_Bmd_Public {
 
 	}
 
+	function tambah_aset_belum_masuk_neraca(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		$params['key'] = $this->functions->decode_key($_GET['key']);
+		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['key']['jenis_aset']));
+		$aset_belum_masuk_neraca = $this->functions->generatePage(array(
+			'nama_page' => 'Aset Belum Masuk Neraca',
+			'content' => '[aset_belum_masuk_neraca]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'publish'
+		));
+		if($params['key']['jenis_aset'] == 'tanah'){
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-tambah-tanah-belum-masuk-neraca.php';
+		}else{
+			echo "Jenis aset tidak ditemukan!";
+		}
+	}
+
 	function aset_belum_masuk_neraca(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
