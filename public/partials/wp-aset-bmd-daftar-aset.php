@@ -139,6 +139,7 @@ $jml = 50;
 $skpd_all = array();
 $skpd_sementara = array();
 $no=0;
+$filter_sub_unit = $this->functions->get_option_multiselect('_crb_sub_unit_pilihan');
 foreach($skpd as $k => $val){
     $no++;
     if($val->harga <= 0){
@@ -186,6 +187,11 @@ foreach($skpd as $k => $val){
             'jenis_aset' => $val->jenis_aset
         )
     ));
+    $kd_sub_unit = explode(".", $kd_lokasi);
+    $kd_sub_unit = $kd_sub_unit[0].'.'.$kd_sub_unit[1].'.'.$kd_sub_unit[2].'.'.$kd_sub_unit[3].'.'.$kd_sub_unit[4].'.'.$kd_sub_unit[5];
+    if(empty($filter_sub_unit[$kd_sub_unit])){
+        continue;
+    }
     $body_skpd .= '
         <tr>
             <td class="text-center">'.$val->nama_aset.'</td>
@@ -342,26 +348,35 @@ jQuery(document).on('ready', function(){
             jQuery('#total_all_skpd').text(formatRupiah(total_page));
             if(pieChart2){
                 var labels = [];
-                pieChart2.data.datasets[0].data = [];
-                pieChart2.data.datasets[1].data = [];
-                pieChart2.data.datasets[2].data = [];
-                pieChart2.data.datasets[3].data = [];
-                pieChart2.data.datasets[4].data = [];
-                pieChart2.data.datasets[5].data = [];
+                if (pieChart2.data.datasets.length === 1){
+                    pieChart2.data.datasets[0].data = [];
+                }else{
+                    pieChart2.data.datasets[0].data = [];
+                    pieChart2.data.datasets[1].data = [];
+                    pieChart2.data.datasets[2].data = [];
+                    pieChart2.data.datasets[3].data = [];
+                    pieChart2.data.datasets[4].data = [];
+                    pieChart2.data.datasets[5].data = [];
+                }
                 api.rows( {page:'current'} ).data().map(function(b, i){
                     labels.push(b[3].substring(0, 50));
-                    if(b[0] == 'Tanah'){
+                    if (pieChart2.data.datasets.length === 1){
                         pieChart2.data.datasets[0].data[i] = to_number(b[6].display);
-                    }else if(b[0].trim() == 'Peralatan dan Mesin'){
-                        pieChart2.data.datasets[1].data[i] = to_number(b[6].display);
-                    }else if(b[0].trim() == 'Gedung dan Bangunan'){
-                        pieChart2.data.datasets[2].data[i] = to_number(b[6].display);
-                    }else if(b[0].trim() == 'Jalan, Jaringan dan Irigrasi'){
-                        pieChart2.data.datasets[3].data[i] = to_number(b[6].display);
-                    }else if(b[0].trim() == 'Aset Tetap Lainnya'){
-                        pieChart2.data.datasets[4].data[i] = to_number(b[6].display);
-                    }else if(b[0].trim() == 'Kontruksi Dalam Pengerjaan'){
-                        pieChart2.data.datasets[5].data[i] = to_number(b[6].display);
+                    }else{
+                        if(b[0] == 'Tanah'){
+                            pieChart2.data.datasets[0].data[i] = to_number(b[6].display);
+                        }
+                        else if(b[0].trim() == 'Peralatan dan Mesin'){
+                            pieChart2.data.datasets[1].data[i] = to_number(b[6].display);
+                        }else if(b[0].trim() == 'Gedung dan Bangunan'){
+                            pieChart2.data.datasets[2].data[i] = to_number(b[6].display);
+                        }else if(b[0].trim() == 'Jalan, Jaringan dan Irigrasi'){
+                            pieChart2.data.datasets[3].data[i] = to_number(b[6].display);
+                        }else if(b[0].trim() == 'Aset Tetap Lainnya'){
+                            pieChart2.data.datasets[4].data[i] = to_number(b[6].display);
+                        }else if(b[0].trim() == 'Kontruksi Dalam Pengerjaan'){
+                            pieChart2.data.datasets[5].data[i] = to_number(b[6].display);
+                        }
                     }
                 });
                 if(labels.length >= 1){
