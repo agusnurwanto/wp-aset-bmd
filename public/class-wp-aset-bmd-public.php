@@ -1002,6 +1002,9 @@ class Wp_Aset_Bmd_Public {
 	}
 	
 	function tambah_temuan_bpk(){
+		global $post;
+
+		$api_key = get_option( '_crb_apikey_simda_bmd' );
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
@@ -1104,6 +1107,7 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_kondisi_aset_simata', $_POST['kondisi_aset_simata']);
 						update_post_meta($post->ID, 'meta_keterangan_kondisi_aset', $_POST['keterangan_kondisi_aset']);
 						update_post_meta($post->ID, 'meta_ket_potensi_penggunaan', $_POST['ket_potensi_penggunaan']);
+						update_post_meta($post->ID, 'meta_judul_temuan_bpk', $_POST['judul_temuan_bpk']);
 						$post_status = 'private';
 						if(
 							!empty($_POST['status_informasi'])

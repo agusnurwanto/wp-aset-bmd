@@ -18,6 +18,7 @@ $args = array(
 $query = new WP_Query($args);
 $no = 0;
 $data_aset = array();
+
 foreach($query->posts as $post){
     $nilai_aset = get_post_meta($post->ID, 'meta_nilai_aset', true);
     $nama_aset = get_post_meta($post->ID, 'meta_nama_aset', true);
@@ -134,14 +135,17 @@ $pilihan_aset = array();
 if(is_user_logged_in()){
     $user_id = get_current_user_id();
     if($this->functions->user_has_role($user_id, 'administrator')){
+        $custom_url = array();
+        $custom_url[] = array('key' => 'tambah_temuan_bpk', 'value' => 'tambah_data_temuan_bpk');
         $judul_form_input = 'Tambah Aset Belum Masuk Neraca';
         $link = $this->functions->generatePage(array(
             'nama_page' => 'Tambah Temuan BPK',
             'content' => '[tambah_temuan_bpk]',
             'post_status' => 'private',
-            'show_header' => 1
+            'show_header' => 1,
+            'custom_url'  => $custom_url
         ));
-        $tombol_tambah = '<button class="btn btn-primary" href="'.$link['url'].'" style="margin-bottom: 20px;">Tambah Temuan BPK</button>';
+        $tombol_tambah = '<a type="button" class="btn btn-primary" href="'.$link['url'].'" target="_blank" style="margin-bottom: 20px;">Tambah Temuan BPK</a>';
     }
 }
 ?>
@@ -161,11 +165,12 @@ if(is_user_logged_in()){
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Temuan BPK<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Temuan BPK<br>( Badan Pemeriksa Keuangan )<br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
         <?php echo $tombol_tambah; ?>
         <table class="table table-bordered" id="data_temuan_bpk">
             <thead>
                 <tr>
+                    <th class="text-center">No</th>
                     <th class="text-center">Judul</th>
                     <th class="text-center">Keterangan</th>
                     <th class="text-center">Tanggal Temuan</th>
@@ -176,9 +181,6 @@ if(is_user_logged_in()){
             <tbody id="data_body">
                 <?php echo $body; ?>
             </tbody>
-            <tfoot>
-                <th ></th>
-            <tfoot>
         </table>
     </div>
 </div>
