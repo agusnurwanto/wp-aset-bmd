@@ -228,7 +228,7 @@ if(!empty($skpd_sementara)){
             <thead id="data_header">
                 <tr>
                     <th class="text-center">Jenis Aset</th>
-                    <th class="text-center">Kode Lokasi</th>
+                    <th class="text-center">Kode UPB</th>
                     <th class="text-center">Nama Sub Unit</th>
                     <th class="text-center">Nama UPB</th>
                     <th class="text-center">Jumlah</th>
