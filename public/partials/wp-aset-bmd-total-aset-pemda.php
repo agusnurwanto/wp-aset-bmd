@@ -204,7 +204,7 @@ update_option('_crb_total_per_jenis', json_encode(array(
             <div class="row counting-box title-row" style="margin-bottom: 55px;">
                 <div class="col-md-12 text-center animated" data-animation="fadeInBottom"
                     data-animation-delay="200">
-                    <div style="width: 100%; max-width: 800px; max-height: 800px; margin: auto; margin-bottom: 20px;">
+                    <div style="width: 100%; max-width: 1500px; max-height: 1000px; margin: auto; margin-bottom: 20px;">
                         <canvas id="chart_per_jenis_aset"></canvas>
                     </div>
                 </div>
