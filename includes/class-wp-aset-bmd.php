@@ -209,6 +209,8 @@ class Wp_Aset_Bmd {
 		add_shortcode('aset_belum_masuk_neraca',  array($plugin_public, 'aset_belum_masuk_neraca'));
 		add_shortcode('tambah_aset_belum_masuk_neraca',  array($plugin_public, 'tambah_aset_belum_masuk_neraca'));
 		add_shortcode('get_all_posts',  array($plugin_public, 'get_all_posts'));
+		add_shortcode('tambah_temuan_bpk',  array($plugin_public, 'tambah_temuan_bpk'));
+		add_shortcode('temuan_bpk',  array($plugin_public, 'temuan_bpk'));
 	}
 
 	/**

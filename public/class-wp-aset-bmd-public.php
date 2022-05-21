@@ -992,6 +992,25 @@ class Wp_Aset_Bmd_Public {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-posts.php';
 
 	}
+	
+	function temuan_bpk(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public\partials\wp-aset-bmd-temuan-bpk.php';
+
+	}
+	
+	function tambah_temuan_bpk(){
+		global $post;
+
+		$api_key = get_option( '_crb_apikey_simda_bmd' );
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public\partials\wp-aset-bmd-tambah-temuan-bpk.php';
+
+	}
 
 	function cek_edit_post($options){
 		$cek_edit = false;
@@ -1088,6 +1107,7 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_kondisi_aset_simata', $_POST['kondisi_aset_simata']);
 						update_post_meta($post->ID, 'meta_keterangan_kondisi_aset', $_POST['keterangan_kondisi_aset']);
 						update_post_meta($post->ID, 'meta_ket_potensi_penggunaan', $_POST['ket_potensi_penggunaan']);
+						update_post_meta($post->ID, 'meta_judul_temuan_bpk', $_POST['judul_temuan_bpk']);
 						$post_status = 'private';
 						if(
 							!empty($_POST['status_informasi'])
@@ -1209,5 +1229,170 @@ class Wp_Aset_Bmd_Public {
 		$set_lokasi = $nama_lokasi === ''  || $nama_lokasi === '-' ? '-' : $set_upb_sub_unit.$nama_kecamatan.$nama_desa.$nama_lokasi;
 		
 		return $set_lokasi;
+	}
+
+	function get_rek_barang($no_die=false){
+		global $wpdb;
+		$return = array(
+			'status' => 'success',
+			'message'	=> 'Berhasil get total per SKPD!'
+		);
+		if(!empty($_POST)){
+			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
+				$tipe = $_POST['tipe'];
+				$val_selected = '';
+				$where = 'where 1=1';
+				if(!empty($_POST['selected'])){
+					$val_selected = $_POST['selected'];
+					$kode = explode('.', $val_selected);
+					unset($kode[count($kode)-1]);
+					foreach($kode as $k => $v){
+						if($k == 0){
+							$where .= ' AND Kd_Aset='.$v;
+						}else{
+							$where .= ' AND Kd_Aset'.($k-1).'='.$v;
+						}
+					}
+				}
+				$sql = '';
+				$select_option = '';
+				if($tipe == 'rek_0'){
+					$sql = "
+						SELECT 
+							*
+				        from Ref_Rek0_108
+					";
+					$select_option = '<option value="">Pilih Rekening Aset 0</option>';
+					$rek_db = $this->functions->CurlSimda(array(
+						'query' => $sql,
+						'no_debug' => 0
+					));
+					foreach($rek_db as $i => $val){
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0;
+						$selected = '';
+						if($val_selected == $kode){
+							$selected = 'selected';
+						}
+						$select_option .= '<option '.$selected.' value="'.$kode.'">'.$kode.' '.$val->Nm_Aset0.'</option>';
+					}
+				}else if($tipe == 'rek_1'){
+					$sql = "
+						SELECT 
+							*
+				        from Ref_Rek1_108
+				        $where
+					";
+					$select_option = '<option value="">Pilih Rekening Aset 1</option>';
+					$rek_db = $this->functions->CurlSimda(array(
+						'query' => $sql,
+						'no_debug' => 0
+					));
+					foreach($rek_db as $i => $val){
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1;
+						$selected = '';
+						if($val_selected == $kode){
+							$selected = 'selected';
+						}
+						$select_option .= '<option '.$selected.' value="'.$kode.'">'.$kode.' '.$val->Nm_Aset1.'</option>';
+					}
+				}else if($tipe == 'rek_2'){
+					$sql = "
+						SELECT 
+							*
+				        from Ref_Rek2_108
+				        $where
+					";
+					$select_option = '<option value="">Pilih Rekening Aset 2</option>';
+					$rek_db = $this->functions->CurlSimda(array(
+						'query' => $sql,
+						'no_debug' => 0
+					));
+					foreach($rek_db as $i => $val){
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2;
+						$selected = '';
+						if($val_selected == $kode){
+							$selected = 'selected';
+						}
+						$select_option .= '<option '.$selected.' value="'.$kode.'">'.$kode.' '.$val->Nm_Aset2.'</option>';
+					}
+				}else if($tipe == 'rek_3'){
+					$sql = "
+						SELECT 
+							*
+				        from Ref_Rek3_108
+				        $where
+					";
+					$select_option = '<option value="">Pilih Rekening Aset 3</option>';
+					$rek_db = $this->functions->CurlSimda(array(
+						'query' => $sql,
+						'no_debug' => 0
+					));
+					foreach($rek_db as $i => $val){
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2.'.'.$val->Kd_Aset3;
+						$selected = '';
+						if($val_selected == $kode){
+							$selected = 'selected';
+						}
+						$select_option .= '<option '.$selected.' value="'.$kode.'">'.$kode.' '.$val->Nm_Aset3.'</option>';
+					}
+				}else if($tipe == 'rek_4'){
+					$sql = "
+						SELECT 
+							*
+				        from Ref_Rek4_108
+				        $where
+					";
+					$select_option = '<option value="">Pilih Rekening Aset 4</option>';
+					$rek_db = $this->functions->CurlSimda(array(
+						'query' => $sql,
+						'no_debug' => 0
+					));
+					foreach($rek_db as $i => $val){
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2.'.'.$val->Kd_Aset3.'.'.$val->Kd_Aset4;
+						$selected = '';
+						if($val_selected == $kode){
+							$selected = 'selected';
+						}
+						$select_option .= '<option '.$selected.' value="'.$kode.'">'.$kode.' '.$val->Nm_Aset3.'</option>';
+					}
+				}else if($tipe == 'rek_5'){
+					$sql = "
+						SELECT 
+							*
+				        from Ref_Rek5_108
+				        $where
+					";
+					$select_option = '<option value="">Pilih Rekening Aset 5</option>';
+					$rek_db = $this->functions->CurlSimda(array(
+						'query' => $sql,
+						'no_debug' => 0
+					));
+					foreach($rek_db as $i => $val){
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2.'.'.$val->Kd_Aset3.'.'.$val->Kd_Aset4.'.'.$val->Kd_Aset5;
+						$selected = '';
+						if($val_selected == $kode){
+							$selected = 'selected';
+						}
+						$select_option .= '<option '.$selected.' value="'.$kode.'">'.$kode.' '.$val->Nm_Aset3.'</option>';
+					}
+				}
+				$return['html'] = $select_option;
+			}else{
+				$return = array(
+					'status' => 'error',
+					'message'	=> 'Api Key tidak sesuai!'
+				);
+			}
+		}else{
+			$return = array(
+				'status' => 'error',
+				'message'	=> 'Format tidak sesuai!'
+			);
+		}
+		if($no_die){
+			return $return;
+		}else{
+			die(json_encode($return));
+		}
 	}
 }
