@@ -1,5 +1,47 @@
 <?php
 	$meta_keterangan = '';
+
+    $sql = "
+		SELECT 
+			u.*, 
+            k.Nm_Kecamatan,
+            d.Nm_Desa
+        from ref_upb u
+        LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
+            AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
+            AND k.Kd_Kecamatan = u.Kd_Kecamatan
+        LEFT JOIN Ref_Desa d ON d.Kd_Prov=u.Kd_Prov
+            AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
+            AND d.Kd_Kecamatan = u.Kd_Kecamatan
+            AND d.Kd_Desa = u.Kd_Desa
+	";
+	$upbs = $this->functions->CurlSimda(array(
+		'query' => $sql,
+		'no_debug' => 0
+	));
+	$list_upb = '<option value="">Pilih UPB</option>';
+	$new_upbs = array();
+	foreach($upbs as $i => $val){
+		$nama_upb = $val->Nm_UPB;
+
+		$alamat = array();
+		if(!empty($val->Nm_Kecamatan)){
+		    $alamat[] = 'Kec. '.$val->Nm_Kecamatan;
+		}
+		if(!empty($val->Nm_Desa)){
+		    $alamat[] = 'Desa/Kel. '.$val->Nm_Desa;
+		}
+		if(!empty($alamat)){
+		    $alamat = ' ('.implode(', ', $alamat).')';
+		}else{
+		    $alamat = '';
+		}
+
+		$kd_upb = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit).'.'.$this->functions->CekNull($val->Kd_Sub).'.'.$this->functions->CekNull($val->Kd_UPB).'.'.$this->functions->CekNull($val->Kd_Kecamatan).'.'.$this->functions->CekNull($val->Kd_Desa);
+		$upbs[$i]->kd_upb = $kd_upb;
+		$new_upbs[$kd_upb] = $upbs[$i];
+		$list_upb .= '<option value="'.$kd_upb.'">'.$kd_upb.'-'.$nama_upb.$alamat.'</option>';
+	}
 ?>
 <style type="text/css">
     .warning {
@@ -32,7 +74,8 @@
                 </div>
                 <label class="col-md-2 col-form-label">OPD yang menindaklanjuti</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="opd_temuan_bpk" value="">
+                    <!-- <input type="text" class="form-control" name="opd_temuan_bpk" value=""> -->
+                    <select class="form-control select2" id="pilih_upb"><?php echo $list_upb; ?></select>
                 </div>
             </div>
             

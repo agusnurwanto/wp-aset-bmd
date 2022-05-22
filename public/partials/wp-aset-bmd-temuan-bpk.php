@@ -110,24 +110,6 @@ foreach($query->posts as $post){
             <td class="text-center"><a href="'.$link['url'].'" class="btn btn-primary">Detail</a></td>
         </tr>
     ';
-
-    if(empty($polygon)){
-        continue;
-    }
-    $data_aset[] = array(
-        'aset' => array(),
-        'lng' => $koordinatX,
-        'ltd' => $koordinatY,
-        'polygon' => $polygon,
-        'nilai_aset' => number_format($nilai_aset,2,",","."),
-        'nama_aset' => $nama_aset,
-        'alamat_aset' => $alamat_aset,
-        'nama_skpd' => $params['nama_skpd'].' '.$alamat,
-        'kd_barang' => $params['kd_barang'],
-        'kd_lokasi' => $params['kd_lokasi'],
-        'warna_map' => $warna_map,
-        'ikon_map'  => $ikon_map,
-    );
 }
 
 $tombol_tambah = '';
@@ -137,9 +119,9 @@ if(is_user_logged_in()){
     if($this->functions->user_has_role($user_id, 'administrator')){
         $custom_url = array();
         $custom_url[] = array('key' => 'tambah_temuan_bpk', 'value' => 'tambah_data_temuan_bpk');
-        $judul_form_input = 'Tambah Aset Belum Masuk Neraca';
+        $judul_form_input = 'Tambah Temuan BPK';
         $link = $this->functions->generatePage(array(
-            'nama_page' => 'Tambah Temuan BPK',
+            'nama_page' => $judul_form_input,
             'content' => '[tambah_temuan_bpk]',
             'post_status' => 'private',
             'show_header' => 1,
