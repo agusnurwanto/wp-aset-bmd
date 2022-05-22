@@ -6,12 +6,11 @@ $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
 
 $args = array(
-   'meta_key' => 'meta_ket_belum_masuk_neraca',
    'meta_query' => array(
        array(
-           'key' => 'meta_ket_belum_masuk_neraca',
-           'value' => '1',
-           'compare' => '=',
+           'key' => 'abm_kd_register',
+           'value' => array(''),
+           'compare' => 'NOT IN',
        )
    )
 );
@@ -20,6 +19,9 @@ $no = 0;
 $data_aset = array();
 foreach($query->posts as $post){
     $nilai_aset = get_post_meta($post->ID, 'meta_nilai_aset', true);
+    if(empty($nilai_aset)){
+        $nilai_aset = 0;
+    }
     $nama_aset = get_post_meta($post->ID, 'meta_nama_aset', true);
     $alamat_aset = get_post_meta($post->ID, 'meta_alamat_aset', true);
     $koordinatX = get_post_meta($post->ID, 'latitude', true);
@@ -34,7 +36,6 @@ foreach($query->posts as $post){
     $polygon = get_post_meta($post->ID, 'polygon', true);
     $keterangan_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
     $params = shortcode_parse_atts(str_replace('[detail_aset', '', str_replace(']', '', $post->post_content)));
-
     $kd_lokasi = explode('.', $params['kd_lokasi']);
     $Kd_Prov = (int) $kd_lokasi[1];
     $Kd_Kab_Kota = (int) $kd_lokasi[2];
@@ -103,7 +104,7 @@ foreach($query->posts as $post){
             <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'</td>
             <td>'.$nama_aset.'</td>
             <td>'.$column_lokasi.'</td>
-            <td>'.implode(' | ', $keterangan).'</td>
+            <td>'.$keterangan.'</td>
             <td>'.$keterangan_tindak_lanjut.'</td>
             <td class="text-right" data-sort="'.$nilai_aset.'">'.number_format($nilai_aset,2,",",".").'</td>
             <td class="text-center"><a href="'.$link['url'].'" class="btn btn-primary">Detail</a></td>

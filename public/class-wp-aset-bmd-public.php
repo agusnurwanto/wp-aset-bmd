@@ -1135,6 +1135,124 @@ class Wp_Aset_Bmd_Public {
 		die(json_encode($ret));
 	}
 
+	function get_kd_register($post){
+		global $wpdb;
+		$args = array(
+		   'meta_query' => array(
+		       array(
+		           'key' => 'abm_jenis_aset',
+		           'value' => $post['jenis_aset'],
+		           'compare' => '=',
+		       ),
+		       array(
+		           'key' => 'abm_kd_upb',
+		           'value' => $post['kd_upb'],
+		           'compare' => '=',
+		       ),
+		       array(
+		           'key' => 'abm_kd_barang',
+		           'value' => $post['kd_barang'],
+		           'compare' => '=',
+		       )
+		   	),
+			'meta_key' => 'abm_kd_register',
+			'orderby' => 'meta_value_num',
+			'meta_type' => 'NUMERIC',
+			'order' => 'DESC',
+			'posts_per_page' => '1',
+			'page' => '1'
+		);
+		$query = new WP_Query($args);
+		$kd_register = 0;
+		foreach($query->posts as $post){
+			$kd_register = get_post_meta($post->ID, 'abm_kd_register', true);
+			if(empty($kd_register)){
+				$kd_register = 0;
+			}
+		}
+		return $kd_register+1;
+	}
+
+	function simpan_aset_belum_masuk_neraca(){
+		global $wpdb;
+		$ret = array(
+			'status'	=> 'success',
+			'message'	=> 'Berhasil simpan aset!'
+		);
+		if (!empty($_POST)) {
+			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
+				$post_id = false;
+				if (!empty($_POST['id_post'])) {
+					$post = get_post($_POST['id_post']);
+					$kd_register = get_post_meta($post->ID, 'abm_kd_register', true);
+					$post_id = $post->ID;
+				}else{
+					$post_type = 'post';
+					$kd_register = $this->get_kd_register($_POST);
+					$judul = 'ABM '.$_POST['jenis_aset'].' '.$_POST['kd_upb'].' '.$_POST['kd_barang'].' '.$kd_register;
+					$custom_post = get_page_by_title($judul, OBJECT, $post_type);
+					if (empty($custom_post) || empty($custom_post->ID)) {
+						$link = $this->functions->generatePage(array(
+					        'nama_page' => $judul,
+					        'content' => '[detail_aset kd_lokasi="'.$_POST['kd_upb'].'" kd_barang="'.$_POST['kd_barang'].'" kd_register="'.$kd_register.'" jenis_aset="'.$_POST['jenis_aset'].'"]',
+					        'post_status' => 'private',
+					        'post_type' => $post_type,
+					        'show_header' => 1,
+					        'no_key' => 1
+					    ));
+					    $post_id = $link['id'];
+					}else{
+					    $post_id = $custom_post->ID;
+					}
+				}
+				if(!empty($post_id)){
+					update_post_meta($post_id, 'abm_jenis_aset', $_POST['jenis_aset']);
+					update_post_meta($post_id, 'abm_kd_upb', $_POST['kd_upb']);
+					update_post_meta($post_id, 'abm_kd_barang', $_POST['kd_barang']);
+					update_post_meta($post_id, 'abm_kd_register', $kd_register);
+					update_post_meta($post_id, 'abm_latitude', $_POST['latitude']);
+					update_post_meta($post_id, 'abm_longitude', $_POST['longitude']);
+					update_post_meta($post_id, 'abm_polygon', $_POST['polygon']);
+					update_post_meta($post_id, 'abm_meta_sejarah', $_POST['sejarah']);
+					update_post_meta($post_id, 'abm_meta_kronologi', $_POST['kronologi']);
+					update_post_meta($post_id, 'abm_meta_foto', $_POST['foto']);
+					update_post_meta($post_id, 'abm_meta_video', $_POST['video']);
+					update_post_meta($post_id, 'abm_meta_disewakan', $_POST['disewakan']);
+					update_post_meta($post_id, 'abm_meta_nilai_sewa', $_POST['nilai_sewa']);
+					update_post_meta($post_id, 'abm_meta_nama_sewa', $_POST['nama_sewa']);
+					update_post_meta($post_id, 'abm_meta_alamat_sewa', $_POST['alamat_sewa']);
+					update_post_meta($post_id, 'abm_meta_waktu_sewa_awal', $_POST['waktu_sewa_awal']);
+					update_post_meta($post_id, 'abm_meta_waktu_sewa_akhir', $_POST['waktu_sewa_akhir']);
+					update_post_meta($post_id, 'abm_meta_aset_perlu_tindak_lanjut', $_POST['aset_perlu_tindak_lanjut']);
+					update_post_meta($post_id, 'abm_meta_keterangan_aset_perlu_tindak_lanjut', $_POST['ket_aset_perlu_tindak_lanjut']);
+					update_post_meta($post_id, 'abm_meta_ket_penggunaan_aset', $_POST['ket_penggunaan_aset']);
+					update_post_meta($post_id, 'abm_meta_kondisi_aset_simata', $_POST['kondisi_aset_simata']);
+					update_post_meta($post_id, 'abm_meta_keterangan_kondisi_aset', $_POST['keterangan_kondisi_aset']);
+					update_post_meta($post_id, 'abm_meta_ket_potensi_penggunaan', $_POST['ket_potensi_penggunaan']);
+					update_post_meta($post_id, 'abm_meta_judul_temuan_bpk', $_POST['judul_temuan_bpk']);
+					$post_status = 'private';
+					if(
+						!empty($_POST['status_informasi'])
+						&& $_POST['status_informasi'] == 2
+					){
+						$post_status = 'publish';
+					}
+					wp_update_post(array(
+				        'ID'    =>  $post_id,
+				        'post_status'   =>  $post_status
+			        ));
+				}else{
+					$ret['status'] = 'error';
+					$ret['message'] = 'ID post aset tidak ditemukan!';
+				}
+			} else {
+				$ret['status'] = 'error';
+				$ret['message'] = 'APIKEY tidak sesuai!';
+			}
+		}
+		die(json_encode($ret));
+	}
+
 	function get_total_aset_upb($table_simda, $params = array()){
 		global $wpdb;
 		$select_custom = '';
@@ -1353,7 +1471,7 @@ class Wp_Aset_Bmd_Public {
 						if($val_selected == $kode){
 							$selected = 'selected';
 						}
-						$select_option .= '<option '.$selected.' value="'.$kode.'">'.$kode.' '.$val->Nm_Aset3.'</option>';
+						$select_option .= '<option '.$selected.' value="'.$kode.'">'.$kode.' '.$val->Nm_Aset4.'</option>';
 					}
 				}else if($tipe == 'rek_5'){
 					$sql = "
@@ -1373,7 +1491,7 @@ class Wp_Aset_Bmd_Public {
 						if($val_selected == $kode){
 							$selected = 'selected';
 						}
-						$select_option .= '<option '.$selected.' value="'.$kode.'">'.$kode.' '.$val->Nm_Aset3.'</option>';
+						$select_option .= '<option '.$selected.' value="'.$kode.'">'.$kode.' '.$val->Nm_Aset5.'</option>';
 					}
 				}
 				$return['html'] = $select_option;
