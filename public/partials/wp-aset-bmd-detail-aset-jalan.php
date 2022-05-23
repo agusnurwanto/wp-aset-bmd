@@ -145,8 +145,9 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Disewakan / Tidak</label>
                 <div class="col-md-4">
-                    <label><input type="radio" <?php echo $disabled.' '.$checked_sewa; ?> name="disewakan" value="1"> Disewakan</label>
+                    <label style="margin-left: 15px;"><input type="radio" <?php echo $disabled.' '.$checked_sewa; ?> name="disewakan" value="1"> Telah Disewakan</label>
                     <label style="margin-left: 15px;"><input type="radio" <?php echo $disabled.' '.$checked_tidak_sewa; ?> name="disewakan" value="2"> Tidak Disewakan</label>
+                    <label style="margin-left: 15px;"><input type="radio" <?php echo $disabled.' '.$potensi_disewakan; ?> name="disewakan" value="3"> Potensi Akan Disewakan</label>
                 </div>
                 <label class="col-md-2 col-form-label">Nilai Sewa</label>
                 <div class="col-md-4">

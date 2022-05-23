@@ -486,9 +486,15 @@ class Wp_Aset_Bmd_Public {
 		$meta_disewakan = get_post_meta($post->ID, 'meta_disewakan', true);
 		$checked_sewa = '';
 		$checked_tidak_sewa = 'checked';
+		$potensi_disewakan = '';
 		if($meta_disewakan == '1'){
 			$checked_sewa = 'checked';
 			$checked_tidak_sewa = '';
+			$potensi_disewakan = '';
+		}else if($meta_disewakan == '3'){
+			$checked_sewa = '';
+			$checked_tidak_sewa = '';
+			$potensi_disewakan = 'checked';
 		}
 		$checked_private = '';
 		$checked_publish = 'checked';

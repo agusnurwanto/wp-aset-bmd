@@ -11,7 +11,7 @@ $args = array(
    'meta_query' => array(
        array(
            'key' => 'meta_disewakan',
-           'value' => '1',
+           'value' => '3',
            'compare' => '=',
        )
    )
@@ -27,7 +27,7 @@ foreach($query->posts as $post){
     $date2 = strtotime($now);
     $interval = $date1 - $date2;
     // cek jika masa sewa belum habis
-    if($interval >= 0){ continue; }
+    // if($interval >= 0){ continue; }
 
     $nilai_sewa = get_post_meta($post->ID, 'meta_nilai_sewa', true);
     $params = shortcode_parse_atts(str_replace('[detail_aset', '', str_replace(']', '', $post->post_content)));
