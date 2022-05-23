@@ -251,7 +251,7 @@
     
     function initMap() {
         // Lokasi Center Map
-        var lokasi_aset = new google.maps.LatLng(<?php echo $koordinatX; ?>, <?php echo $koordinatY; ?>);
+        var lokasi_aset = new google.maps.LatLng(<?php echo $lat_default; ?>, <?php echo $lng_default; ?>);
         // Setting Map
         var mapOptions = {
             zoom: 18,
@@ -269,7 +269,7 @@
         kode_aset      = '<?php echo $params['kd_barang']; ?>';
         status_aset    = '<?php if(!empty($aset[0]->Sertifikat_Nomor)){ echo 'Bersertipikat'; }else{ echo 'Belum sertifikat'; } ?>';
         luas           = '<?php echo number_format($aset[0]->Luas_M2,2,",","."); ?>';
-        alamat         = '<?php echo $aset[0]->Alamat; ?>';
+        alamat         = '<?php echo trim($aset[0]->Alamat); ?>';
         hak_tanah      = '<?php echo $aset[0]->Hak_Tanah; ?>';
         tgl_sertipikat = '<?php echo $aset[0]->Sertifikat_Tanggal; ?>';
         no_sertipikat  = '<?php echo $aset[0]->Sertifikat_Nomor; ?>';

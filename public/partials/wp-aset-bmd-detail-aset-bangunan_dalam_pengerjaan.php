@@ -262,7 +262,7 @@
     
     function initMap() {
         // Lokasi Center Map
-        var lokasi_aset = new google.maps.LatLng(<?php echo $koordinatX; ?>, <?php echo $koordinatY; ?>);
+        var lokasi_aset = new google.maps.LatLng(<?php echo $lat_default; ?>, <?php echo $lng_default; ?>);
         // Setting Map
         var mapOptions = {
             zoom: 18,

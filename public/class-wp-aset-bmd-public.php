@@ -475,6 +475,16 @@ class Wp_Aset_Bmd_Public {
 		if(empty($koordinatY)){
 		    $koordinatY = '0';
 		}
+		$lat_default = $koordinatX;
+		$lng_default = $koordinatY;
+		if(empty($lat_default) || empty($lng_default)){
+			$center_map_default = get_option('_crb_google_map_center');
+			if(!empty($center_map_default)){
+				$center_map_default = explode(',', $center_map_default);
+				$lat_default = $center_map_default[0];
+				$lng_default = $center_map_default[1];
+			}
+		}
 		$polygon = get_post_meta($post->ID, 'polygon', true);
 		if(empty($polygon)){
 		    $polygon = '[]';

@@ -5,6 +5,16 @@
 	$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['key']['jenis_aset']));
 	$api_googlemap = get_option( '_crb_google_api' );
 	$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
+    $lat_default = 0;
+    $lng_default = 0;
+    if(empty($lat_default) || empty($lng_default)){
+        $center_map_default = get_option('_crb_google_map_center');
+        if(!empty($center_map_default)){
+            $center_map_default = explode(',', $center_map_default);
+            $lat_default = $center_map_default[0];
+            $lng_default = $center_map_default[1];
+        }
+    }
 	$warna_map = get_option('_crb_warna_tanah');
 	$ikon_map  = get_option('_crb_icon_tanah');
 	$sql = "
@@ -477,7 +487,7 @@
     var ikon_map = "<?php echo $ikon_map; ?>";
     
     function initMap() {
-    	var lokasi_aset = new google.maps.LatLng(0, 0);
+        var lokasi_aset = new google.maps.LatLng(<?php echo $lat_default; ?>, <?php echo $lng_default; ?>);
         // Setting Map
         var mapOptions = {
             zoom: 18,
