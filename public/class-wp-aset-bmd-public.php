@@ -1208,8 +1208,20 @@ class Wp_Aset_Bmd_Public {
 				if(!empty($post_id)){
 					update_post_meta($post_id, 'abm_jenis_aset', $_POST['jenis_aset']);
 					update_post_meta($post_id, 'abm_kd_upb', $_POST['kd_upb']);
+					update_post_meta($post_id, 'abm_nama_upb', $_POST['nama_upb']);
 					update_post_meta($post_id, 'abm_kd_barang', $_POST['kd_barang']);
 					update_post_meta($post_id, 'abm_kd_register', $kd_register);
+					update_post_meta($post_id, 'abm_nama_aset', $_POST['nama_aset']);
+					update_post_meta($post_id, 'abm_penggunaan', $_POST['penggunaan']);
+					update_post_meta($post_id, 'abm_luas', $_POST['luas']);
+					update_post_meta($post_id, 'abm_alamat', $_POST['alamat']);
+					update_post_meta($post_id, 'abm_tgl_pengadaan', $_POST['tgl_pengadaan']);
+					update_post_meta($post_id, 'abm_hak', $_POST['hak']);
+					update_post_meta($post_id, 'abm_tgl_sertifikat', $_POST['tgl_sertifikat']);
+					update_post_meta($post_id, 'abm_nomor_sertifikat', $_POST['nomor_sertifikat']);
+					update_post_meta($post_id, 'abm_asal_usul', $_POST['asal_usul']);
+					update_post_meta($post_id, 'abm_harga', $_POST['harga']);
+					update_post_meta($post_id, 'abm_keterangan', $_POST['keterangan']);
 					update_post_meta($post_id, 'abm_latitude', $_POST['latitude']);
 					update_post_meta($post_id, 'abm_longitude', $_POST['longitude']);
 					update_post_meta($post_id, 'abm_polygon', $_POST['polygon']);
@@ -1406,7 +1418,7 @@ class Wp_Aset_Bmd_Public {
 						'no_debug' => 0
 					));
 					foreach($rek_db as $i => $val){
-						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1;
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$this->functions->CekNull($val->Kd_Aset1);
 						$selected = '';
 						if($val_selected == $kode){
 							$selected = 'selected';
@@ -1426,7 +1438,7 @@ class Wp_Aset_Bmd_Public {
 						'no_debug' => 0
 					));
 					foreach($rek_db as $i => $val){
-						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2;
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$this->functions->CekNull($val->Kd_Aset1).'.'.$this->functions->CekNull($val->Kd_Aset2);
 						$selected = '';
 						if($val_selected == $kode){
 							$selected = 'selected';
@@ -1446,7 +1458,7 @@ class Wp_Aset_Bmd_Public {
 						'no_debug' => 0
 					));
 					foreach($rek_db as $i => $val){
-						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2.'.'.$val->Kd_Aset3;
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$this->functions->CekNull($val->Kd_Aset1).'.'.$this->functions->CekNull($val->Kd_Aset2).'.'.$this->functions->CekNull($val->Kd_Aset3);
 						$selected = '';
 						if($val_selected == $kode){
 							$selected = 'selected';
@@ -1466,7 +1478,7 @@ class Wp_Aset_Bmd_Public {
 						'no_debug' => 0
 					));
 					foreach($rek_db as $i => $val){
-						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2.'.'.$val->Kd_Aset3.'.'.$val->Kd_Aset4;
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$this->functions->CekNull($val->Kd_Aset1).'.'.$this->functions->CekNull($val->Kd_Aset2).'.'.$this->functions->CekNull($val->Kd_Aset3).'.'.$this->functions->CekNull($val->Kd_Aset4);
 						$selected = '';
 						if($val_selected == $kode){
 							$selected = 'selected';
@@ -1486,7 +1498,7 @@ class Wp_Aset_Bmd_Public {
 						'no_debug' => 0
 					));
 					foreach($rek_db as $i => $val){
-						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2.'.'.$val->Kd_Aset3.'.'.$val->Kd_Aset4.'.'.$val->Kd_Aset5;
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$this->functions->CekNull($val->Kd_Aset1).'.'.$this->functions->CekNull($val->Kd_Aset2).'.'.$this->functions->CekNull($val->Kd_Aset3).'.'.$this->functions->CekNull($val->Kd_Aset4).'.'.$this->functions->CekNull($val->Kd_Aset5, 3);
 						$selected = '';
 						if($val_selected == $kode){
 							$selected = 'selected';
