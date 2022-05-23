@@ -1170,9 +1170,11 @@ class Wp_Aset_Bmd_Public {
 					$ret['status'] = 'error';
 					$ret['message'] = 'APIKEY tidak sesuai!';
 				}
+				die(json_encode($ret));
 			}
-		die(json_encode($ret));
+		}
 	}
+	
 	
 	function get_kd_register($post){
 		global $wpdb;
