@@ -192,6 +192,7 @@ class Wp_Aset_Bmd {
 		$this->loader->add_action('wp_ajax_nopriv_get_total_skpd',  $plugin_public, 'get_total_skpd');
 
 		$this->loader->add_action('wp_ajax_simpan_aset',  $plugin_public, 'simpan_aset');
+		$this->loader->add_action('wp_ajax_simpan_temuan_bpk',  $plugin_public, 'simpan_temuan_bpk');
 
 		add_shortcode('dashboard_aset',  array($plugin_public, 'dashboard_aset'));
 		add_shortcode('dashboard_galeri',  array($plugin_public, 'dashboard_galeri'));

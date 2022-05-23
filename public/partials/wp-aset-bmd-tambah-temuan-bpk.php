@@ -1,5 +1,6 @@
 <?php
-	$meta_keterangan = '';
+	$keterangan_temuan_bpk = '';
+	$lampiran_temuan_bpk = '';
 
     $sql = "
 		SELECT 
@@ -58,7 +59,7 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Judul</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="judul_temuan_bpk">
+                    <input type="text" class="form-control" placeholder="Judul Data Temuan BPK" name="judul_temuan_bpk">
                 </div>
                 <label for="inputEmail3" class="col-md-2 col-form-label">Tanggal Temuan</label>
                 <div class="col-md-4">
@@ -68,14 +69,11 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Keterangan</label>
                 <div class="col-md-4">
-                    <textarea>
-
-                    </textarea>
+                <textarea class="form-control" name="keterangan_temuan_bpk" placeholder="Keterangan Data Temuan BPK"><?php echo $keterangan_temuan_bpk; ?></textarea>
                 </div>
                 <label class="col-md-2 col-form-label">OPD yang menindaklanjuti</label>
                 <div class="col-md-4">
-                    <!-- <input type="text" class="form-control" name="opd_temuan_bpk" value=""> -->
-                    <select class="form-control select2" id="pilih_upb"><?php echo $list_upb; ?></select>
+                    <select class="form-control select2" id="pilih_opd_temuan_bpk"><?php echo $list_upb; ?></select>
                 </div>
             </div>
             
@@ -83,14 +81,14 @@
                 <label class="col-md-2 col-form-label">Lampiran</label>
                 <div class="col-md-10">
                     <?php 
-                        wp_editor($meta_keterangan,'keterangan',array('textarea_name' => 'keterangan_temuan_bpk', 'textarea_rows' => 20)); 
+                        wp_editor($lampiran_temuan_bpk,'lampiran_temuan_bpk',array('textarea_name' => 'lampiran_temuan_bpk', 'textarea_rows' => 20)); 
                     ?>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
                 <div class="col-md-10">
-                    <a onclick="simpan_aset(); return false;" href="#" class="btn btn-primary">Simpan</a> <a style="margin-left: 10px;" href="<?php echo $aset_belum_masuk_neraca['url']; ?>" class="btn btn-danger">Kembali</a>
+                    <a onclick="simpan_temuan_bpk(); return false;" href="#" class="btn btn-primary">Simpan</a> <a style="margin-left: 10px;" href="<?php echo $aset_belum_masuk_neraca['url']; ?>" class="btn btn-danger">Kembali</a>
                 </div>
             </div>
        	</form>
@@ -98,7 +96,7 @@
 </div>
 
 <script>
-    function simpan_aset(){
+    function simpan_temuan_bpk(){
         cek_simpan()
         .then(function(res){
             jQuery('#wrap-loading').show();
@@ -110,7 +108,10 @@
                     "api_key": "<?php echo $api_key; ?>",
                     "id_post": "<?php echo $post->ID; ?>",
                     "judul_temuan_bpk": jQuery('input[name="judul_temuan_bpk"]').val(),
-
+                    "tanggal_temuan_bpk": jQuery('input[name="tanggal_temuan_bpk"]').val(),
+                    "keterangan_temuan_bpk": jQuery('textarea[name="keterangan_temuan_bpk"]').val(),
+                    "lampiran_temuan_bpk": tinyMCE.get('lampiran_temuan_bpk').getContent(),
+                    "pilih_opd_temuan_bpk": jQuery( "#pilih_opd_temuan_bpk option:selected" ).text(),
                 },
                 dataType: "json",
                 success: function(data){

@@ -1107,7 +1107,6 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_kondisi_aset_simata', $_POST['kondisi_aset_simata']);
 						update_post_meta($post->ID, 'meta_keterangan_kondisi_aset', $_POST['keterangan_kondisi_aset']);
 						update_post_meta($post->ID, 'meta_ket_potensi_penggunaan', $_POST['ket_potensi_penggunaan']);
-						update_post_meta($post->ID, 'meta_judul_temuan_bpk', $_POST['judul_temuan_bpk']);
 						$post_status = 'private';
 						if(
 							!empty($_POST['status_informasi'])
@@ -1122,6 +1121,50 @@ class Wp_Aset_Bmd_Public {
 					}else{
 						$ret['status'] = 'error';
 						$ret['message'] = 'ID post aset tidak ditemukan!';
+					}
+				} else {
+					$ret['status'] = 'error';
+					$ret['message'] = 'Format data salah!';
+				}
+			} else {
+				$ret['status'] = 'error';
+				$ret['message'] = 'APIKEY tidak sesuai!';
+			}
+		}
+		die(json_encode($ret));
+	}
+
+	function simpan_temuan_bpk(){
+		global $wpdb;
+		$ret = array(
+			'status'	=> 'success',
+			'message'	=> 'Berhasil simpan temuan!'
+		);
+		if (!empty($_POST)) {
+			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
+				if (!empty($_POST['id_post'])) {
+					$post = get_post($_POST['id_post']);
+					if(!empty($post->ID)){
+						update_post_meta($post->ID, 'latitude', $_POST['latitude']);
+						update_post_meta($post->ID, 'meta_judul_temuan_bpk', $_POST['judul_temuan_bpk']);
+						update_post_meta($post->ID, 'meta_tanggal_temuan_bpk', $_POST['tanggal_temuan_bpk']);
+						update_post_meta($post->ID, 'meta_keterangan_temuan_bpk', $_POST['keterangan_temuan_bpk']);
+						update_post_meta($post->ID, 'meta_lampiran_temuan_bpk', $_POST['lampiran_temuan_bpk']);
+						update_post_meta($post->ID, 'meta_pilih_opd_temuan_bpk', $_POST['pilih_opd_temuan_bpk']);
+						$post_status = 'private';
+						if(
+							!empty($_POST['status_informasi'])
+							&& $_POST['status_informasi'] == 2
+						){
+							$post_status = 'publish';
+						}
+						wp_update_post(array(
+					        'ID'    =>  $post->ID,
+					        'post_status'   =>  $post_status
+				        ));
+					}else{
+						$ret['status'] = 'error';
+						$ret['message'] = 'ID post temuan tidak ditemukan!';
 					}
 				} else {
 					$ret['status'] = 'error';
