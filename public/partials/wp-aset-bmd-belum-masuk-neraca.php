@@ -6,12 +6,11 @@ $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
 
 $args = array(
-   'meta_key' => 'meta_ket_belum_masuk_neraca',
    'meta_query' => array(
        array(
-           'key' => 'meta_ket_belum_masuk_neraca',
-           'value' => '1',
-           'compare' => '=',
+           'key' => 'abm_kd_register',
+           'value' => array(''),
+           'compare' => 'NOT IN',
        )
    )
 );
@@ -19,22 +18,27 @@ $query = new WP_Query($args);
 $no = 0;
 $data_aset = array();
 foreach($query->posts as $post){
-    $nilai_aset = get_post_meta($post->ID, 'meta_nilai_aset', true);
-    $nama_aset = get_post_meta($post->ID, 'meta_nama_aset', true);
-    $alamat_aset = get_post_meta($post->ID, 'meta_alamat_aset', true);
-    $koordinatX = get_post_meta($post->ID, 'latitude', true);
+    $abm_kd_barang = get_post_meta($post->ID, 'abm_kd_barang', true);
+    $abm_kd_register = get_post_meta($post->ID, 'abm_kd_register', true);
+    $nilai_aset = get_post_meta($post->ID, 'abm_harga', true);
+    if(empty($nilai_aset)){
+        $nilai_aset = 0;
+    }
+    $alamat_aset = get_post_meta($post->ID, 'abm_alamat', true);
+    $kd_upb = get_post_meta($post->ID, 'abm_kd_upb', true);
+    $alamat_aset = get_post_meta($post->ID, 'abm_alamat', true);
+    $koordinatX = get_post_meta($post->ID, 'abm_latitude', true);
     if(empty($koordinatX)){
         $koordinatX = '0';
     }
-    $koordinatY = get_post_meta($post->ID, 'longitude', true);
+    $koordinatY = get_post_meta($post->ID, 'abm_longitude', true);
     if(empty($koordinatY)){
         $koordinatY = '0';
     }
-    $keterangan = get_post_meta($post->ID, 'keterangan_aset', true);;
-    $polygon = get_post_meta($post->ID, 'polygon', true);
-    $keterangan_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
+    $keterangan = get_post_meta($post->ID, 'abm_keterangan', true);
+    $polygon = get_post_meta($post->ID, 'abm_polygon', true);
+    $keterangan_tindak_lanjut = get_post_meta($post->ID, 'abm_meta_keterangan_aset_perlu_tindak_lanjut', true);
     $params = shortcode_parse_atts(str_replace('[detail_aset', '', str_replace(']', '', $post->post_content)));
-
     $kd_lokasi = explode('.', $params['kd_lokasi']);
     $Kd_Prov = (int) $kd_lokasi[1];
     $Kd_Kab_Kota = (int) $kd_lokasi[2];
@@ -56,6 +60,9 @@ foreach($query->posts as $post){
     $No_Reg8 = (int) $params['kd_register'];
 
     $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
+    $nama_aset = get_post_meta($post->ID, 'abm_nama_aset', true);
+    $nama_upb = get_post_meta($post->ID, 'abm_nama_upb', true);
+    $column_lokasi = get_post_meta($post->ID, 'abm_alamat', true);
 
     $warna_map = '';
     $ikon_map = '';
@@ -74,19 +81,6 @@ foreach($query->posts as $post){
         $ikon_map  = get_option('_crb_icon_jalan');
     }
 
-    $alamat = array();
-    if(!empty($params['kecamatan'])){
-        $alamat[] = 'Kec. '.$params['kecamatan'];
-    }
-    if(!empty($params['desa'])){
-        $alamat[] = 'Desa/Kel. '.$params['desa'];
-    }
-    if(!empty($alamat)){
-        $alamat = '('.implode(', ', $alamat).')';
-    }else{
-        $alamat = '';
-    }
-
     $link = $this->functions->generatePage(array(
         'nama_page' => $params['jenis_aset'].' '.$params['kd_lokasi'].' '.$params['kd_barang'].' '.$params['kd_register'],
         'content' => '[detail_aset kd_lokasi="'.$params['kd_lokasi'].'" kd_barang="'.$params['kd_barang'].'" kd_register="'.$params['kd_register'].'" jenis_aset="'.$params['jenis_aset'].'"]',
@@ -95,16 +89,15 @@ foreach($query->posts as $post){
         'show_header' => 1,
         'no_key' => 1
     ));
-    $column_lokasi = '';
 
     $body .= '
         <tr>
+            <td class="text-center">'.$kd_upb.'<br>'.$nama_upb.'</td>
             <td class="text-center">'.$data_jenis['nama'].'</td>
-            <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'</td>
+            <td class="text-center">'.$abm_kd_barang.'.'.$abm_kd_register.'</td>
             <td>'.$nama_aset.'</td>
             <td>'.$column_lokasi.'</td>
-            <td>'.implode(' | ', $keterangan).'</td>
-            <td>'.$keterangan_tindak_lanjut.'</td>
+            <td>'.$keterangan.'</td>
             <td class="text-right" data-sort="'.$nilai_aset.'">'.number_format($nilai_aset,2,",",".").'</td>
             <td class="text-center"><a href="'.$link['url'].'" class="btn btn-primary">Detail</a></td>
         </tr>
@@ -247,12 +240,12 @@ if(is_user_logged_in()){
         <table class="table table-bordered" id="data_aset_aset">
             <thead>
                 <tr>
+                    <th class="text-center">UPB</th>
                     <th class="text-center">Jenis Aset</th>
                     <th class="text-center">Kode Barang</th>
                     <th class="text-center">Nama Aset</th>
                     <th class="text-center">Lokasi</th>
                     <th class="text-center">Keterangan Aset</th>
-                    <th class="text-center">Keterangan Belum Masuk Neraca</th>
                     <th class="text-center">Nilai Aset (Rp)</th>
                     <th class="text-center">Aksi</th>
                 </tr>
@@ -273,8 +266,7 @@ if(is_user_logged_in()){
 jQuery(document).on('ready', function(){
     jQuery('#data_aset_aset').dataTable({
         columnDefs: [
-            { "width": "200px", "targets": 3 },
-            { "width": "200px", "targets": 4 }
+            { "width": "200px", "targets": 5 }
         ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
