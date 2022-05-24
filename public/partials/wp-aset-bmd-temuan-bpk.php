@@ -6,23 +6,21 @@ $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
 
 $args = array(
-   'meta_key' => 'meta_data_temuan_bpk',
    'meta_query' => array(
        array(
            'key' => 'meta_data_temuan_bpk',
-           'value' => 'data temuan bpk',
-           'compare' => '=',
+           'value' => array(''),
+           'compare' => 'NOT IN',
        )
    )
 );
 
 $query = new WP_Query($args);
-$no = 0;
 
 $data_aset = array();
 
 foreach($query->posts as $post){
-    $post_id = $post->id;
+    $post_id = $post->ID;
 
     $judul = get_post_meta($post_id, 'meta_judul_temuan_bpk', true);
     $tanggal_temuan_bpk = get_post_meta($post_id, 'meta_tanggal_temuan_bpk', true);
@@ -32,9 +30,9 @@ foreach($query->posts as $post){
     // $params = '';
     $body .= '
         <tr>
-            <td class="text-center">'.$no++.'</td>
             <td class="text-center">'.$judul.'</td>
             <td class="text-center">'.$keterangan_temuan_bpk.'</td>
+            <td>'.$tanggal_temuan_bpk.'</td>
             <td>'.$lampiran_temuan_bpk.'</td>
             <td>'.$pilih_opd_temuan_bpk.'</td>
             <td><a class="btn btn-primary">Detail</a></td>
@@ -81,8 +79,7 @@ if(is_user_logged_in()){
         <table class="table table-bordered" id="data_temuan_bpk">
             <thead>
                 <tr>
-                    <th class="text-center">No</th>
-                    <th class="text-center">Judul</th>
+                    <th class="text-center">Jenis Temuan</th>
                     <th class="text-center">Keterangan</th>
                     <th class="text-center">Tanggal Temuan</th>
                     <th class="text-center">Lampiran</th>

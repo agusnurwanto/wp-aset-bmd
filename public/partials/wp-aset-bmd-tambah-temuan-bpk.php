@@ -55,9 +55,19 @@
         <h2 class="text-center">Tambah Data Temuan BPK<br>( Badan Pemeriksa Keuangan )</h2>
         <form>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Judul</label>
+                <label class="col-md-2 col-form-label">OPD yang menindaklanjuti</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" placeholder="Judul Data Temuan BPK" name="judul_temuan_bpk" value="<?php echo $judul_temuan_bpk; ?>">
+                    <select class="form-control select2" id="pilih_opd_temuan_bpk"><?php echo $list_upb; ?></select>
+                </div>
+                <label class="col-md-2 col-form-label">Kode Barang Temuan</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="kode_barang"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Jenis Temuan BPK</label>
+                <div class="col-md-4">
+                    <select class="form-control" name="judul_temuan_bpk"><?php echo $option_judul_temuan_bpk; ?>"</select>
                 </div>
                 <label for="inputEmail3" class="col-md-2 col-form-label">Tanggal Temuan</label>
                 <div class="col-md-4">
@@ -66,12 +76,8 @@
             </div>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Keterangan</label>
-                <div class="col-md-4">
-                <textarea class="form-control" name="keterangan_temuan_bpk" placeholder="Keterangan Data Temuan BPK"><?php echo $keterangan_temuan_bpk; ?></textarea>
-                </div>
-                <label class="col-md-2 col-form-label">OPD yang menindaklanjuti</label>
-                <div class="col-md-4">
-                    <select class="form-control select2" id="pilih_opd_temuan_bpk" value="<?php echo $pilih_opd_temuan_bpk; ?>"><?php echo $list_upb; ?></select>
+                <div class="col-md-10">
+                    <textarea class="form-control" name="keterangan_temuan_bpk" placeholder="Keterangan Data Temuan BPK"><?php echo $keterangan_temuan_bpk; ?></textarea>
                 </div>
             </div>
             
@@ -95,8 +101,7 @@
 
 <script>
     function simpan_temuan_bpk(){
-        cek_simpan()
-        .then(function(res){
+        if(confirm("Apakah anda yakin untuk menimpan data ini?")){
             jQuery('#wrap-loading').show();
             jQuery.ajax({
                 url: ajax.url,
@@ -104,7 +109,7 @@
                 data: {
                     "action": "simpan_temuan_bpk",
                     "api_key": "<?php echo $api_key; ?>",
-                    "judul_temuan_bpk": jQuery('input[name="judul_temuan_bpk"]').val(),
+                    "judul_temuan_bpk": jQuery('select[name="judul_temuan_bpk"]').val(),
                     "tanggal_temuan_bpk": jQuery('input[name="tanggal_temuan_bpk"]').val(),
                     "keterangan_temuan_bpk": jQuery('textarea[name="keterangan_temuan_bpk"]').val(),
                     "lampiran_temuan_bpk": tinyMCE.get('lampiran_temuan_bpk').getContent(),
@@ -120,6 +125,6 @@
                     return alert(data.message);
                 }
             });
-        });
+        };
     }
 </script>

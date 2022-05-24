@@ -554,6 +554,13 @@ class Wp_Aset_Bmd_Admin {
         			->add_options( $cek_skpd )
         			->set_help_text('Sub unit yang akan ditampilkan saat masuk ke halaman total aset per SKPD.')
 		    ) )
+			->add_tab( __( 'Temuan BPK' ), array(
+				Field::make( 'complex', 'crb_jenis_temuan', 'Jenis Temuan BPK' )
+		    		->add_fields( 'jenis', array(
+				        Field::make( 'text', 'jenis', 'Judul' )
+		        			->set_default_value('Belum ada nilai aset')
+	        		) )
+		    ) )
 			->add_tab( __( 'Petunjuk Penggunaan' ), array(
 				Field::make( 'complex', 'crb_petunjuk_penggunaan', 'Keterangan Tambahan' )
 		    		->add_fields( 'keterangan', array(

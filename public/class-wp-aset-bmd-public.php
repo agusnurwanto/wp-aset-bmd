@@ -1019,20 +1019,34 @@ class Wp_Aset_Bmd_Public {
 	}
 	
 	function tambah_data_temuan_bpk(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+
 		global $post;
 
 		$judul_temuan_bpk = get_post_meta($post->ID, 'meta_judul_temuan_bpk', true);
+		$option_judul_temuan_bpk = $this->get_opsi_jenis_temuan($judul_temuan_bpk);
 		$tanggal_temuan_bpk = get_post_meta($post->ID, 'meta_tanggal_temuan_bpk', true);
 		$keterangan_temuan_bpk = get_post_meta($post->ID, 'meta_keterangan_temuan_bpk', true);
 		$lampiran_temuan_bpk = get_post_meta($post->ID, 'meta_lampiran_temuan_bpk', true);
 		$pilih_opd_temuan_bpk = get_post_meta($post->ID, 'meta_pilih_opd_temuan_bpk', true);
 		$api_key = get_option( '_crb_apikey_simda_bmd' );
-
-		if(!empty($_GET) && !empty($_GET['post'])){
-			return '';
-		}
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public\partials\wp-aset-bmd-tambah-temuan-bpk.php';
 
+	}
+
+	function get_opsi_jenis_temuan($default=false){
+		$jenis_temuan = $this->functions->get_option_complex('_crb_jenis_temuan', 'jenis');
+        $jenis_temuan_options = '<option value="">Pilih jenis temuan BPK</option>';
+        foreach($jenis_temuan as $val){
+        	$selected = '';
+        	if($default == $val['jenis']){
+        		$selected = 'selected';
+        	}
+        	$jenis_temuan_options .= '<option '.$selected.' value="'.$val['jenis'].'">'.$val['jenis'].'</option>';
+        }
+        return $jenis_temuan_options;
 	}
 
 	function cek_edit_post($options){
