@@ -248,6 +248,7 @@ class Wp_Aset_Bmd_Public {
 				        array(
 				            'kd_lokasi' => '12.'.$kd_lokasi_user, 
 				            'nama_skpd' => $nama_skpd, 
+				            'user' => 1, 
 				            'daftar_aset' => 1
 				        )
 				    )
