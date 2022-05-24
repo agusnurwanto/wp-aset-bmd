@@ -6,128 +6,40 @@ $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
 
 $args = array(
-   'meta_key' => 'meta_temuan_bpk',
+   'meta_key' => 'meta_data_temuan_bpk',
    'meta_query' => array(
        array(
-           'key' => 'meta_temuan_bpk',
-           'value' => '1',
+           'key' => 'meta_data_temuan_bpk',
+           'value' => 'data temuan bpk',
            'compare' => '=',
        )
    )
 );
+
 $query = new WP_Query($args);
 $no = 0;
+
 $data_aset = array();
 
 foreach($query->posts as $post){
-    $nilai_aset = get_post_meta($post->ID, 'meta_nilai_aset', true);
-    $nama_aset = get_post_meta($post->ID, 'meta_nama_aset', true);
-    $alamat_aset = get_post_meta($post->ID, 'meta_alamat_aset', true);
-    $koordinatX = get_post_meta($post->ID, 'latitude', true);
-    if(empty($koordinatX)){
-        $koordinatX = '0';
-    }
-    $koordinatY = get_post_meta($post->ID, 'longitude', true);
-    if(empty($koordinatY)){
-        $koordinatY = '0';
-    }
-    $keterangan = get_post_meta($post->ID, 'keterangan_aset', true);;
-    $polygon = get_post_meta($post->ID, 'polygon', true);
-    $keterangan_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
-    $params = shortcode_parse_atts(str_replace('[detail_aset', '', str_replace(']', '', $post->post_content)));
+    $post_id = $post->id;
 
-    $kd_lokasi = explode('.', $params['kd_lokasi']);
-    $Kd_Prov = (int) $kd_lokasi[1];
-    $Kd_Kab_Kota = (int) $kd_lokasi[2];
-    $Kd_Bidang = (int) $kd_lokasi[3];
-    $Kd_Unit = (int) $kd_lokasi[4];
-    $Kd_Sub = (int) $kd_lokasi[5];
-    $Kd_UPB = (int) $kd_lokasi[6];
-    $Kd_Kecamatan = (int) $kd_lokasi[7];
-    $Kd_Desa = (int) $kd_lokasi[8];
-
-    $kd_barang = explode('.', $params['kd_barang']);
-    $Kd_Aset8 = (int) $kd_barang[0];
-    $Kd_Aset80 = (int) $kd_barang[1];
-    $Kd_Aset81 = (int) $kd_barang[2];
-    $Kd_Aset82 = (int) $kd_barang[3];
-    $Kd_Aset83 = (int) $kd_barang[4];
-    $Kd_Aset84 = (int) $kd_barang[5];
-    $Kd_Aset85 = (int) $kd_barang[6];
-    $No_Reg8 = (int) $params['kd_register'];
-
-    $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
-
-    $warna_map = '';
-    $ikon_map = '';
-    if ($params['jenis_aset'] == 'tanah') {
-        $warna_map = get_option('_crb_warna_tanah');
-        $ikon_map  = get_option('_crb_icon_tanah');
-    }
-
-    if ($params['jenis_aset'] == 'bangunan') {
-        $warna_map = get_option('_crb_warna_gedung');
-        $ikon_map  = get_option('_crb_icon_gedung');
-    }
-
-    if ($params['jenis_aset'] == 'jalan') {
-        $warna_map = get_option('_crb_warna_jalan');
-        $ikon_map  = get_option('_crb_icon_jalan');
-    }
-
-    $alamat = array();
-    if(!empty($params['kecamatan'])){
-        $alamat[] = 'Kec. '.$params['kecamatan'];
-    }
-    if(!empty($params['desa'])){
-        $alamat[] = 'Desa/Kel. '.$params['desa'];
-    }
-    if(!empty($alamat)){
-        $alamat = '('.implode(', ', $alamat).')';
-    }else{
-        $alamat = '';
-    }
-
-    $link = $this->functions->generatePage(array(
-        'nama_page' => $params['jenis_aset'].' '.$params['kd_lokasi'].' '.$params['kd_barang'].' '.$params['kd_register'],
-        'content' => '[detail_aset kd_lokasi="'.$params['kd_lokasi'].'" kd_barang="'.$params['kd_barang'].'" kd_register="'.$params['kd_register'].'" jenis_aset="'.$params['jenis_aset'].'"]',
-        'post_status' => 'private',
-        'post_type' => 'post',
-        'show_header' => 1,
-        'no_key' => 1
-    ));
-    $column_lokasi = '';
-
+    $judul = get_post_meta($post_id, 'meta_judul_temuan_bpk', true);
+    $tanggal_temuan_bpk = get_post_meta($post_id, 'meta_tanggal_temuan_bpk', true);
+    $keterangan_temuan_bpk = get_post_meta($post_id, 'meta_keterangan_temuan_bpk', true);
+    $lampiran_temuan_bpk = get_post_meta($post_id, 'meta_lampiran_temuan_bpk', true);
+    $pilih_opd_temuan_bpk = get_post_meta($post_id, 'meta_pilih_opd_temuan_bpk', true);
+    // $params = '';
     $body .= '
         <tr>
-            <td class="text-center">'.$data_jenis['nama'].'</td>
-            <td class="text-center">'.$params['kd_barang'].'.'.$params['kd_register'].'</td>
-            <td>'.$nama_aset.'</td>
-            <td>'.$column_lokasi.'</td>
-            <td>'.implode(' | ', $keterangan).'</td>
-            <td>'.$keterangan_tindak_lanjut.'</td>
-            <td class="text-right" data-sort="'.$nilai_aset.'">'.number_format($nilai_aset,2,",",".").'</td>
-            <td class="text-center"><a href="'.$link['url'].'" class="btn btn-primary">Detail</a></td>
+            <td class="text-center">'.$no++.'</td>
+            <td class="text-center">'.$judul.'</td>
+            <td class="text-center">'.$keterangan_temuan_bpk.'</td>
+            <td>'.$lampiran_temuan_bpk.'</td>
+            <td>'.$pilih_opd_temuan_bpk.'</td>
+            <td><a class="btn btn-primary">Detail</a></td>
         </tr>
     ';
-
-    if(empty($polygon)){
-        continue;
-    }
-    $data_aset[] = array(
-        'aset' => array(),
-        'lng' => $koordinatX,
-        'ltd' => $koordinatY,
-        'polygon' => $polygon,
-        'nilai_aset' => number_format($nilai_aset,2,",","."),
-        'nama_aset' => $nama_aset,
-        'alamat_aset' => $alamat_aset,
-        'nama_skpd' => $params['nama_skpd'].' '.$alamat,
-        'kd_barang' => $params['kd_barang'],
-        'kd_lokasi' => $params['kd_lokasi'],
-        'warna_map' => $warna_map,
-        'ikon_map'  => $ikon_map,
-    );
 }
 
 $tombol_tambah = '';
@@ -136,15 +48,14 @@ if(is_user_logged_in()){
     $user_id = get_current_user_id();
     if($this->functions->user_has_role($user_id, 'administrator')){
         $custom_url = array();
-        $custom_url[] = array('key' => 'tambah_temuan_bpk', 'value' => 'tambah_data_temuan_bpk');
-        $judul_form_input = 'Tambah Aset Belum Masuk Neraca';
+        $judul_form_input = 'Tambah Data Temuan BPK';
         $link = $this->functions->generatePage(array(
-            'nama_page' => 'Tambah Temuan BPK',
-            'content' => '[tambah_temuan_bpk]',
+            'nama_page' => $judul_form_input,
+            'content' => '[tambah_data_temuan_bpk]',
             'post_status' => 'private',
             'show_header' => 1,
-            'custom_url'  => $custom_url
         ));
+
         $tombol_tambah = '<a type="button" class="btn btn-primary" href="'.$link['url'].'" target="_blank" style="margin-bottom: 20px;">Tambah Temuan BPK</a>';
     }
 }
@@ -176,6 +87,7 @@ if(is_user_logged_in()){
                     <th class="text-center">Tanggal Temuan</th>
                     <th class="text-center">Lampiran</th>
                     <th class="text-center">OPD yang menindaklanjuti</th>
+                    <th class="text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody id="data_body">

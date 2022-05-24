@@ -198,6 +198,7 @@ class Wp_Aset_Bmd {
 		$this->loader->add_action('wp_ajax_nopriv_simpan_aset_belum_masuk_neraca',  $plugin_public, 'simpan_aset_belum_masuk_neraca');
 
 		$this->loader->add_action('wp_ajax_simpan_aset',  $plugin_public, 'simpan_aset');
+		$this->loader->add_action('wp_ajax_simpan_temuan_bpk',  $plugin_public, 'simpan_temuan_bpk');
 
 		add_shortcode('dashboard_aset',  array($plugin_public, 'dashboard_aset'));
 		add_shortcode('dashboard_galeri',  array($plugin_public, 'dashboard_galeri'));
@@ -215,7 +216,7 @@ class Wp_Aset_Bmd {
 		add_shortcode('aset_belum_masuk_neraca',  array($plugin_public, 'aset_belum_masuk_neraca'));
 		add_shortcode('tambah_aset_belum_masuk_neraca',  array($plugin_public, 'tambah_aset_belum_masuk_neraca'));
 		add_shortcode('get_all_posts',  array($plugin_public, 'get_all_posts'));
-		add_shortcode('tambah_temuan_bpk',  array($plugin_public, 'tambah_temuan_bpk'));
+		add_shortcode('tambah_data_temuan_bpk',  array($plugin_public, 'tambah_data_temuan_bpk'));
 		add_shortcode('temuan_bpk',  array($plugin_public, 'temuan_bpk'));
 	}
 
