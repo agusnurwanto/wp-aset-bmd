@@ -1001,10 +1001,16 @@ class Wp_Aset_Bmd_Public {
 
 	}
 	
-	function tambah_temuan_bpk(){
+	function tambah_data_temuan_bpk(){
 		global $post;
 
+		$judul_temuan_bpk = get_post_meta($post->ID, 'meta_judul_temuan_bpk', true);
+		$tanggal_temuan_bpk = get_post_meta($post->ID, 'meta_tanggal_temuan_bpk', true);
+		$keterangan_temuan_bpk = get_post_meta($post->ID, 'meta_keterangan_temuan_bpk', true);
+		$lampiran_temuan_bpk = get_post_meta($post->ID, 'meta_lampiran_temuan_bpk', true);
+		$pilih_opd_temuan_bpk = get_post_meta($post->ID, 'meta_pilih_opd_temuan_bpk', true);
 		$api_key = get_option( '_crb_apikey_simda_bmd' );
+
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
@@ -1133,48 +1139,6 @@ class Wp_Aset_Bmd_Public {
 		}
 		die(json_encode($ret));
 	}
-
-	function simpan_temuan_bpk(){
-		global $wpdb;
-		$ret = array(
-			'status'	=> 'success',
-			'message'	=> 'Berhasil simpan temuan!'
-		);
-		if (!empty($_POST)) {
-			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
-				if (!empty($_POST['id_post'])) {
-					$post = get_post($_POST['id_post']);
-					if(!empty($post->ID)){
-						update_post_meta($post->ID, 'latitude', $_POST['latitude']);
-						update_post_meta($post->ID, 'meta_judul_temuan_bpk', $_POST['judul_temuan_bpk']);
-						update_post_meta($post->ID, 'meta_tanggal_temuan_bpk', $_POST['tanggal_temuan_bpk']);
-						update_post_meta($post->ID, 'meta_keterangan_temuan_bpk', $_POST['keterangan_temuan_bpk']);
-						update_post_meta($post->ID, 'meta_lampiran_temuan_bpk', $_POST['lampiran_temuan_bpk']);
-						update_post_meta($post->ID, 'meta_pilih_opd_temuan_bpk', $_POST['pilih_opd_temuan_bpk']);
-						$post_status = 'private';
-						if(
-							!empty($_POST['status_informasi'])
-							&& $_POST['status_informasi'] == 2
-						){
-							$post_status = 'publish';
-						}
-						wp_update_post(array(
-							'ID'    =>  $post_id,
-							'post_status'   =>  $post_status
-						));
-					}else{
-						$ret['status'] = 'error';
-						$ret['message'] = 'ID post aset tidak ditemukan!';
-					}
-				} else {
-					$ret['status'] = 'error';
-					$ret['message'] = 'APIKEY tidak sesuai!';
-				}
-				die(json_encode($ret));
-			}
-		}
-	}
-	
 	
 	function get_kd_register($post){
 		global $wpdb;
@@ -1304,6 +1268,66 @@ class Wp_Aset_Bmd_Public {
 			}
 		}
 		die(json_encode($ret));
+	}
+
+	
+	function simpan_temuan_bpk(){
+		global $wpdb;
+		$ret = array(
+			'status'	=> 'success',
+			'message'	=> 'Berhasil simpan temuan!'
+		);
+		if (!empty($_POST)) {
+			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
+				if (!empty($_POST['id_post'])) {
+					$post = get_post($_POST['id_post']);
+					$post_id = $post->ID;
+				}else{
+					$post_type = 'post';
+					$judul = 'Temuan BPK '.$_POST['judul_temuan_bpk'].' '.$_POST['tanggal_temuan_bpk'];
+					$custom_post = get_page_by_title($judul, OBJECT, $post_type);
+					if (empty($custom_post) || empty($custom_post->ID)) {
+						$link = $this->functions->generatePage(array(
+					        'nama_page' => $judul,
+					        'content' => '[tambah_data_temuan_bpk]',
+					        'post_status' => 'private',
+					        'post_type' => $post_type,
+					        'show_header' => 1,
+					        'no_key' => 1
+					    ));
+					    $post_id = $link['id'];
+					}else{
+					    $post_id = $custom_post->ID;
+					}
+				}
+				if(!empty($post_id)){
+					update_post_meta($post_id, 'meta_data_temuan_bpk', 'data temuan bpk');
+					update_post_meta($post_id, 'meta_judul_temuan_bpk', $_POST['judul_temuan_bpk']);
+					update_post_meta($post_id, 'meta_tanggal_temuan_bpk', $_POST['tanggal_temuan_bpk']);
+					update_post_meta($post_id, 'meta_keterangan_temuan_bpk', $_POST['keterangan_temuan_bpk']);
+					update_post_meta($post_id, 'meta_lampiran_temuan_bpk', $_POST['lampiran_temuan_bpk']);
+					update_post_meta($post_id, 'meta_pilih_opd_temuan_bpk', $_POST['pilih_opd_temuan_bpk']);
+					$post_status = 'private';
+					if(
+						!empty($_POST['status_informasi'])
+						&& $_POST['status_informasi'] == 2
+					){
+						$post_status = 'publish';
+					}
+					$x = wp_update_post(array(
+						'ID'    =>  $post_id,
+						'post_status'   =>  $post_status
+					));
+				}else{
+					$ret['status'] = 'error';
+					$ret['message'] = 'ID post aset tidak ditemukan!';
+				}
+			} else {
+				$ret['status'] = 'error';
+				$ret['message'] = 'APIKEY tidak sesuai!';
+			}
+			die(json_encode($ret));
+		}
 	}
 
 	function get_total_aset_upb($table_simda, $params = array()){

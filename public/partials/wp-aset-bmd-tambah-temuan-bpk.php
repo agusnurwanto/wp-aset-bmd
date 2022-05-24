@@ -1,6 +1,4 @@
 <?php
-	$keterangan_temuan_bpk = '';
-	$lampiran_temuan_bpk = '';
 
     $sql = "
 		SELECT 
@@ -59,11 +57,11 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Judul</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" placeholder="Judul Data Temuan BPK" name="judul_temuan_bpk">
+                    <input type="text" class="form-control" placeholder="Judul Data Temuan BPK" name="judul_temuan_bpk" value="<?php echo $judul_temuan_bpk; ?>">
                 </div>
                 <label for="inputEmail3" class="col-md-2 col-form-label">Tanggal Temuan</label>
                 <div class="col-md-4">
-                    <input type="date" class="form-control" name="tanggal_temuan_bpk" value="">
+                    <input type="date" class="form-control" name="tanggal_temuan_bpk" value="<?php echo $tanggal_temuan_bpk; ?>">
                 </div>
             </div>
             <div class="form-group row">
@@ -73,7 +71,7 @@
                 </div>
                 <label class="col-md-2 col-form-label">OPD yang menindaklanjuti</label>
                 <div class="col-md-4">
-                    <select class="form-control select2" id="pilih_opd_temuan_bpk"><?php echo $list_upb; ?></select>
+                    <select class="form-control select2" id="pilih_opd_temuan_bpk" value="<?php echo $pilih_opd_temuan_bpk; ?>"><?php echo $list_upb; ?></select>
                 </div>
             </div>
             
@@ -104,9 +102,8 @@
                 url: ajax.url,
                 type: "post",
                 data: {
-                    "action": "simpan_aset",
+                    "action": "simpan_temuan_bpk",
                     "api_key": "<?php echo $api_key; ?>",
-                    "id_post": "<?php echo $post->ID; ?>",
                     "judul_temuan_bpk": jQuery('input[name="judul_temuan_bpk"]').val(),
                     "tanggal_temuan_bpk": jQuery('input[name="tanggal_temuan_bpk"]').val(),
                     "keterangan_temuan_bpk": jQuery('textarea[name="keterangan_temuan_bpk"]').val(),
