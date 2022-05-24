@@ -5,9 +5,6 @@ $tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
 
-// $x = wp_delete_post(2297);
-// print_r($x);
-
 $args = array(
    'meta_key' => 'meta_data_temuan_bpk',
    'meta_query' => array(
