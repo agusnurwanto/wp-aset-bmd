@@ -254,7 +254,7 @@ class Wp_Aset_Bmd_Public {
 				    )
 				);
 				return '
-				<ul style="text-align: center; margin: 0;">
+				<ul style="text-align: center; margin-top: 15px;">
 					<li style="list-style: none;"><a class="button button-primary" href="'.$link_detail_unit.'" target="_blank">Data Barang Milik Daerah '.$nama_skpd.'</a></li>
 				</ul>';
 		    }
@@ -1295,10 +1295,12 @@ class Wp_Aset_Bmd_Public {
             $Kd_Kab_Kota = (int) $kode[2];
             $Kd_Bidang = (int) $kode[3];
             $Kd_Unit = (int) $kode[4];
+            $Kd_Sub = (int) $kode[5];
             $where .= $wpdb->prepare(' WHERE a.Kd_Prov=%d', $Kd_Prov);
             $where .= $wpdb->prepare(' AND a.Kd_Kab_Kota=%d', $Kd_Kab_Kota);
             $where .= $wpdb->prepare(' AND a.Kd_Bidang=%d', $Kd_Bidang);
             $where .= $wpdb->prepare(' AND a.Kd_Unit=%d', $Kd_Unit);
+            $where .= $wpdb->prepare(' AND a.Kd_Sub=%d', $Kd_Sub);
         }
         if(!empty($params['jenis_aset'])){
         	$select_custom .= '\''.$params['jenis_aset'].'\' as jenis_aset, ';
