@@ -195,8 +195,6 @@ class Wp_Aset_Bmd {
 		$this->loader->add_action('wp_ajax_nopriv_get_rek_barang',  $plugin_public, 'get_rek_barang');
 
 		$this->loader->add_action('wp_ajax_simpan_aset_belum_masuk_neraca',  $plugin_public, 'simpan_aset_belum_masuk_neraca');
-		$this->loader->add_action('wp_ajax_nopriv_simpan_aset_belum_masuk_neraca',  $plugin_public, 'simpan_aset_belum_masuk_neraca');
-
 		$this->loader->add_action('wp_ajax_simpan_aset',  $plugin_public, 'simpan_aset');
 		$this->loader->add_action('wp_ajax_simpan_temuan_bpk',  $plugin_public, 'simpan_temuan_bpk');
 
