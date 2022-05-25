@@ -276,6 +276,21 @@ class Wp_Aset_Bmd_Admin {
         	'no_key' => 1,
 			'post_status' => 'private'
 		));
+		$update_release = $this->functions->generatePage(array(
+			'nama_page' => 'Release Update Version',
+			'content' => '[update_release]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'publish'
+		));
+
+		$dokumentasi_wp_aset_bmd = $this->functions->generatePage(array(
+			'nama_page' => 'Dokumentasi wp-aset-bmd',
+			'content' => '[dokumentasi_wp_aset_bmd]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'publish'
+		));
 
         $status = $this->get_status_simda();
         $nama_pemda = $status['data']['nama_pemda'];

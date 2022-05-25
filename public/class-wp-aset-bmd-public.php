@@ -233,6 +233,20 @@ class Wp_Aset_Bmd_Public {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-perlu-tindak-lanjut.php';
 	}
 
+	function update_release(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-release-update.php';
+	}
+	
+	function dokumentasi_wp_aset_bmd(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dokumentasi.php';
+	}
+
 	function dashboard_aset_user(){
 		// untuk disable render shortcode di halaman edit page/post
 		if(!empty($_GET) && !empty($_GET['post'])){
