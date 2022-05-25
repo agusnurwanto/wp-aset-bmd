@@ -262,12 +262,13 @@ class Wp_Aset_Bmd_Public {
 				        array(
 				            'kd_lokasi' => '12.'.$kd_lokasi_user, 
 				            'nama_skpd' => $nama_skpd, 
+				            'user' => 1, 
 				            'daftar_aset' => 1
 				        )
 				    )
 				);
 				return '
-				<ul style="text-align: center; margin: 0;">
+				<ul style="text-align: center; margin-top: 15px;">
 					<li style="list-style: none;"><a class="button button-primary" href="'.$link_detail_unit.'" target="_blank">Data Barang Milik Daerah '.$nama_skpd.'</a></li>
 				</ul>';
 		    }
@@ -489,6 +490,16 @@ class Wp_Aset_Bmd_Public {
 		if(empty($koordinatY)){
 		    $koordinatY = '0';
 		}
+		$lat_default = $koordinatX;
+		$lng_default = $koordinatY;
+		if(empty($lat_default) || empty($lng_default)){
+			$center_map_default = get_option('_crb_google_map_center');
+			if(!empty($center_map_default)){
+				$center_map_default = explode(',', $center_map_default);
+				$lat_default = $center_map_default[0];
+				$lng_default = $center_map_default[1];
+			}
+		}
 		$polygon = get_post_meta($post->ID, 'polygon', true);
 		if(empty($polygon)){
 		    $polygon = '[]';
@@ -500,9 +511,15 @@ class Wp_Aset_Bmd_Public {
 		$meta_disewakan = get_post_meta($post->ID, 'meta_disewakan', true);
 		$checked_sewa = '';
 		$checked_tidak_sewa = 'checked';
+		$potensi_disewakan = '';
 		if($meta_disewakan == '1'){
 			$checked_sewa = 'checked';
 			$checked_tidak_sewa = '';
+			$potensi_disewakan = '';
+		}else if($meta_disewakan == '3'){
+			$checked_sewa = '';
+			$checked_tidak_sewa = '';
+			$potensi_disewakan = 'checked';
 		}
 		$checked_private = '';
 		$checked_publish = 'checked';
@@ -1015,15 +1032,35 @@ class Wp_Aset_Bmd_Public {
 
 	}
 	
-	function tambah_temuan_bpk(){
-		global $post;
-
-		$api_key = get_option( '_crb_apikey_simda_bmd' );
+	function tambah_data_temuan_bpk(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
+
+		global $post;
+
+		$judul_temuan_bpk = get_post_meta($post->ID, 'meta_judul_temuan_bpk', true);
+		$option_judul_temuan_bpk = $this->get_opsi_jenis_temuan($judul_temuan_bpk);
+		$tanggal_temuan_bpk = get_post_meta($post->ID, 'meta_tanggal_temuan_bpk', true);
+		$keterangan_temuan_bpk = get_post_meta($post->ID, 'meta_keterangan_temuan_bpk', true);
+		$lampiran_temuan_bpk = get_post_meta($post->ID, 'meta_lampiran_temuan_bpk', true);
+		$pilih_opd_temuan_bpk = get_post_meta($post->ID, 'meta_pilih_opd_temuan_bpk', true);
+		$api_key = get_option( '_crb_apikey_simda_bmd' );
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public\partials\wp-aset-bmd-tambah-temuan-bpk.php';
 
+	}
+
+	function get_opsi_jenis_temuan($default=false){
+		$jenis_temuan = $this->functions->get_option_complex('_crb_jenis_temuan', 'jenis');
+        $jenis_temuan_options = '<option value="">Pilih jenis temuan BPK</option>';
+        foreach($jenis_temuan as $val){
+        	$selected = '';
+        	if($default == $val['jenis']){
+        		$selected = 'selected';
+        	}
+        	$jenis_temuan_options .= '<option '.$selected.' value="'.$val['jenis'].'">'.$val['jenis'].'</option>';
+        }
+        return $jenis_temuan_options;
 	}
 
 	function cek_edit_post($options){
@@ -1121,7 +1158,6 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_kondisi_aset_simata', $_POST['kondisi_aset_simata']);
 						update_post_meta($post->ID, 'meta_keterangan_kondisi_aset', $_POST['keterangan_kondisi_aset']);
 						update_post_meta($post->ID, 'meta_ket_potensi_penggunaan', $_POST['ket_potensi_penggunaan']);
-						update_post_meta($post->ID, 'meta_judul_temuan_bpk', $_POST['judul_temuan_bpk']);
 						$post_status = 'private';
 						if(
 							!empty($_POST['status_informasi'])
@@ -1148,7 +1184,7 @@ class Wp_Aset_Bmd_Public {
 		}
 		die(json_encode($ret));
 	}
-
+	
 	function get_kd_register($post){
 		global $wpdb;
 		$args = array(
@@ -1222,8 +1258,20 @@ class Wp_Aset_Bmd_Public {
 				if(!empty($post_id)){
 					update_post_meta($post_id, 'abm_jenis_aset', $_POST['jenis_aset']);
 					update_post_meta($post_id, 'abm_kd_upb', $_POST['kd_upb']);
+					update_post_meta($post_id, 'abm_nama_upb', $_POST['nama_upb']);
 					update_post_meta($post_id, 'abm_kd_barang', $_POST['kd_barang']);
 					update_post_meta($post_id, 'abm_kd_register', $kd_register);
+					update_post_meta($post_id, 'abm_nama_aset', $_POST['nama_aset']);
+					update_post_meta($post_id, 'abm_penggunaan', $_POST['penggunaan']);
+					update_post_meta($post_id, 'abm_luas', $_POST['luas']);
+					update_post_meta($post_id, 'abm_alamat', $_POST['alamat']);
+					update_post_meta($post_id, 'abm_tgl_pengadaan', $_POST['tgl_pengadaan']);
+					update_post_meta($post_id, 'abm_hak', $_POST['hak']);
+					update_post_meta($post_id, 'abm_tgl_sertifikat', $_POST['tgl_sertifikat']);
+					update_post_meta($post_id, 'abm_nomor_sertifikat', $_POST['nomor_sertifikat']);
+					update_post_meta($post_id, 'abm_asal_usul', $_POST['asal_usul']);
+					update_post_meta($post_id, 'abm_harga', $_POST['harga']);
+					update_post_meta($post_id, 'abm_keterangan', $_POST['keterangan']);
 					update_post_meta($post_id, 'abm_latitude', $_POST['latitude']);
 					update_post_meta($post_id, 'abm_longitude', $_POST['longitude']);
 					update_post_meta($post_id, 'abm_polygon', $_POST['polygon']);
@@ -1267,6 +1315,66 @@ class Wp_Aset_Bmd_Public {
 		die(json_encode($ret));
 	}
 
+	
+	function simpan_temuan_bpk(){
+		global $wpdb;
+		$ret = array(
+			'status'	=> 'success',
+			'message'	=> 'Berhasil simpan temuan!'
+		);
+		if (!empty($_POST)) {
+			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
+				if (!empty($_POST['id_post'])) {
+					$post = get_post($_POST['id_post']);
+					$post_id = $post->ID;
+				}else{
+					$post_type = 'post';
+					$judul = 'Temuan BPK '.$_POST['judul_temuan_bpk'].' '.$_POST['tanggal_temuan_bpk'];
+					$custom_post = get_page_by_title($judul, OBJECT, $post_type);
+					if (empty($custom_post) || empty($custom_post->ID)) {
+						$link = $this->functions->generatePage(array(
+					        'nama_page' => $judul,
+					        'content' => '[tambah_data_temuan_bpk]',
+					        'post_status' => 'private',
+					        'post_type' => $post_type,
+					        'show_header' => 1,
+					        'no_key' => 1
+					    ));
+					    $post_id = $link['id'];
+					}else{
+					    $post_id = $custom_post->ID;
+					}
+				}
+				if(!empty($post_id)){
+					update_post_meta($post_id, 'meta_data_temuan_bpk', 'data temuan bpk');
+					update_post_meta($post_id, 'meta_judul_temuan_bpk', $_POST['judul_temuan_bpk']);
+					update_post_meta($post_id, 'meta_tanggal_temuan_bpk', $_POST['tanggal_temuan_bpk']);
+					update_post_meta($post_id, 'meta_keterangan_temuan_bpk', $_POST['keterangan_temuan_bpk']);
+					update_post_meta($post_id, 'meta_lampiran_temuan_bpk', $_POST['lampiran_temuan_bpk']);
+					update_post_meta($post_id, 'meta_pilih_opd_temuan_bpk', $_POST['pilih_opd_temuan_bpk']);
+					$post_status = 'private';
+					if(
+						!empty($_POST['status_informasi'])
+						&& $_POST['status_informasi'] == 2
+					){
+						$post_status = 'publish';
+					}
+					$x = wp_update_post(array(
+						'ID'    =>  $post_id,
+						'post_status'   =>  $post_status
+					));
+				}else{
+					$ret['status'] = 'error';
+					$ret['message'] = 'ID post aset tidak ditemukan!';
+				}
+			} else {
+				$ret['status'] = 'error';
+				$ret['message'] = 'APIKEY tidak sesuai!';
+			}
+			die(json_encode($ret));
+		}
+	}
+
 	function get_total_aset_upb($table_simda, $params = array()){
 		global $wpdb;
 		$select_custom = '';
@@ -1280,10 +1388,12 @@ class Wp_Aset_Bmd_Public {
             $Kd_Kab_Kota = (int) $kode[2];
             $Kd_Bidang = (int) $kode[3];
             $Kd_Unit = (int) $kode[4];
+            $Kd_Sub = (int) $kode[5];
             $where .= $wpdb->prepare(' WHERE a.Kd_Prov=%d', $Kd_Prov);
             $where .= $wpdb->prepare(' AND a.Kd_Kab_Kota=%d', $Kd_Kab_Kota);
             $where .= $wpdb->prepare(' AND a.Kd_Bidang=%d', $Kd_Bidang);
             $where .= $wpdb->prepare(' AND a.Kd_Unit=%d', $Kd_Unit);
+            $where .= $wpdb->prepare(' AND a.Kd_Sub=%d', $Kd_Sub);
         }
         if(!empty($params['jenis_aset'])){
         	$select_custom .= '\''.$params['jenis_aset'].'\' as jenis_aset, ';
@@ -1420,7 +1530,7 @@ class Wp_Aset_Bmd_Public {
 						'no_debug' => 0
 					));
 					foreach($rek_db as $i => $val){
-						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1;
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$this->functions->CekNull($val->Kd_Aset1);
 						$selected = '';
 						if($val_selected == $kode){
 							$selected = 'selected';
@@ -1440,7 +1550,7 @@ class Wp_Aset_Bmd_Public {
 						'no_debug' => 0
 					));
 					foreach($rek_db as $i => $val){
-						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2;
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$this->functions->CekNull($val->Kd_Aset1).'.'.$this->functions->CekNull($val->Kd_Aset2);
 						$selected = '';
 						if($val_selected == $kode){
 							$selected = 'selected';
@@ -1460,7 +1570,7 @@ class Wp_Aset_Bmd_Public {
 						'no_debug' => 0
 					));
 					foreach($rek_db as $i => $val){
-						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2.'.'.$val->Kd_Aset3;
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$this->functions->CekNull($val->Kd_Aset1).'.'.$this->functions->CekNull($val->Kd_Aset2).'.'.$this->functions->CekNull($val->Kd_Aset3);
 						$selected = '';
 						if($val_selected == $kode){
 							$selected = 'selected';
@@ -1480,7 +1590,7 @@ class Wp_Aset_Bmd_Public {
 						'no_debug' => 0
 					));
 					foreach($rek_db as $i => $val){
-						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2.'.'.$val->Kd_Aset3.'.'.$val->Kd_Aset4;
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$this->functions->CekNull($val->Kd_Aset1).'.'.$this->functions->CekNull($val->Kd_Aset2).'.'.$this->functions->CekNull($val->Kd_Aset3).'.'.$this->functions->CekNull($val->Kd_Aset4);
 						$selected = '';
 						if($val_selected == $kode){
 							$selected = 'selected';
@@ -1500,7 +1610,7 @@ class Wp_Aset_Bmd_Public {
 						'no_debug' => 0
 					));
 					foreach($rek_db as $i => $val){
-						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$val->Kd_Aset1.'.'.$val->Kd_Aset2.'.'.$val->Kd_Aset3.'.'.$val->Kd_Aset4.'.'.$val->Kd_Aset5;
+						$kode = $val->Kd_Aset.'.'.$val->Kd_Aset0.'.'.$this->functions->CekNull($val->Kd_Aset1).'.'.$this->functions->CekNull($val->Kd_Aset2).'.'.$this->functions->CekNull($val->Kd_Aset3).'.'.$this->functions->CekNull($val->Kd_Aset4).'.'.$this->functions->CekNull($val->Kd_Aset5, 3);
 						$selected = '';
 						if($val_selected == $kode){
 							$selected = 'selected';

@@ -8,6 +8,16 @@ $table_simda = $data_jenis['table_simda'];
 $api_googlemap = get_option( '_crb_google_api' );
 $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
 
+$lat_default = 0;
+$lng_default = 0;
+if(empty($lat_default) || empty($lng_default)){
+    $center_map_default = get_option('_crb_google_map_center');
+    if(!empty($center_map_default)){
+        $center_map_default = explode(',', $center_map_default);
+        $lat_default = $center_map_default[0];
+        $lng_default = $center_map_default[1];
+    }
+}
 if(empty($nama_jenis_aset)){
     die('Jenis Aset tidak ditemukan!');
 }
@@ -310,92 +320,90 @@ var ikon_map;
 var infoWindow = {};
 
 function initMap() {
-    geocoder = new google.maps.Geocoder();
-    geocoder.geocode( { 'address': '<?php echo $nama_pemda; ?>'}, function(results, status) {
-        var mapOptions = {
-            zoom: 13,
-            center: results[0].geometry.location,
-            mapTypeId: google.maps.MapTypeId.HYBRID
-        };
-        // Membuat Map
-        window.map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-        data_aset.map(function(aset, i){
-            console.log('aset', aset);
-            var lokasi_aset = new google.maps.LatLng(aset.lng, aset.ltd);
-            // Menampilkan Marker
-            var marker1 = new google.maps.Marker({
-                position: lokasi_aset,
+    var lokasi_aset = new google.maps.LatLng(<?php echo $lat_default; ?>, <?php echo $lng_default; ?>);
+    var mapOptions = {
+        zoom: 13,
+        center: lokasi_aset,
+        mapTypeId: google.maps.MapTypeId.HYBRID
+    };
+    // Membuat Map
+    window.map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+    data_aset.map(function(aset, i){
+        console.log('aset', aset);
+        var lokasi_aset = new google.maps.LatLng(aset.lng, aset.ltd);
+        // Menampilkan Marker
+        var marker1 = new google.maps.Marker({
+            position: lokasi_aset,
+            map: map,
+            icon: aset.ikon_map,
+            title: 'Lokasi Aset'
+        });
+        
+        // Variabel Informasi Data
+        nama_aset      = aset.aset.Nm_Aset5;
+        kode_aset      = aset.kd_barang;
+        keterangan     = aset.aset.Keterangan;
+
+        // Menampilkan Informasi Data
+        var contentString = '<br>' +
+            '<table width="100%" border="0">' +
+            '<tr>' +
+            '<td width="33%" valign="top" height="25">Nama Aset</td><td valign="top"><center>:</center></td><td valign="top"><b>' + nama_aset + '</b></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">Nilai Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">Rp ' + aset.nilai + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
+            '</tr>' +
+            '</table>';
+
+        infoWindow[i] = new google.maps.InfoWindow({
+            content: contentString
+        });
+        google.maps.event.addListener(marker1, 'click', function(event) {
+            infoWindow[i].setPosition(event.latLng);
+            infoWindow[i].open(map);
+        });
+
+        if(aset.polygon == '[]'){
+            return;
+        }
+
+        // Define the LatLng coordinates for the shape.
+        var Coords1 = JSON.parse(aset.polygon);
+
+        // Membuat Shape
+        if(aset.jenis == 'jalan'){
+            var opsi = {
                 map: map,
-                icon: aset.ikon_map,
-                title: 'Lokasi Aset'
-            });
-            
-            // Variabel Informasi Data
-            nama_aset      = aset.aset.Nm_Aset5;
-            kode_aset      = aset.kd_barang;
-            keterangan     = aset.aset.Keterangan;
-
-            // Menampilkan Informasi Data
-            var contentString = '<br>' +
-                '<table width="100%" border="0">' +
-                '<tr>' +
-                '<td width="33%" valign="top" height="25">Nama Aset</td><td valign="top"><center>:</center></td><td valign="top"><b>' + nama_aset + '</b></td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td valign="top" height="25">Nilai Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">Rp ' + aset.nilai + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
-                '</tr>' +
-                '</table>';
-
-            infoWindow[i] = new google.maps.InfoWindow({
-                content: contentString
-            });
-            google.maps.event.addListener(marker1, 'click', function(event) {
-                infoWindow[i].setPosition(event.latLng);
-                infoWindow[i].open(map);
-            });
-
-            if(aset.polygon == '[]'){
-                return;
-            }
-
-            // Define the LatLng coordinates for the shape.
-            var Coords1 = JSON.parse(aset.polygon);
-
-            // Membuat Shape
-            if(aset.jenis == 'jalan'){
-                var opsi = {
-                    map: map,
-                    path: Coords1,
-                    geodesic: true,
-                    strokeColor: aset.warna_map,
-                    strokeOpacity: 3,
-                    strokeWeight: 6,
-                    fillColor: aset.warna_map,
-                    fillOpacity: 3
-                };
-                window.bentuk_bidang1 = new google.maps.Polyline(opsi);
-            }else{
-                var opsi = {
-                    map: map,
-                    paths: Coords1,
-                    strokeColor: aset.warna_map,
-                    strokeOpacity: 0.8,
-                    strokeWeight: 2,
-                    fillColor: aset.warna_map,
-                    fillOpacity: 0.45
-                };
-                window.bentuk_bidang1 = new google.maps.Polygon(opsi);
-            }
-            google.maps.event.addListener(bentuk_bidang1, 'click', function(event) {
-                infoWindow[i].setPosition(event.latLng);
-                infoWindow[i].open(map);
-            });
+                path: Coords1,
+                geodesic: true,
+                strokeColor: aset.warna_map,
+                strokeOpacity: 3,
+                strokeWeight: 6,
+                fillColor: aset.warna_map,
+                fillOpacity: 3
+            };
+            window.bentuk_bidang1 = new google.maps.Polyline(opsi);
+        }else{
+            var opsi = {
+                map: map,
+                paths: Coords1,
+                strokeColor: aset.warna_map,
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: aset.warna_map,
+                fillOpacity: 0.45
+            };
+            window.bentuk_bidang1 = new google.maps.Polygon(opsi);
+        }
+        google.maps.event.addListener(bentuk_bidang1, 'click', function(event) {
+            infoWindow[i].setPosition(event.latLng);
+            infoWindow[i].open(map);
         });
     });
 }

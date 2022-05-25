@@ -569,6 +569,13 @@ class Wp_Aset_Bmd_Admin {
         			->add_options( $cek_skpd )
         			->set_help_text('Sub unit yang akan ditampilkan saat masuk ke halaman total aset per SKPD.')
 		    ) )
+			->add_tab( __( 'Temuan BPK' ), array(
+				Field::make( 'complex', 'crb_jenis_temuan', 'Jenis Temuan BPK' )
+		    		->add_fields( 'jenis', array(
+				        Field::make( 'text', 'jenis', 'Judul' )
+		        			->set_default_value('Belum ada nilai aset')
+	        		) )
+		    ) )
 			->add_tab( __( 'Petunjuk Penggunaan' ), array(
 				Field::make( 'complex', 'crb_petunjuk_penggunaan', 'Keterangan Tambahan' )
 		    		->add_fields( 'keterangan', array(
@@ -750,6 +757,7 @@ class Wp_Aset_Bmd_Admin {
 		Container::make( 'theme_options', __( 'Google Maps' ) )
 			->set_page_parent( $basic_options_container )
 			->add_fields( array(
+	        	Field::make( 'map', 'crb_google_map_center', 'Lokasi default Google Maps' ),
 	        	Field::make( 'text', 'crb_google_api', 'Google Maps APIKEY' )
 	        		->set_default_value('AIzaSyDBrDSUIMFDIleLOFUUXf1wFVum9ae3lJ0'),
 	        	Field::make( 'color', 'crb_warna_tanah', 'Warna garis aset Tanah' )

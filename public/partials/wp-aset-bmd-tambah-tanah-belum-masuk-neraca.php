@@ -5,6 +5,16 @@
 	$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['key']['jenis_aset']));
 	$api_googlemap = get_option( '_crb_google_api' );
 	$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
+    $lat_default = 0;
+    $lng_default = 0;
+    if(empty($lat_default) || empty($lng_default)){
+        $center_map_default = get_option('_crb_google_map_center');
+        if(!empty($center_map_default)){
+            $center_map_default = explode(',', $center_map_default);
+            $lat_default = $center_map_default[0];
+            $lng_default = $center_map_default[1];
+        }
+    }
 	$warna_map = get_option('_crb_warna_tanah');
 	$ikon_map  = get_option('_crb_icon_tanah');
 	$sql = "
@@ -54,15 +64,15 @@
 	$rek_0_ret = $this->get_rek_barang(true);
 	$rek_0 = $rek_0_ret['html'];
 	$_POST['tipe'] = 'rek_1';
-	$_POST['selected'] = '1.3.1';
+	$_POST['selected'] = '1.3.01';
 	$rek_1_ret = $this->get_rek_barang(true);
 	$rek_1 = $rek_1_ret['html'];
 	$_POST['tipe'] = 'rek_2';
-	$_POST['selected'] = '1.3.1.1';
+	$_POST['selected'] = '1.3.01.01';
 	$rek_2_ret = $this->get_rek_barang(true);
 	$rek_2 = $rek_2_ret['html'];
 	$_POST['tipe'] = 'rek_3';
-	$_POST['selected'] = '1.3.1.1';
+	$_POST['selected'] = '1.3.01.01';
 	$rek_3_ret = $this->get_rek_barang(true);
 	$rek_3 = $rek_3_ret['html'];
 	$rek_4 = '<option value="">Pilih Rekening Aset 4</option>';
@@ -81,7 +91,7 @@
         <h2 class="text-center">Tambah Data Barang Milik Daerah<br><?php echo $data_jenis['nama']; ?></h2>
         <form>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Pilih Unit Pengelola Barang</label>
+                <label class="col-md-2 col-form-label">Pilih Unit Pengelola Barang*</label>
                 <div class="col-md-10">
                     <select class="form-control select2" id="pilih_upb"><?php echo $list_upb; ?></select>
                 </div>
@@ -139,7 +149,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Nama Aset</label>
+                <label class="col-md-2 col-form-label">Nama Aset*</label>
                 <div class="col-md-10">
                     <input type="text" disabled class="form-control" name="nama_aset" value="">
                 </div>
@@ -155,9 +165,9 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Letak / Alamat</label>
+                <label class="col-md-2 col-form-label">Letak / Alamat*</label>
                 <div class="col-md-10">
-                    <input type="text"  class="form-control" name="alamat" value="">
+                    <textarea class="form-control" name="alamat"></textarea>
                 </div>
             </div>
             <div class="form-group row">
@@ -191,7 +201,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Keterangan</label>
+                <label class="col-md-2 col-form-label">Keterangan*</label>
                 <div class="col-md-10">
                     <textarea  class="form-control" name="keterangan"></textarea>
                 </div>
@@ -301,7 +311,7 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Status informasi aset</label>
                 <div class="col-md-10">
-                    <label><input type="radio" name="status_informasi" value="1"> Privasi / rahasia</label>
+                    <label><input type="radio" name="status_informasi" value="1" checked> Privasi / rahasia</label>
                     <label style="margin-left: 15px;"><input type="radio" name="status_informasi" value="2"> Informasi untuk masyarakat umum</label>
                 </div>
             </div>
@@ -389,8 +399,26 @@
 	});
 
 	function simpan_aset(){
+		var kd_upb = jQuery('#pilih_upb').val();
+		if(kd_upb == ''){
+			return alert("Unit Pengelola Barang (UPB) tidak boleh kosong!");
+		}
+		var nama_aset = jQuery('input[name="nama_aset"]').val();
+		if(nama_aset == ''){
+			return alert("Nama Aset tidak boleh kosong!");
+		}
+		var alamat = jQuery('textarea[name="alamat"]').val();
+		if(alamat == ''){
+			return alert("Letak / Alamat aset tidak boleh kosong!");
+		}
+		var keterangan = jQuery('textarea[name="keterangan"]').val();
+		if(keterangan == ''){
+			return alert("Keterangan aset tidak boleh kosong!");
+		}
         if(confirm("Apakah anda yakin untuk menyimpan data ini. Data lama akan diupdate sesuai perubahan terbaru!")){
             jQuery('#wrap-loading').show();
+            var upb = jQuery('#pilih_upb option:selected').text().split(' ');
+            upb.shift();
             jQuery.ajax({
                 url: ajax.url,
                 type: "post",
@@ -398,18 +426,20 @@
                     "action": "simpan_aset_belum_masuk_neraca",
                     "api_key": "<?php echo $api_key; ?>",
                     "jenis_aset": "<?php echo $data_jenis['jenis']; ?>",
-                    "kd_upb": jQuery('#pilih_upb').val(),
+                    "kd_upb": kd_upb,
+                    "nama_upb": upb.join(' '),
                     "kd_barang": jQuery('input[name="kd_barang"]').val(),
+                    "nama_aset": nama_aset,
                     "penggunaan": jQuery('input[name="penggunaan"]').val(),
                     "luas": jQuery('input[name="luas"]').val(),
-                    "alamat": jQuery('input[name="alamat"]').val(),
+                    "alamat": alamat,
                     "tgl_pengadaan": jQuery('input[name="tgl_pengadaan"]').val(),
                     "hak": jQuery('input[name="hak"]').val(),
                     "tgl_sertifikat": jQuery('input[name="tgl_sertifikat"]').val(),
                     "nomor_sertifikat": jQuery('input[name="nomor_sertifikat"]').val(),
                     "asal_usul": jQuery('input[name="asal_usul"]').val(),
                     "harga": jQuery('input[name="harga"]').val(),
-                    "keterangan": jQuery('textarea[name="keterangan"]').val(),
+                    "keterangan": keterangan,
                     "sejarah": jQuery('textarea[name="sejarah"]').val(),
                     "kronologi": tinyMCE.get('kronologi').getContent(),
                     "foto": tinyMCE.get('foto').getContent(),
@@ -457,7 +487,7 @@
     var ikon_map = "<?php echo $ikon_map; ?>";
     
     function initMap() {
-    	var lokasi_aset = new google.maps.LatLng(0, 0);
+        var lokasi_aset = new google.maps.LatLng(<?php echo $lat_default; ?>, <?php echo $lng_default; ?>);
         // Setting Map
         var mapOptions = {
             zoom: 18,
