@@ -284,14 +284,6 @@ class Wp_Aset_Bmd_Admin {
 			'post_status' => 'publish'
 		));
 
-		$dokumentasi_wp_aset_bmd = $this->functions->generatePage(array(
-			'nama_page' => 'Dokumentasi wp-aset-bmd',
-			'content' => '[dokumentasi_wp_aset_bmd]',
-        	'show_header' => 1,
-        	'no_key' => 1,
-			'post_status' => 'publish'
-		));
-
         $status = $this->get_status_simda();
         $nama_pemda = $status['data']['nama_pemda'];
         $alamat_pemda = $status['data']['alamat_pemda'];
@@ -364,6 +356,7 @@ class Wp_Aset_Bmd_Admin {
 	            		<li><b>Dokumentasi Sistem: <a target="_blank" href="'.$dokumentasi_sistem['url'].'">'.$dokumentasi_sistem['title'].'</a></b></li>
 	            		<li><b>Aset Belum Masuk Neraca: <a target="_blank" href="'.$aset_belum_masuk_neraca['url'].'">'.$aset_belum_masuk_neraca['title'].'</a></b></li>
 	            		<li><b>Temuan BPK: <a target="_blank" href="'.$temuan_bpk['url'].'">'.$temuan_bpk['title'].'</a></b></li>
+						<li><b>Release Update Version: <a target="_blank" href="'.$update_release['url'].'">'.$update_release['title'].'</a></b></li>
 	            	</ul>
 	            	' ),
 	        	Field::make( 'html', 'crb_simda_bmd_referensi_html' )

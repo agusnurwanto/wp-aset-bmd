@@ -353,11 +353,11 @@ class Wp_Aset_Bmd_Public {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-release-update.php';
 	}
 	
-	function dokumentasi_wp_aset_bmd(){
+	function dokumentasi_sistem(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dokumentasi.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dokumentasi-sistem.php';
 	}
 
 	function dashboard_aset_user(){
