@@ -186,8 +186,26 @@ class Wp_Aset_Bmd_Public {
 				$lng_default = $center_map_default[1];
 			}
 		}
+		if(empty($koordinatX)){
+			$koordinatX = 0;
+		}
+		if(empty($koordinatY)){
+			$koordinatY = 0;
+		}
+		if(empty($polygon)){
+			$polygon = '[]';
+		}
 
 		$jenis_aset = $abm_jenis_aset;
+		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
+		$aset_belum_masuk_neraca = $this->functions->generatePage(array(
+			'nama_page' => 'Aset Belum Masuk Neraca',
+			'content' => '[aset_belum_masuk_neraca]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'publish'
+		));
+
 		$disabled = '';
 		$allow_edit_post = false;
 		if(is_user_logged_in()){
@@ -201,6 +219,15 @@ class Wp_Aset_Bmd_Public {
 		            )
 		        );
 		        $link_edit = $this->functions->get_link_post($post);
+
+		        $daftar_abm = $aset_belum_masuk_neraca['post'];
+		    	$daftar_abm->custom_url = array(
+		            array(
+		                'key' =>'delete',
+		                'value' => $post->ID
+		            )
+		        );
+		        $link_delete = $this->functions->get_link_post($daftar_abm);
 		    }
 		}
 
@@ -212,15 +239,6 @@ class Wp_Aset_Bmd_Public {
 				$disabled = 'disabled';
 			}
 		}
-
-		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
-		$aset_belum_masuk_neraca = $this->functions->generatePage(array(
-			'nama_page' => 'Aset Belum Masuk Neraca',
-			'content' => '[aset_belum_masuk_neraca]',
-        	'show_header' => 1,
-        	'no_key' => 1,
-			'post_status' => 'publish'
-		));
 		if($data_jenis['jenis'] == 'tanah'){
 			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-tambah-tanah-belum-masuk-neraca.php';
 		}else{

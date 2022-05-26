@@ -359,7 +359,7 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
                 <div class="col-md-10">
-                    <a href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a>
+                    <a href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a> <a onclick="return confirm('Apakah anda yakin untuk menghapus aset ini?');" href="<?php echo $link_delete; ?>" class="btn btn-danger">Delete Post</a>
                 </div>
             </div>
         <?php endif; ?>

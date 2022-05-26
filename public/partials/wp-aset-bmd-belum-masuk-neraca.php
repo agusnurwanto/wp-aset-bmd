@@ -1,15 +1,33 @@
 <?php
 global $wpdb;
+global $post;
+
+$current_post = $post;
 $nama_pemda = get_option('_crb_bmd_nama_pemda');
 $tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
+$alert = '';
 
 $allow_edit = false;
 if(is_user_logged_in()){
     $user_id = get_current_user_id();
     if($this->functions->user_has_role($user_id, 'administrator')){
         $allow_edit = true;
+        if(!empty($_GET) && !empty($_GET['key'])){
+            $params['key'] = $this->functions->decode_key($_GET['key']);
+            if(!empty($params['key']['delete'])){
+                $post_id_delete = $params['key']['delete'];
+                $meta_all = get_post_meta($post_id_delete);
+                foreach($meta_all as $key => $val)  {
+                    delete_post_meta($post_id_delete, $key);
+                }
+                $ret = wp_delete_post($post_id_delete, true);
+                if(!empty($ret)){
+                    $alert = 'alert("Berhasil hapus data aset belum masuk neraca!");';
+                }
+            }
+        }
     }
 }
 
@@ -86,7 +104,14 @@ foreach($query->posts as $post){
             )
         );
         $link_edit = $this->functions->get_link_post($post);
-        $tombol_edit = '<a href="'.$link_edit.'" class="btn btn-success"><i class="dashicons dashicons-edit"></i></a> <a onclick="return false;" href="#" class="btn btn-danger"><i class="dashicons dashicons-trash"></i></a>';
+        $current_post->custom_url = array(
+            array(
+                'key' =>'delete',
+                'value' => $post->ID
+            )
+        );
+        $link_delete = $this->functions->get_link_post($current_post);
+        $tombol_edit = '<a href="'.$link_edit.'" class="btn btn-success"><i class="dashicons dashicons-edit"></i></a> <a onclick="return confirm(\'Apakah anda yakin untuk menghapus aset ini?\');" href="'.$link_delete.'" class="btn btn-danger"><i class="dashicons dashicons-trash"></i></a>';
     }
 
     $body .= '
@@ -113,7 +138,7 @@ foreach($query->posts as $post){
         'nilai_aset' => number_format($nilai_aset,2,",","."),
         'nama_aset' => $nama_aset,
         'alamat_aset' => $alamat_aset,
-        'nama_skpd' => $abm_nama_upb.' '.$alamat,
+        'nama_skpd' => $abm_nama_upb,
         'kd_barang' => $abm_kd_barang,
         'kd_lokasi' => $kd_upb,
         'warna_map' => $warna_map,
@@ -258,7 +283,7 @@ if($allow_edit){
     </div>
 </div>
 <script type="text/javascript">
-
+<?php echo $alert; ?>
 jQuery(document).on('ready', function(){
     jQuery('#data_aset_aset').dataTable({
         columnDefs: [
