@@ -18,6 +18,11 @@
 		'query' => $sql,
 		'no_debug' => 0
 	));
+    $pilih_jenis_aset = '<option value="">Pilih Jenis Aset</option>';
+    if (!empty($jenis_aset) && $jenis_aset != '' ) {
+        $pilih_jenis_aset = '<option value="">'.$jenis_aset.'</option>';
+    }
+
 	$list_upb = '<option value="">Pilih UPB</option>';
 	$new_upbs = array();
 	foreach($upbs as $i => $val){
@@ -41,6 +46,8 @@
 		$new_upbs[$kd_upb] = $upbs[$i];
 		$list_upb .= '<option value="'.$kd_upb.'">'.$kd_upb.'-'.$nama_upb.$alamat.'</option>';
 	}
+
+
 ?>
 <style type="text/css">
     .warning {
@@ -55,13 +62,33 @@
         <h2 class="text-center">Tambah Data Temuan BPK<br>( Badan Pemeriksa Keuangan )</h2>
         <form>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label" >Status Neraca</label>
+                <div class="col-md-4">
+                    <label style="margin-left: 15px;"><input type="radio" <?php $checked_sudah_neraca; ?> name="status_neraca" value="1"> Sudah masuk neraca </label>
+                    <label style="margin-left: 15px;"><input type="radio" <?php $checked_belum_neraca; ?> name="status_neraca" value="2"> Belum masuk neraca </label>
+                </div>
+                <label class="col-md-2 col-form-label">Jenis Aset</label>
+                <div class="col-md-4">
+                    <select class="form-control select2" id="pilih_jenis_aset" <?php echo $disabled; ?>>
+                        <?php echo $pilih_jenis_aset; ?>
+                        <option value="tanah">Tanah</option>
+                        <option value="bangunan">Bangunan</option>
+                        <option value="mesin">Mesin</option>
+                        <option value="jalan">Jalan</option>
+                        <option value="aset_tetap">Aset Tetap</option>
+                        <option value="bangunan_dalam_pengerjaan">Bangunan Dalam Pengerjaan</option>
+                    </select>
+                </div>
+                
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">OPD yang menindaklanjuti</label>
                 <div class="col-md-4">
-                    <select class="form-control select2" id="pilih_opd_temuan_bpk"><?php echo $list_upb; ?></select>
+                    <select class="form-control select2" id="pilih_opd_temuan_bpk" <?php echo $disabled; ?>><?php echo $list_upb; ?></select>
                 </div>
                 <label class="col-md-2 col-form-label">Kode Barang Temuan</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="kode_barang"/>
+                    <input type="text" class="form-control" id="kode_barang" <?php echo $disabled; ?>/>
                 </div>
             </div>
             <div class="form-group row">
@@ -92,7 +119,7 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
                 <div class="col-md-10">
-                    <a onclick="simpan_temuan_bpk(); return false;" href="#" class="btn btn-primary">Simpan</a> <a style="margin-left: 10px;" href="<?php echo $aset_belum_masuk_neraca['url']; ?>" class="btn btn-danger">Kembali</a>
+                    <a onclick="simpan_temuan_bpk(); return false;" href="#" class="btn btn-primary">Simpan</a> <a style="margin-left: 10px;" href="<?php echo $temuan_bpk['url']; ?>" class="btn btn-danger">Kembali</a>
                 </div>
             </div>
        	</form>
@@ -109,11 +136,13 @@
                 data: {
                     "action": "simpan_temuan_bpk",
                     "api_key": "<?php echo $api_key; ?>",
+                    "status_neraca": jQuery('input[name="status_neraca"]:checked').val(),
+                    "pilih_jenis_aset": jQuery( "#pilih_jenis_aset option:selected" ).text(),
                     "judul_temuan_bpk": jQuery('select[name="judul_temuan_bpk"]').val(),
                     "tanggal_temuan_bpk": jQuery('input[name="tanggal_temuan_bpk"]').val(),
                     "keterangan_temuan_bpk": jQuery('textarea[name="keterangan_temuan_bpk"]').val(),
                     "lampiran_temuan_bpk": tinyMCE.get('lampiran_temuan_bpk').getContent(),
-                    "pilih_opd_temuan_bpk": jQuery( "#pilih_opd_temuan_bpk option:selected" ).text(),
+                    "pilih_opd_temuan_bpk": jQuery('select[id="pilih_opd_temuan_bpk"]').val(),
                 },
                 dataType: "json",
                 success: function(data){
@@ -127,4 +156,6 @@
             });
         };
     }
+
+
 </script>

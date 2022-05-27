@@ -1032,13 +1032,35 @@ class Wp_Aset_Bmd_Public {
 
 	}
 	
-	function tambah_data_temuan_bpk(){
+	function tambah_data_temuan_bpk($atts){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
 
 		global $post;
 
+		$params = shortcode_atts( array(
+			'kd_lokasi' => '0.0.0.0.0.0.0.0.0',
+			'kd_barang' => '0.0.0.0.0.0.0',
+			'kd_register' => '0',
+			'jenis_aset' => '',
+			'key' => array()
+		), $atts );
+		if(!empty($_GET) && !empty($_GET['key'])){
+			$params['key'] = $this->functions->decode_key($_GET['key']);
+		}
+		$kd_lokasi = explode('.', $params['kd_lokasi']);
+		$Kd_Prov = (int) $kd_lokasi[1];
+        $Kd_Kab_Kota = (int) $kd_lokasi[2];
+        $Kd_Bidang = (int) $kd_lokasi[3];
+        $Kd_Unit = (int) $kd_lokasi[4];
+        $Kd_Sub = (int) $kd_lokasi[5];
+        $Kd_UPB = (int) $kd_lokasi[6];
+        $Kd_Kecamatan = (int) $kd_lokasi[7];
+        $Kd_Desa = (int) $kd_lokasi[8];
+
+		$status_neraca = get_post_meta($post->ID, 'meta_status_neraca', true);
+		$jenis_aset = get_post_meta($post->ID, 'meta_pilih_jenis_aset', true);
 		$judul_temuan_bpk = get_post_meta($post->ID, 'meta_judul_temuan_bpk', true);
 		$option_judul_temuan_bpk = $this->get_opsi_jenis_temuan($judul_temuan_bpk);
 		$tanggal_temuan_bpk = get_post_meta($post->ID, 'meta_tanggal_temuan_bpk', true);
@@ -1046,6 +1068,52 @@ class Wp_Aset_Bmd_Public {
 		$lampiran_temuan_bpk = get_post_meta($post->ID, 'meta_lampiran_temuan_bpk', true);
 		$pilih_opd_temuan_bpk = get_post_meta($post->ID, 'meta_pilih_opd_temuan_bpk', true);
 		$api_key = get_option( '_crb_apikey_simda_bmd' );
+
+
+		$allow_edit_post = $this->cek_edit_post(array(
+		    'Kd_Prov' => $Kd_Prov,
+		    'Kd_Kab_Kota' => $Kd_Kab_Kota,
+		    'Kd_Bidang' => $Kd_Bidang,
+		    'Kd_Unit' => $Kd_Unit,
+		    'Kd_Sub' => $Kd_Sub,
+		    'Kd_UPB' => $Kd_UPB,
+		    'Kd_Kecamatan' => $Kd_Kecamatan,
+		    'Kd_Desa' => $Kd_Desa
+		));
+		$disabled = 'disabled';
+		if($allow_edit_post){
+		    $post->custom_url = array(
+		        array(
+		            'key' =>'edit',
+		            'value' => 1
+		        )
+		    );
+		    $link_post = get_permalink($post);
+		    $link_edit = $this->functions->get_link_post($post);
+		    if(!empty($params['key']['edit'])){
+		        $disabled = '';
+		    }
+		}
+
+		if($status_neraca == '1'){
+			$checked_sudah_neraca = 'checked';
+			$checked_belum_neraca = '';
+		}else if($status_neraca == '2'){
+			$checked_sudah_neraca = '';
+			$checked_belum_neraca = 'checked';
+		}
+
+		$temuan_bpk = $this->functions->generatePage(array(
+			'nama_page' => 'Temuan BPK',
+			'content' => '[temuan_bpk]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'private'
+		));
+
+		
+
+
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public\partials\wp-aset-bmd-tambah-temuan-bpk.php';
 
 	}
@@ -1347,6 +1415,8 @@ class Wp_Aset_Bmd_Public {
 				}
 				if(!empty($post_id)){
 					update_post_meta($post_id, 'meta_data_temuan_bpk', 'data temuan bpk');
+					update_post_meta($post_id, 'meta_status_neraca', $_POST['status_neraca']);
+					update_post_meta($post_id, 'meta_pilih_jenis_aset', $_POST['pilih_jenis_aset']);
 					update_post_meta($post_id, 'meta_judul_temuan_bpk', $_POST['judul_temuan_bpk']);
 					update_post_meta($post_id, 'meta_tanggal_temuan_bpk', $_POST['tanggal_temuan_bpk']);
 					update_post_meta($post_id, 'meta_keterangan_temuan_bpk', $_POST['keterangan_temuan_bpk']);

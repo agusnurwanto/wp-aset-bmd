@@ -27,6 +27,16 @@ foreach($query->posts as $post){
     $keterangan_temuan_bpk = get_post_meta($post_id, 'meta_keterangan_temuan_bpk', true);
     $lampiran_temuan_bpk = get_post_meta($post_id, 'meta_lampiran_temuan_bpk', true);
     $pilih_opd_temuan_bpk = get_post_meta($post_id, 'meta_pilih_opd_temuan_bpk', true);
+
+    $link = $this->functions->generatePage(array(
+        'nama_page' => $judul,
+        'content' => '[tambah_data_temuan_bpk]',
+        'post_status' => 'private',
+        'show_header' => 1,
+    ));
+
+    $tombol_details = '<a type="button" class="btn btn-primary" href="'.$link['url'].'" target="_blank" style="margin-bottom: 20px;">Details</a>';
+
     // $params = '';
     $body .= '
         <tr>
@@ -35,7 +45,7 @@ foreach($query->posts as $post){
             <td>'.$tanggal_temuan_bpk.'</td>
             <td>'.$lampiran_temuan_bpk.'</td>
             <td>'.$pilih_opd_temuan_bpk.'</td>
-            <td><a class="btn btn-primary">Detail</a></td>
+            <td>'.$tombol_details.'</td>
         </tr>
     ';
 }
