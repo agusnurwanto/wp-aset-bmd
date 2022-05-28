@@ -42,8 +42,6 @@ foreach($upbs as $i => $val){
         $alamat = '';
     }
 
-
-
     $kd_upb = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit).'.'.$this->functions->CekNull($val->Kd_Sub).'.'.$this->functions->CekNull($val->Kd_UPB).'.'.$this->functions->CekNull($val->Kd_Kecamatan).'.'.$this->functions->CekNull($val->Kd_Desa);
     $upbs[$i]->kd_upb = $kd_upb;
     $new_upbs[$kd_upb] = $upbs[$i];
@@ -69,9 +67,17 @@ foreach($upbs as $i => $val){
         <h2 class="text-center">Tambah Data Temuan BPK<br>( Badan Pemeriksa Keuangan )</h2>
         <form>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label" >Status Neraca</label>
+                <label class="col-md-2 col-form-label">OPD yang menindaklanjuti</label>
+                <div class="col-md-10">
+                    <select class="form-control" name="pilih_opd_temuan_bpk" <?php echo $disabled; ?>>
+                        <?php echo $list_upb; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" >Status Aset</label>
                 <div class="col-md-4" >
-                    <label style="margin-left: 15px;"><input type="radio" <?php echo $disabled.' '.$checked_sudah_neraca; ?> name="status_neraca" value="1"> Sudah masuk neraca </label>
+                    <label style="margin-left: 15px;"><input type="radio" <?php echo $disabled.' '.$checked_sudah_neraca; ?> name="status_neraca" value="1"> SIMDA BMD </label>
                     <label style="margin-left: 15px;"><input type="radio" <?php echo $disabled.' '.$checked_belum_neraca; ?> name="status_neraca" value="2"> Belum masuk neraca </label>
                 </div>
                 <label class="col-md-2 col-form-label">Jenis Aset</label>
@@ -89,15 +95,13 @@ foreach($upbs as $i => $val){
                 
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">OPD yang menindaklanjuti</label>
-                <div class="col-md-4">
-                    <select class="form-control" name="pilih_opd_temuan_bpk" <?php echo $disabled; ?>>
-                        <?php echo $list_upb; ?>
-                    </select>
-                </div>
-                <label class="col-md-2 col-form-label">Kode Barang Temuan</label>
+                <label class="col-md-2 col-form-label">Kode Barang</label>
                 <div class="col-md-4">
                     <input type="text" class="form-control" name="kode_barang_temuan" value="<?php echo $kode_barang_temuan; ?>" <?php echo $disabled; ?>/>
+                </div>
+                <label class="col-md-2 col-form-label">Nama Aset</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="nama_aset" value="" disabled/>
                 </div>
             </div>
             <div class="form-group row">
@@ -123,10 +127,10 @@ foreach($upbs as $i => $val){
                 <label class="col-md-2 col-form-label">Lampiran</label>
                 <div class="col-md-10">
                 <?php 
+                    if(empty($disabled)){
                         wp_editor($lampiran_temuan_bpk,'lampiran_temuan_bpk',array('textarea_name' => 'lampiran_temuan_bpk', 'textarea_rows' => 20)); 
-                    if(!empty($params['key']['edit'])){
                     }else{
-                        // echo $lampiran_temuan_bpk;
+                        echo $lampiran_temuan_bpk;
                     }
                 ?>
                 </div>
@@ -166,6 +170,8 @@ foreach($upbs as $i => $val){
 		}
         if(confirm("Apakah anda yakin untuk menyimpan data ini?")){
             jQuery('#wrap-loading').show();
+            var upb = jQuery('select[name="pilih_opd_temuan_bpk"] option:selected').text().split(' ');
+            upb.shift();
             var data_post = {
                 "action": "simpan_temuan_bpk",
                 "api_key": "<?php echo $api_key; ?>",
@@ -173,6 +179,7 @@ foreach($upbs as $i => $val){
                 "pilih_jenis_aset": jQuery( "#pilih_jenis_aset option:selected" ).text(),
                 "judul_temuan_bpk": jQuery('select[name="judul_temuan_bpk"]').val(),
                 "pilih_opd_temuan_bpk": jQuery('select[name="pilih_opd_temuan_bpk"]').val(),
+                "nama_upb": upb.join(' '),
                 "tanggal_temuan_bpk": jQuery('input[name="tanggal_temuan_bpk"]').val(),
                 "tanggal_temuan_bpk": jQuery('input[name="tanggal_temuan_bpk"]').val(),
                 "keterangan_temuan_bpk": jQuery('textarea[name="keterangan_temuan_bpk"]').val(),
@@ -182,9 +189,9 @@ foreach($upbs as $i => $val){
 
             };
         <?php 
-            // if(!empty($allow_edit_post)){
-            //     echo "data_post.id_post = ".$post->ID.';';
-            // }
+            if(!empty($allow_edit_post)){
+                echo "data_post.id_post = ".$post->ID.';';
+            }
         ?>
             jQuery.ajax({
                 url: ajax.url,
@@ -193,7 +200,12 @@ foreach($upbs as $i => $val){
                 dataType: "json",
                 success: function(data){
                     jQuery('#wrap-loading').hide();
-                    return alert(data.message);
+                    alert(data.message);
+                <?php 
+                    if(empty($allow_edit_post)){
+                        echo "window.location.href='".$data_temuan_bpk['url']."';";
+                    }
+                ?>
                 },
                 error: function(e) {
                     console.log(e);

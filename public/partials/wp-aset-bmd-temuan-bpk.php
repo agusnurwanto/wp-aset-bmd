@@ -52,10 +52,11 @@ foreach($query->posts as $post){
     $keterangan_temuan_bpk = get_post_meta($post_id, 'meta_keterangan_temuan_bpk', true);
     $lampiran_temuan_bpk = get_post_meta($post_id, 'meta_lampiran_temuan_bpk', true);
     $pilih_opd_temuan_bpk = get_post_meta($post_id, 'meta_pilih_opd_temuan_bpk', true);
+    $nama_opd_temuan_bpk = get_post_meta($post_id, 'meta_nama_opd_temuan_bpk', true);
     $kode_barang_temuan = get_post_meta($post_id, 'meta_kode_barang_temuan', true);
 
     if($status_neraca == '1'){
-        $status_neraca = 'Sudah Masuk Neraca';
+        $status_neraca = 'SIMDA BMD';
     }else if($status_neraca == '2'){
         $status_neraca = 'Belum Masuk Neraca';
     }
@@ -89,15 +90,14 @@ foreach($query->posts as $post){
     // $params = '';
     $body .= '
         <tr>
-            <td class="text-center">'.$no++.'</td>
             <td class="text-center">'.$status_neraca.'</td>
             <td class="text-center">'.$jenis_aset.'</td>
-            <td class="text-center">'.$judul_temuan_bpk.'</td>
+            <td>'.$judul_temuan_bpk.'</td>
             <td class="text-center">'.$kode_barang_temuan.'</td>
-            <td class="text-center">'.$keterangan_temuan_bpk.'</td>
-            <td>'.$tanggal_temuan_bpk.'</td>
+            <td>'.$keterangan_temuan_bpk.'</td>
+            <td class="text-center">'.$tanggal_temuan_bpk.'</td>
             <td>'.$lampiran_temuan_bpk.'</td>
-            <td>'.$pilih_opd_temuan_bpk.'</td>
+            <td class="text-center">'.$pilih_opd_temuan_bpk.'<br>'.$nama_opd_temuan_bpk.'</td>
             <td class="text-center"><a href="'.$link_detail.'" class="btn btn-primary"><i class="dashicons dashicons-search"></i></a> '.$tombol_edit.'</td>
         </tr>
     ';
@@ -141,11 +141,10 @@ if(is_user_logged_in()){
         <table class="table table-bordered" id="data_temuan_bpk">
             <thead>
                 <tr>
-                    <th class="text-center">No</th>
-                    <th class="text-center">Status Neraca</th>
-                    <th class="text-center">Jenis Temuan</th>
+                    <th class="text-center">Status Aset</th>
+                    <th class="text-center">Jenis Aset</th>
                     <th class="text-center">Judul Temuan</th>
-                    <th class="text-center">Kode Barang Temuan</th>
+                    <th class="text-center">Kode Barang</th>
                     <th class="text-center">Keterangan</th>
                     <th class="text-center">Tanggal Temuan</th>
                     <th class="text-center">Lampiran</th>
@@ -164,8 +163,8 @@ if(is_user_logged_in()){
 jQuery(document).on('ready', function(){
     jQuery('#data_temuan_bpk').dataTable({
         columnDefs: [
-            { "width": "200px", "targets": 3 },
-            { "width": "200px", "targets": 4 }
+            { "width": "10px", "targets": 0 },
+            { "width": "200px", "targets": 2 }
         ],
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {

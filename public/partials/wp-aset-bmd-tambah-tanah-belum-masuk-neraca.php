@@ -524,7 +524,12 @@
                 dataType: "json",
                 success: function(data){
                     jQuery('#wrap-loading').hide();
-                    return alert(data.message);
+                    alert(data.message);
+                <?php 
+                    if(empty($allow_edit_post)){
+                        echo "window.location.href='".$aset_belum_masuk_neraca['url']."';";
+                    }
+                ?>
                 },
                 error: function(e) {
                     console.log(e);

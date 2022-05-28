@@ -237,7 +237,11 @@ class Wp_Aset_Bmd_Simda
 			$post_type = $options['post_type'];
 		}
 
-		$custom_post = get_page_by_title($options['nama_page'], OBJECT, $post_type);
+		if(!empty($options['post_id'])){
+			$custom_post = get_page($options['post_id']);
+		}else{
+			$custom_post = get_page_by_title($options['nama_page'], OBJECT, $post_type);
+		}
 		$_post = array(
 			'post_title'	=> $options['nama_page'],
 			'post_content'	=> $options['content'],
