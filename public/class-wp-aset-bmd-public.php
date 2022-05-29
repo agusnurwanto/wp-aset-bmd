@@ -1174,12 +1174,9 @@ class Wp_Aset_Bmd_Public {
 			$strtotime = 'kosong';
 		}
 
-		$checked_sudah_neraca='';
-		$checked_belum_neraca='';
-		if($status_neraca == '1'){
-			$checked_sudah_neraca = 'checked';
-			$checked_belum_neraca = '';
-		}else if($status_neraca == '2'){
+		$checked_sudah_neraca = 'checked';
+		$checked_belum_neraca = '';
+		if($status_neraca == '2'){
 			$checked_sudah_neraca = '';
 			$checked_belum_neraca = 'checked';
 		}
@@ -1531,6 +1528,7 @@ class Wp_Aset_Bmd_Public {
 				}
 
 				if(!empty($post_id)){
+					update_post_meta($post_id, 'meta_post_id_aset', $_POST['post_id_aset']);
 					update_post_meta($post_id, 'meta_status_neraca', $_POST['status_neraca']);
 					update_post_meta($post_id, 'meta_pilih_jenis_aset', $_POST['pilih_jenis_aset']);
 					update_post_meta($post_id, 'meta_judul_temuan_bpk', $_POST['judul_temuan_bpk']);
@@ -1666,7 +1664,7 @@ class Wp_Aset_Bmd_Public {
 		global $wpdb;
 		$return = array(
 			'status' => 'success',
-			'message'	=> 'Berhasil get total per SKPD!'
+			'message'	=> 'Berhasil get rekening barang!'
 		);
 		if(!empty($_POST)){
 			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
@@ -1808,6 +1806,211 @@ class Wp_Aset_Bmd_Public {
 					}
 				}
 				$return['html'] = $select_option;
+			}else{
+				$return = array(
+					'status' => 'error',
+					'message'	=> 'Api Key tidak sesuai!'
+				);
+			}
+		}else{
+			$return = array(
+				'status' => 'error',
+				'message'	=> 'Format tidak sesuai!'
+			);
+		}
+		if($no_die){
+			return $return;
+		}else{
+			die(json_encode($return));
+		}
+	}
+
+	function get_data_barang($no_die=false){
+		global $wpdb;
+		$return = array(
+			'status' => 'success',
+			'message'	=> 'Berhasil get data aset!'
+		);
+		if(!empty($_POST)){
+			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
+				$err = false;
+				if(empty($err) && empty($_POST['kd_upb'])){
+					$err = 'Kode UPB tidak boleh kosong!';
+				}
+				if(empty($err) && empty($_POST['status_aset'])){
+					$err = 'Status aset tidak boleh kosong!';
+				}
+				if(empty($err) && empty($_POST['jenis_aset'])){
+					$err = 'Jenis aset tidak boleh kosong!';
+				}
+				if(empty($err) && empty($_POST['kd_barang'])){
+					$err = 'Kode barang tidak boleh kosong!';
+				}
+				if(empty($err)){
+					$kd_barang = explode('.', $_POST['kd_barang']);
+					if(count($kd_barang) < 8){
+						$err = 'Format kode harus terdiri minimal 7 kode aset dan 1 kode register!';
+					}
+				}
+				if(empty($err)){
+					$kd_lokasi = explode('.', $_POST['kd_upb']);
+					$Kd_Prov = (int) $kd_lokasi[1];
+			        $Kd_Kab_Kota = (int) $kd_lokasi[2];
+			        $Kd_Bidang = (int) $kd_lokasi[3];
+			        $Kd_Unit = (int) $kd_lokasi[4];
+			        $Kd_Sub = (int) $kd_lokasi[5];
+			        $Kd_UPB = (int) $kd_lokasi[6];
+			        $Kd_Kecamatan = (int) $kd_lokasi[7];
+			        $Kd_Desa = (int) $kd_lokasi[8];
+
+					$Kd_Aset8 = (int) $kd_barang[0];
+					$Kd_Aset80 = (int) $kd_barang[1];
+					$Kd_Aset81 = (int) $kd_barang[2];
+					$Kd_Aset82 = (int) $kd_barang[3];
+					$Kd_Aset83 = (int) $kd_barang[4];
+					$Kd_Aset84 = (int) $kd_barang[5];
+					$Kd_Aset85 = (int) $kd_barang[6];
+					$No_Reg8 = (int) $kd_barang[7];
+					$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $_POST['jenis_aset']));
+					$where = '';
+					if(!empty($Kd_Kecamatan)){
+					    $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
+					}
+					if(!empty($Kd_Desa)){
+					    $where .= $wpdb->prepare(' AND a.Kd_Desa=%d', $Kd_Desa);
+					}
+					if($_POST['status_aset'] == 1){
+						$sql = $wpdb->prepare('
+						    select 
+						        a.*,
+				        		b.Harga as harga_asli,
+						        r.Nm_Aset5
+						    from '.$data_jenis['table_simda'].' a
+				    		LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda
+					        LEFT JOIN Ref_Rek5_108 r on r.kd_aset=a.Kd_Aset8 
+					            and r.kd_aset0=a.Kd_Aset80 
+					            and r.kd_aset1=a.Kd_Aset81 
+					            and r.kd_aset2=a.Kd_Aset82 
+					            and r.kd_aset3=a.Kd_Aset83 
+					            and r.kd_aset4=a.Kd_Aset84 
+					            and r.kd_aset5=a.Kd_Aset85
+						    where a.Kd_Prov=%d
+						        AND a.Kd_Kab_Kota=%d 
+						        AND a.Kd_Bidang=%d 
+						        AND a.Kd_Unit=%d 
+						        AND a.Kd_Sub=%d 
+						        AND a.Kd_UPB=%d
+						        AND a.Kd_Aset8=%d
+						        AND a.Kd_Aset80=%d
+						        AND a.Kd_Aset81=%d
+						        AND a.Kd_Aset82=%d
+						        AND a.Kd_Aset83=%d
+						        AND a.Kd_Aset84=%d
+						        AND a.Kd_Aset85=%d
+						        AND a.No_Reg8=%d
+						        '.$where.'
+						    ',
+						    $Kd_Prov,
+						    $Kd_Kab_Kota,
+						    $Kd_Bidang,
+						    $Kd_Unit,
+						    $Kd_Sub,
+						    $Kd_UPB,
+						    $Kd_Aset8,
+						    $Kd_Aset80,
+						    $Kd_Aset81,
+						    $Kd_Aset82,
+						    $Kd_Aset83,
+						    $Kd_Aset84,
+						    $Kd_Aset85,
+						    $No_Reg8
+						);
+						$aset_all = $this->functions->CurlSimda(array(
+						    'query' => $sql 
+						));
+						$url = '';
+						$nm_aset = '';
+						$post_id = '';
+						foreach($aset_all as $val){
+							$kd_lokasi = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang).'.'.$this->functions->CekNull($val->Kd_Unit).'.'.$this->functions->CekNull($val->Kd_Sub).'.'.$this->functions->CekNull($val->Kd_UPB).'.'.$this->functions->CekNull($val->Kd_Kecamatan).'.'.$this->functions->CekNull($val->Kd_Desa);
+    						$kd_barang = $val->Kd_Aset8.'.'.$val->Kd_Aset80.'.'.$this->functions->CekNull($val->Kd_Aset81).'.'.$this->functions->CekNull($val->Kd_Aset82).'.'.$this->functions->CekNull($val->Kd_Aset83).'.'.$this->functions->CekNull($val->Kd_Aset84).'.'.$this->functions->CekNull($val->Kd_Aset85, 3);
+							$link = $this->functions->generatePage(array(
+						        'nama_page' => $data_jenis['jenis'].' '.$kd_lokasi.' '.$kd_barang.' '.$No_Reg8,
+						        'content' => '[detail_aset kd_lokasi="'.$kd_lokasi.'" kd_barang="'.$kd_barang.'" kd_register="'.$No_Reg8.'" jenis_aset="'.$data_jenis['jenis'].'"]',
+						        'post_status' => 'private',
+						        'post_type' => 'post',
+						        'show_header' => 1,
+						        'no_key' => 1
+						    ));
+							$url = $link['url'];
+							$nm_aset = $aset->Nm_Aset5;
+							$post_id = $link['id'];
+						}
+						$return['post_id'] = $post_id;
+						$return['nm_aset'] = $nm_aset;
+						$return['url'] = $url;
+						$return['query'] = $sql;
+						if(empty($post_id)){
+							$return['status'] = 'error';
+							$return['message'] = 'Kode barang tidak ditemukan!';
+						}
+					}else{
+						unset($kd_barang[7]);
+						$kd_barang_all = implode('.', $kd_barang);
+						$args = array(
+						   'meta_query' => array(
+						       array(
+						           'key' => 'abm_jenis_aset',
+						           'value' => $_POST['jenis_aset'],
+						           'compare' => '=',
+						       ),
+						       array(
+						           'key' => 'abm_kd_upb',
+						           'value' => $_POST['kd_upb'],
+						           'compare' => '=',
+						       ),
+						       array(
+						           'key' => 'abm_kd_barang',
+						           'value' => $kd_barang_all,
+						           'compare' => '=',
+						       ),
+						       array(
+						           'key' => 'abm_kd_register',
+						           'value' => $No_Reg8,
+						           'compare' => '=',
+						       ),
+						       array(
+						           'key' => 'abm_kd_register',
+						           'value' => $No_Reg8,
+						           'compare' => '=',
+						       )
+						   )
+						);
+						$query = new WP_Query($args);
+						$url = '';
+						$nm_aset = '';
+						$post_id = '';
+						foreach($query->posts as $post){
+					        $url = get_permalink($post);
+					        $nm_aset = get_post_meta($post->ID, 'abm_nama_aset', true);
+							$post_id = $post->ID;
+						}
+						$return['post_id'] = $post_id;
+						$return['nm_aset'] = $nm_aset;
+						$return['url'] = $url;
+						$return['query'] = $wpdb->last_query;
+						if(empty($post_id)){
+							$return['status'] = 'error';
+							$return['message'] = 'Kode barang tidak ditemukan!';
+						}
+					}
+				}
+				if(!empty($err)){
+					$return = array(
+						'status' => 'error',
+						'message'	=> $err
+					);
+				}
 			}else{
 				$return = array(
 					'status' => 'error',

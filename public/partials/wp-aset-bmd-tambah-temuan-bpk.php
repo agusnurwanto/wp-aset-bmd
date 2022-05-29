@@ -1,5 +1,5 @@
 <?php
-
+$aset_tidak_ditemukan = '<label class="col-form-label" style="color: red">Nama Aset Tidak Ditemukan!</label>';
 $sql = "
     SELECT 
         u.*, 
@@ -97,11 +97,17 @@ foreach($upbs as $i => $val){
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Kode Barang</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="kode_barang_temuan" value="<?php echo $kode_barang_temuan; ?>" <?php echo $disabled; ?>/>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="kode_barang_temuan" value="<?php echo $kode_barang_temuan; ?>" <?php echo $disabled; ?>/>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-success" id="cari-aset" type="button">Cari Aset</button>
+                        </div>
+                    </div>
                 </div>
                 <label class="col-md-2 col-form-label">Nama Aset</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="nama_aset" value="" disabled/>
+                    <input type="text" class="form-control" name="post_id_aset" value="" disabled style="display: none;" />
+                    <span id="link_nama_aset"><?php echo $aset_tidak_ditemukan; ?></span>
                 </div>
             </div>
             <div class="form-group row">
@@ -164,6 +170,10 @@ foreach($upbs as $i => $val){
 		if(opd == ''){
 			return alert("OPD tidak boleh kosong!");
 		}
+        var post_id_aset = jQuery('input[name="post_id_aset"]').val();
+        if(post_id_aset == ''){
+            return alert("Nama aset tidak boleh kosong!");
+        }
 		var keterangan_temuan_bpk = jQuery('textarea[name="keterangan_temuan_bpk"]').val();
 		if(keterangan_temuan_bpk == ''){
 			return alert("Keterangan aset tidak boleh kosong!");
@@ -175,6 +185,7 @@ foreach($upbs as $i => $val){
             var data_post = {
                 "action": "simpan_temuan_bpk",
                 "api_key": "<?php echo $api_key; ?>",
+                "post_id_aset": post_id_aset,
                 "status_neraca": jQuery('input[name="status_neraca"]:checked').val(),
                 "pilih_jenis_aset": jQuery( "#pilih_jenis_aset option:selected" ).text(),
                 "judul_temuan_bpk": jQuery('select[name="judul_temuan_bpk"]').val(),
@@ -214,5 +225,52 @@ foreach($upbs as $i => $val){
         }
     }
 
-
+    jQuery('#cari-aset').on('click', function(){
+        var kd_upb = jQuery('select[name="pilih_opd_temuan_bpk"]').val();
+        if(kd_upb == ''){
+            return alert('Kode UPB tidak boleh kosong!');
+        }
+        var status_aset = jQuery('input[name="status_neraca"]:checked').val();
+        if(status_aset == ''){
+            return alert('Status aset tidak boleh kosong!');
+        }
+        var jenis_aset = jQuery('#pilih_jenis_aset').val();
+        if(jenis_aset == ''){
+            return alert('Jenis aset tidak boleh kosong!');
+        }
+        var kd_barang = jQuery('input[name="kode_barang_temuan"]').val();
+        if(kd_barang.split('.').length < 8){
+            jQuery('input[name="post_id_aset"]').val('');
+            jQuery('#link_nama_aset').html('<?php echo $aset_tidak_ditemukan; ?>');
+            return alert('Format kode barang harus diisi full dengan termasuk kode register!');
+        }
+        jQuery('#wrap-loading').show();
+        jQuery.ajax({
+            url: ajax.url,
+            type: "post",
+            data: {
+                action: 'get_data_barang',
+                api_key: "<?php echo $api_key; ?>",
+                kd_upb: kd_upb,
+                status_aset: status_aset,
+                jenis_aset: jenis_aset,
+                kd_barang: kd_barang
+            },
+            dataType: "json",
+            success: function(data){
+                jQuery('#wrap-loading').hide();
+                if(data.status == 'success'){
+                    jQuery('input[name="post_id_aset"]').val(data.post_id);
+                    jQuery('#link_nama_aset').html('<a target="_blank" href="'+data.url+'" class="btn btn-outline-primary">'+data.nm_aset+'</a>');
+                }else{
+                    jQuery('input[name="post_id_aset"]').val('');
+                    jQuery('#link_nama_aset').html('<?php echo $aset_tidak_ditemukan; ?>');
+                    alert(data.message);
+                }
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        });
+    });
 </script>

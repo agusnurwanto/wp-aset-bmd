@@ -54,6 +54,13 @@ foreach($query->posts as $post){
     $pilih_opd_temuan_bpk = get_post_meta($post_id, 'meta_pilih_opd_temuan_bpk', true);
     $nama_opd_temuan_bpk = get_post_meta($post_id, 'meta_nama_opd_temuan_bpk', true);
     $kode_barang_temuan = get_post_meta($post_id, 'meta_kode_barang_temuan', true);
+    $post_id_aset = get_post_meta($post_id, 'meta_post_id_aset', true);
+    $url_aset = '#';
+    $nm_aset = '';
+    if(!empty($post_id_aset)){
+        $url_aset = get_permalink($post_id_aset);
+        $nm_aset = get_post_meta($post_id_aset, 'abm_nama_aset', true);
+    }
 
     if($status_neraca == '1'){
         $status_neraca = 'SIMDA BMD';
@@ -93,7 +100,7 @@ foreach($query->posts as $post){
             <td class="text-center">'.$status_neraca.'</td>
             <td class="text-center">'.$jenis_aset.'</td>
             <td>'.$judul_temuan_bpk.'</td>
-            <td class="text-center">'.$kode_barang_temuan.'</td>
+            <td class="text-center"><a href="'.$url_aset.'">'.$kode_barang_temuan.'<br>'.$nm_aset.'</a></td>
             <td>'.$keterangan_temuan_bpk.'</td>
             <td class="text-center">'.$tanggal_temuan_bpk.'</td>
             <td>'.$lampiran_temuan_bpk.'</td>

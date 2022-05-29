@@ -174,7 +174,7 @@ class Wp_Aset_Bmd_Admin {
 		global $wpdb;
 
 		// disable carbon field on public
-		if( !is_admin() ){
+		if( !is_admin() || wp_doing_ajax()){
         	return;
         }
 
