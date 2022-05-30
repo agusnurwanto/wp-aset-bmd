@@ -22,6 +22,7 @@ if(empty($lat_default) || empty($lng_default)){
 
 $nama_jenis_aset = array();
 $args = array(
+    'posts_per_page' => -1,
    'meta_query' => array(
        array(
            'key' => 'polygon',

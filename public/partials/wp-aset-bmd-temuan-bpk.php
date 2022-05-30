@@ -8,7 +8,8 @@ $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
 
 $args = array(
-   'meta_query' => array(
+    'posts_per_page' => -1,
+    'meta_query' => array(
        array(
            'key' => 'meta_data_temuan_bpk',
            'value' => array(''),

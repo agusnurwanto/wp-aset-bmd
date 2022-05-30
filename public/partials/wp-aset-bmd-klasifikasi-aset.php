@@ -15,7 +15,8 @@ $datasets_awal = array();
 $all_jenis = array('mesin', 'bangunan', 'jalan', 'aset_tetap');
 $color = array('red', 'green', 'blue', 'orange', 'purple', 'pink');
 $args = array(
-   'meta_query' => array(
+    'posts_per_page' => -1,
+    'meta_query' => array(
        array(
            'key' => 'meta_kondisi_aset_simata',
            'value' => array(''),

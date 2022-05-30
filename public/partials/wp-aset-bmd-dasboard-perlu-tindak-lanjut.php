@@ -6,8 +6,8 @@ $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
 
 $args = array(
-   'meta_key' => 'meta_aset_perlu_tindak_lanjut',
-   'meta_query' => array(
+    'posts_per_page' => -1,
+    'meta_query' => array(
        array(
            'key' => 'meta_aset_perlu_tindak_lanjut',
            'value' => '1',
