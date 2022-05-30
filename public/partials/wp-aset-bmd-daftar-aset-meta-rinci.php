@@ -23,7 +23,8 @@ if(empty($lat_default) || empty($lng_default)){
 $datasets_awal = array();
 $all_jenis = array('mesin', 'bangunan', 'jalan', 'aset_tetap');
 $args = array(
-   'meta_query' => array(
+    'posts_per_page' => -1,
+    'meta_query' => array(
        array(
            'key' => 'meta_kondisi_aset_simata',
            'value' => $params['kondisi_simata'],
@@ -208,7 +209,7 @@ foreach($query->posts as $post){
         'show_header' => 1,
         'no_key' => 1
     ));
-    $keterangan = array($val->Keterangan);
+    $keterangan = array($this->filter_string($val->Keterangan));
     if($params['jenis_aset'] == 'mesin'){
         $keterangan = array();
         if(!empty($val->Nomor_Polisi)){

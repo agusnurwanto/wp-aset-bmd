@@ -594,7 +594,7 @@ class Wp_Aset_Bmd_Public {
 		$aset = $this->functions->CurlSimda(array(
 		    'query' => $sql 
 		));
-		$aset[0]->Keterangan = trim(preg_replace('/\s\s+/', ' ', $aset[0]->Keterangan));
+		$aset[0]->Keterangan = $this->filter_string($aset[0]->Keterangan);
 		$koordinatX = get_post_meta($post->ID, 'latitude', true);
 		if(empty($koordinatX)){
 		    $koordinatX = '0';
@@ -701,6 +701,10 @@ class Wp_Aset_Bmd_Public {
         }else if($params['jenis_aset'] == 'bangunan_dalam_pengerjaan'){
 			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-bangunan_dalam_pengerjaan.php';
         }
+	}
+
+	function filter_string($text){
+		return addslashes(trim(preg_replace('/\s\s+/', ' ', $text)));
 	}
 
 	function daftar_aset(){

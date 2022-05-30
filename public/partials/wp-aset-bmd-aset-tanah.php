@@ -97,7 +97,7 @@ foreach($aset as $k => $val){
     }else{
         $alamat = '';
     }
-    $keterangan = array($val->Keterangan);
+    $keterangan = array($this->filter_string($val->Keterangan));
     $tanggal_sertifikat = substr($val->Sertifikat_Tanggal,0,10);
     $tanggal_sertifikat = $val->Sertifikat_Tanggal == '' ? '-' : date("d-m-Y", strtotime($tanggal_sertifikat));
     $column_sertifikat = '';

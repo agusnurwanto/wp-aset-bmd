@@ -181,7 +181,7 @@ foreach($query->posts as $post){
         'show_header' => 1,
         'no_key' => 1
     ));
-    $keterangan = array($aset[0]->Keterangan);
+    $keterangan = array($this->filter_string($aset[0]->Keterangan));
     $warna_map = '';
     $ikon_map = '';
     if ($data_jenis['jenis'] == 'tanah') {

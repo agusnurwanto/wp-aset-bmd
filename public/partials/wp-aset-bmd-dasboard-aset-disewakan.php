@@ -247,7 +247,7 @@ foreach($query->posts as $post){
         'show_header' => 1,
         'no_key' => 1
     ));
-    $keterangan = array($aset[0]->Keterangan);
+    $keterangan = array($this->filter_string($aset[0]->Keterangan));
     if($params['jenis_aset'] == 'mesin'){
         $keterangan = array();
         if(!empty($aset[0]->Nomor_Polisi)){
