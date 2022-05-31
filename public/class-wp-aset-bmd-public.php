@@ -197,7 +197,6 @@ class Wp_Aset_Bmd_Public {
 		}
 
 		$jenis_aset = $abm_jenis_aset;
-		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
 		$aset_belum_masuk_neraca = $this->functions->generatePage(array(
 			'nama_page' => 'Aset Belum Masuk Neraca',
 			'content' => '[aset_belum_masuk_neraca]',
@@ -239,6 +238,8 @@ class Wp_Aset_Bmd_Public {
 				$disabled = 'disabled';
 			}
 		}
+		
+		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
 		if($data_jenis['jenis'] == 'tanah'){
 			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-tambah-tanah-belum-masuk-neraca.php';
 		}else{

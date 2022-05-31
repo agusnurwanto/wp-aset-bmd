@@ -67,7 +67,7 @@ foreach($all_jenis as $jenis){
             a.Kd_Hapus= \'0\' 
             AND a.Kd_Data != \'3\' 
             AND a.Kd_KA= \'1\'
-            AND b.Harga > 0
+            AND a.Harga > 0
             '.$where_all.'
         group by a.Kd_Prov, a.Kd_Kab_Kota, a.Kd_Bidang, n.Nm_Bidang, a.Kd_Unit, u.Nm_Unit, i.Uraian, a.Kondisi
         ';
