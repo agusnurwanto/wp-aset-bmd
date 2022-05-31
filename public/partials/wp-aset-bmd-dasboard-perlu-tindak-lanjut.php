@@ -6,8 +6,8 @@ $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
 
 $args = array(
-   'meta_key' => 'meta_aset_perlu_tindak_lanjut',
-   'meta_query' => array(
+    'posts_per_page' => -1,
+    'meta_query' => array(
        array(
            'key' => 'meta_aset_perlu_tindak_lanjut',
            'value' => '1',
@@ -207,7 +207,7 @@ foreach($query->posts as $post){
         'show_header' => 1,
         'no_key' => 1
     ));
-    $keterangan = array($aset[0]->Keterangan);
+    $keterangan = array($this->filter_string($aset[0]->Keterangan));
     if($params['jenis_aset'] == 'mesin'){
         $keterangan = array();
         if(!empty($aset[0]->Nomor_Polisi)){

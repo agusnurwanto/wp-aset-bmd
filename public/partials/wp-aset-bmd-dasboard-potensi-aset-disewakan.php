@@ -17,7 +17,8 @@ if(empty($lat_default) || empty($lng_default)){
     }
 }
 $args = array(
-   'meta_query' => array(
+    'posts_per_page' => -1,
+    'meta_query' => array(
        array(
            'key' => 'meta_disewakan',
            'value' => '3',
@@ -243,7 +244,7 @@ foreach($query->posts as $post){
         'show_header' => 1,
         'no_key' => 1
     ));
-    $keterangan = array($aset[0]->Keterangan);
+    $keterangan = array($this->filter_string($aset[0]->Keterangan));
     if($params['jenis_aset'] == 'mesin'){
         $keterangan = array();
         if(!empty($aset[0]->Nomor_Polisi)){

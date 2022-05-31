@@ -32,7 +32,8 @@ if(is_user_logged_in()){
 }
 
 $args = array(
-   'meta_query' => array(
+    'posts_per_page' => -1,
+    'meta_query' => array(
        array(
            'key' => 'abm_kd_register',
            'value' => array(''),

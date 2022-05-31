@@ -123,7 +123,7 @@ foreach($aset as $k => $val){
         'show_header' => 1,
         'no_key' => 1
     ));
-    $keterangan = array($val->Keterangan);
+    $keterangan = array($this->filter_string($val->Keterangan));
     if($params['jenis_aset'] == 'mesin'){
         $keterangan = array();
         if(!empty($val->Nomor_Polisi)){
