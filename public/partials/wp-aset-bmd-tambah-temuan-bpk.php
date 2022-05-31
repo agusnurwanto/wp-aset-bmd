@@ -196,7 +196,6 @@ foreach($upbs as $i => $val){
                 "keterangan_temuan_bpk": jQuery('textarea[name="keterangan_temuan_bpk"]').val(),
                 "lampiran_temuan_bpk": tinyMCE.get('lampiran_temuan_bpk').getContent(),
                 "kode_barang_temuan": jQuery('input[name="kode_barang_temuan"]').val(),
-                "strtotime": "<?php echo $strtotime; ?>",
 
             };
         <?php 
@@ -244,6 +243,7 @@ foreach($upbs as $i => $val){
             jQuery('#link_nama_aset').html('<?php echo $aset_tidak_ditemukan; ?>');
             return alert('Format kode barang harus diisi full dengan termasuk kode register!');
         }
+
         jQuery('#wrap-loading').show();
         jQuery.ajax({
             url: ajax.url,

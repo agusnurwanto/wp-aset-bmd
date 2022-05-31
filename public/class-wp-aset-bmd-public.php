@@ -1169,10 +1169,6 @@ class Wp_Aset_Bmd_Public {
 		$keterangan_temuan_bpk = get_post_meta($post->ID, 'meta_keterangan_temuan_bpk', true);
 		$lampiran_temuan_bpk = get_post_meta($post->ID, 'meta_lampiran_temuan_bpk', true);
 		$kode_barang_temuan = get_post_meta($post->ID, 'meta_kode_barang_temuan', true);
-		$strtotime = get_post_meta($post->ID, 'meta_strtotime', true);
-		if (empty($strtotime)) {
-			$strtotime = 'kosong';
-		}
 
 		$checked_sudah_neraca = 'checked';
 		$checked_belum_neraca = '';

@@ -44,7 +44,6 @@ $query = new WP_Query($args);
 foreach($query->posts as $post){
     $post_id = $post->ID;
     $status_neraca = get_post_meta($post_id, 'meta_status_neraca', true);
-    $strtotime = get_post_meta($post->ID, 'meta_strtotime', true);
     $jenis_aset = get_post_meta($post_id, 'meta_pilih_jenis_aset', true);
     $judul_temuan_bpk = get_post_meta($post_id, 'meta_judul_temuan_bpk', true);
     $option_judul_temuan_bpk = $this->get_opsi_jenis_temuan($judul_temuan_bpk);
