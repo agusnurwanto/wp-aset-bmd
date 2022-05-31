@@ -197,6 +197,7 @@ class Wp_Aset_Bmd_Public {
 		}
 
 		$jenis_aset = $abm_jenis_aset;
+		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
 		$aset_belum_masuk_neraca = $this->functions->generatePage(array(
 			'nama_page' => 'Aset Belum Masuk Neraca',
 			'content' => '[aset_belum_masuk_neraca]',
@@ -238,8 +239,6 @@ class Wp_Aset_Bmd_Public {
 				$disabled = 'disabled';
 			}
 		}
-		
-		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
 		if($data_jenis['jenis'] == 'tanah'){
 			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-tambah-tanah-belum-masuk-neraca.php';
 		}else{
@@ -595,7 +594,7 @@ class Wp_Aset_Bmd_Public {
 		$aset = $this->functions->CurlSimda(array(
 		    'query' => $sql 
 		));
-		$aset[0]->Keterangan = $this->filter_string($aset[0]->Keterangan);
+		$aset[0]->Keterangan = trim(preg_replace('/\s\s+/', ' ', $aset[0]->Keterangan));
 		$koordinatX = get_post_meta($post->ID, 'latitude', true);
 		if(empty($koordinatX)){
 		    $koordinatX = '0';
@@ -702,10 +701,6 @@ class Wp_Aset_Bmd_Public {
         }else if($params['jenis_aset'] == 'bangunan_dalam_pengerjaan'){
 			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-bangunan_dalam_pengerjaan.php';
         }
-	}
-
-	function filter_string($text){
-		return addslashes(trim(preg_replace('/\s\s+/', ' ', $text)));
 	}
 
 	function daftar_aset(){
@@ -1529,6 +1524,7 @@ class Wp_Aset_Bmd_Public {
 				}
 
 				if(!empty($post_id)){
+					update_post_meta($post_id, 'meta_data_temuan_bpk', $_POST['post_id_aset']);
 					update_post_meta($post_id, 'meta_post_id_aset', $_POST['post_id_aset']);
 					update_post_meta($post_id, 'meta_status_neraca', $_POST['status_neraca']);
 					update_post_meta($post_id, 'meta_pilih_jenis_aset', $_POST['pilih_jenis_aset']);
@@ -1944,7 +1940,7 @@ class Wp_Aset_Bmd_Public {
 						        'no_key' => 1
 						    ));
 							$url = $link['url'];
-							$nm_aset = $aset->Nm_Aset5;
+							$nm_aset = $val->Nm_Aset5;
 							$post_id = $link['id'];
 						}
 						$return['post_id'] = $post_id;
