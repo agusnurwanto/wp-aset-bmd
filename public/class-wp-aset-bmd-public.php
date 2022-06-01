@@ -673,6 +673,7 @@ class Wp_Aset_Bmd_Public {
 		    'Kd_Desa' => $Kd_Desa
 		));
 		$disabled = 'disabled';
+		$link_post = get_permalink($post);
 		if($allow_edit_post){
 		    $post->custom_url = array(
 		        array(
@@ -680,7 +681,6 @@ class Wp_Aset_Bmd_Public {
 		            'value' => 1
 		        )
 		    );
-		    $link_post = get_permalink($post);
 		    $link_edit = $this->functions->get_link_post($post);
 		    if(!empty($params['key']['edit'])){
 		        $disabled = '';

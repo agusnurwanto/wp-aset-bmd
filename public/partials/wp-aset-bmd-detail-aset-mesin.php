@@ -199,6 +199,24 @@
                 </div>
             </div>
         <?php endif; ?>
+        <?php if(!empty($disabled) && !empty($potensi_disewakan)): ?>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Tanggapan Publik</label>
+                <div class="col-md-10">
+                    <div id="fb-root"></div>
+                    <script>
+                        (function (d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (d.getElementById(id)) return;
+                        js = d.createElement(s); js.id = id;
+                        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=255775617964700";
+                        fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));
+                    </script>
+                    <div style="margin: auto;" class="fb-comments" data-href="<?php echo $link_post; ?>" data-width="700" data-numposts="5"></div>
+                </div>
+            </div>
+        <?php endif; ?>
         </form>
     </div>
 </div>

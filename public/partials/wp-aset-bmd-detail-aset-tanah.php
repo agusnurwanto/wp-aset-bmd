@@ -174,7 +174,7 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
                 <div class="col-md-10">
-                    <a href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a>
+                    <a href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Aset</a>
                 </div>
             </div>
         <?php elseif(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
