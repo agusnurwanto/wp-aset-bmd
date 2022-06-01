@@ -1164,6 +1164,8 @@ class Wp_Aset_Bmd_Public {
 		}
 		
 		$api_key = get_option('_crb_apikey_simda_bmd');
+		$url_aset = '#';
+		$nm_aset = '';
 		if(false == $edit && $disabled != 'disabled'){
 			$status_neraca = 1;
 			$jenis_aset = '';
@@ -1171,11 +1173,14 @@ class Wp_Aset_Bmd_Public {
 			$jenis_aset = '';
 			$pilih_opd_temuan_bpk = '';
 			$judul_temuan_bpk = '';
-			$option_judul_temuan_bpk = '';
+			$option_judul_temuan_bpk = $this->get_opsi_jenis_temuan();
 			$tanggal_temuan_bpk = '';
 			$keterangan_temuan_bpk = '';
 			$lampiran_temuan_bpk = '';
 			$kode_barang_temuan = '';
+			$nama_barang_temuan = '';
+			$url_aset = '#';
+			$nm_aset = '';
 		}else{
 			$status_neraca = get_post_meta($post->ID, 'meta_status_neraca', true);
 			$jenis_aset = get_post_meta($post->ID, 'meta_pilih_jenis_aset', true);
@@ -1186,9 +1191,8 @@ class Wp_Aset_Bmd_Public {
 			$keterangan_temuan_bpk = get_post_meta($post->ID, 'meta_keterangan_temuan_bpk', true);
 			$lampiran_temuan_bpk = get_post_meta($post->ID, 'meta_lampiran_temuan_bpk', true);
 			$kode_barang_temuan = get_post_meta($post->ID, 'meta_kode_barang_temuan', true);
-			$post_id_aset = get_post_meta($post_id, 'meta_post_id_aset', true);
-			$url_aset = '#';
-			$nm_aset = '';
+			$nama_barang_temuan = get_post_meta($post->ID, 'meta_nama_barang_temuan', true);
+			$post_id_aset = get_post_meta($post->ID, 'meta_post_id_aset', true);
 			if(!empty($post_id_aset)){
 				$url_aset = get_permalink($post_id_aset);
 				$nm_aset = get_post_meta($post_id_aset, 'abm_nama_aset', true);
@@ -1559,6 +1563,7 @@ class Wp_Aset_Bmd_Public {
 					update_post_meta($post_id, 'meta_pilih_opd_temuan_bpk', $_POST['pilih_opd_temuan_bpk']);
 					update_post_meta($post_id, 'meta_nama_opd_temuan_bpk', $_POST['nama_upb']);
 					update_post_meta($post_id, 'meta_kode_barang_temuan', $_POST['kode_barang_temuan']);
+					update_post_meta($post_id, 'meta_nama_barang_temuan', $_POST['nama_barang_temuan']);
 					$post_status = 'private';
 
 					if(
@@ -2049,5 +2054,9 @@ class Wp_Aset_Bmd_Public {
 		}else{
 			die(json_encode($return));
 		}
+	}
+
+	function filter_string($text){
+		return addslashes(trim(preg_replace('/\s\s+/', ' ', $text)));
 	}
 }
