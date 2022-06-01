@@ -1186,7 +1186,7 @@ class Wp_Aset_Bmd_Public {
 			$keterangan_temuan_bpk = get_post_meta($post->ID, 'meta_keterangan_temuan_bpk', true);
 			$lampiran_temuan_bpk = get_post_meta($post->ID, 'meta_lampiran_temuan_bpk', true);
 			$kode_barang_temuan = get_post_meta($post->ID, 'meta_kode_barang_temuan', true);
-			$post_id_aset = get_post_meta($post_id, 'meta_post_id_aset', true);
+			$post_id_aset = get_post_meta($post->ID, 'meta_post_id_aset', true);
 			$url_aset = '#';
 			$nm_aset = '';
 			if(!empty($post_id_aset)){
