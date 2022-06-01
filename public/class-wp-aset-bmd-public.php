@@ -645,6 +645,11 @@ class Wp_Aset_Bmd_Public {
 		if($meta_tindak_lanjut == '1'){
 			$checked_tindak_lanjut = 'checked';
 		}
+		$meta_mutasi_aset = get_post_meta($post->ID, 'meta_mutasi_aset', true);
+		$checked_mutasi_aset = '';
+		if($meta_mutasi_aset == '1'){
+			$checked_mutasi_aset = 'checked';
+		}
 		$kondisi_aset_simata = get_post_meta($post->ID, 'meta_kondisi_aset_simata', true);
 
 		$kondisi_simda = '';
@@ -658,6 +663,7 @@ class Wp_Aset_Bmd_Public {
 		$waktu_sewa_awal = get_post_meta($post->ID, 'meta_waktu_sewa_awal', true);
 		$waktu_sewa_akhir = get_post_meta($post->ID, 'meta_waktu_sewa_akhir', true);
 		$aset_perlu_tindak_lanjut = get_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', true);
+		$ket_mutasi_aset = get_post_meta($post->ID, 'meta_keterangan_mutasi_aset', true);
 		$ket_penggunaan_aset = get_post_meta($post->ID, 'meta_ket_penggunaan_aset', true);
 		
 		$keterangan_kondisi_aset = get_post_meta($post->ID, 'meta_keterangan_kondisi_aset', true);
@@ -1347,6 +1353,8 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post->ID, 'meta_waktu_sewa_akhir', $_POST['waktu_sewa_akhir']);
 						update_post_meta($post->ID, 'meta_aset_perlu_tindak_lanjut', $_POST['aset_perlu_tindak_lanjut']);
 						update_post_meta($post->ID, 'meta_keterangan_aset_perlu_tindak_lanjut', $_POST['ket_aset_perlu_tindak_lanjut']);
+						update_post_meta($post->ID, 'meta_mutasi_aset', $_POST['mutasi_aset']);
+						update_post_meta($post->ID, 'meta_keterangan_mutasi_aset', $_POST['ket_mutasi_aset']);
 						update_post_meta($post->ID, 'meta_ket_penggunaan_aset', $_POST['ket_penggunaan_aset']);
 						update_post_meta($post->ID, 'meta_kondisi_aset_simata', $_POST['kondisi_aset_simata']);
 						update_post_meta($post->ID, 'meta_keterangan_kondisi_aset', $_POST['keterangan_kondisi_aset']);
@@ -2058,5 +2066,26 @@ class Wp_Aset_Bmd_Public {
 
 	function filter_string($text){
 		return addslashes(trim(preg_replace('/\s\s+/', ' ', $text)));
+	}
+
+	function get_comment($url){
+		return '
+			<div class="form-group row">
+                <label class="col-md-2 col-form-label">Tanggapan Publik</label>
+                <div class="col-md-10">
+                    <div id="fb-root"></div>
+                    <script>
+                        (function (d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (d.getElementById(id)) return;
+                        js = d.createElement(s); js.id = id;
+                        js.src = "//connect.facebook.net/id_ID/all.js#xfbml=1&appId=255775617964700";
+                        fjs.parentNode.insertBefore(js, fjs);
+                        }(document, "script", "facebook-jssdk"));
+                    </script>
+                    <div style="margin: auto;" class="fb-comments" data-href="'.$url.'" data-width="700" data-numposts="5"></div>
+                </div>
+            </div>
+		';
 	}
 }
