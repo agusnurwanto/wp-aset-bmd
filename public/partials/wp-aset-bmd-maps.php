@@ -1,44 +1,39 @@
 <script async defer src="<?php echo $api_googlemap ?>"></script>
 <script type="text/javascript">
 <?php if(!empty($allow_edit_post) && !empty($params['key']['edit'])): ?>
+    function cari_alamat() {
+        var alamat = jQuery('#cari-alamat-input').val();
+        geocoder = new google.maps.Geocoder();
+        geocoder.geocode( { 'address': alamat}, function(results, status) {
+            if (status == 'OK') {
+                console.log('results', results);
+                map.setCenter(results[0].geometry.location);
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
     jQuery(document).ready(function(){
         var search = ''
-            +'<div class="input-group" style="margin-bottom: 5px;">'
+            +'<div class="input-group" style="margin-bottom: 5px; display: block;">'
                 +'<div class="input-group-prepend">'
                     +'<input class="form-control" id="cari-alamat-input" type="text" placeholder="Kotak pencarian alamat">'
-                    +'<button class="btn btn-success" id="cari-alamat" type="button">Cari</button>'
+                    +'<button class="btn btn-success" id="cari-alamat" type="button"><i class="dashicons dashicons-search"></i></button>'
                 +'</div>'
             +'</div>';
         jQuery("#map-canvas").before(search);
         jQuery("#cari-alamat").on('click', function(){
-            alert('Fitur cari alamat masih dalam pengembangan!');
-            var alamat = jQuery('#cari-alamat-input').val();
-            geocoder = new google.maps.Geocoder();
-            geocoder.geocode( { 'address': alamat}, function(results, status) {
-                if (status == 'OK') {
-                    console.log('results', results);
-                    // map.setCenter(results[0].geometry.location);
-                } else {
-                    alert('Geocode was not successful for the following reason: ' + status);
-                }
-            });
+            cari_alamat();
+        });
+        jQuery("#cari-alamat-input").on('keyup', function (e) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                cari_alamat();
+            }
         });
     });
 <?php endif; ?>
-    var map;
-    var nama_aset;
-    var kode_aset;
-    var status_aset;
-    var luas;
-    var alamat;
-    var hak_tanah;
-    var tgl_sertipikat;
-    var no_sertipikat;
-    var penggunaan;
-    var keterangan;
-    var warna_map;
-    var ikon_map;
-    
+
     function initMap() {
         // Lokasi Center Map
         var lokasi_aset = new google.maps.LatLng(<?php echo $lat_default; ?>, <?php echo $lng_default; ?>);
@@ -49,24 +44,10 @@
             mapTypeId: google.maps.MapTypeId.HYBRID
         };
         // Membuat Map
-        map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        window.map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
         // Define the LatLng coordinates for the shape.
         var Coords1 = <?php echo $polygon; ?>;
-        
-        // Variabel Informasi Data
-        nama_aset      = '<?php echo $aset[0]->Nm_Aset5; ?>';
-        kode_aset      = '<?php echo $params['kd_barang']; ?>';
-        status_aset    = '<?php if(!empty($aset[0]->Sertifikat_Nomor)){ echo 'Bersertipikat'; }else{ echo 'Belum sertifikat'; } ?>';
-        luas           = '<?php echo number_format($aset[0]->Luas_M2,2,",","."); ?>';
-        alamat         = '<?php echo trim($aset[0]->Alamat); ?>';
-        hak_tanah      = '<?php echo $aset[0]->Hak_Tanah; ?>';
-        tgl_sertipikat = '<?php echo $aset[0]->Sertifikat_Tanggal; ?>';
-        no_sertipikat  = '<?php echo $aset[0]->Sertifikat_Nomor; ?>';
-        penggunaan     = '<?php echo $aset[0]->Penggunaan; ?>';
-        keterangan     = '<?php echo $aset[0]->Keterangan; ?>';
-        warna_map      = '<?php echo $warna_map; ?>';
-        ikon_map       = '<?php echo $ikon_map; ?>';
 
         // Menampilkan Marker
         window.evm = new google.maps.Marker({
@@ -78,41 +59,6 @@
         <?php endif; ?>
             title: 'Lokasi Aset'
         });
-
-        // Menampilkan Informasi Data
-        var contentString = '<br>' +
-            '<table width="100%" border="0">' +
-            '<tr>' +
-            '<td width="33%" valign="top" height="25">Nama Aset</td><td valign="top"><center>:</center></td><td valign="top"><b>' + nama_aset + '</b></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Status Aset</td><td valign="top"><center>:</center></td><td valign="top">' + status_aset + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Luas</td><td valign="top"><center>:</center></td><td valign="top">' + luas + ' M&sup2;</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Alamat</td><td valign="top"><center>:</center></td><td valign="top">' + alamat + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Hak Tanah</td><td valign="top"><center>:</center></td><td valign="top">' + hak_tanah + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Tgl Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + tgl_sertipikat + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">No Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + no_sertipikat + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Penggunaan</td><td valign="top"><center>:</center></td><td valign="top">' + penggunaan + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
-            '</tr>' +
-            '</table>';
 
         // Membuat Shape
         window.evp = new google.maps.Polygon({

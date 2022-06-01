@@ -233,5 +233,55 @@
         }
     }
 <?php endif; ?>
+
+    // Variabel Informasi Data
+    window.nama_aset      = '<?php echo $aset[0]->Nm_Aset5; ?>';
+    window.kode_aset      = '<?php echo $params['kd_barang']; ?>';
+    window.status_aset    = '<?php if(!empty($aset[0]->Sertifikat_Nomor)){ echo 'Bersertipikat'; }else{ echo 'Belum sertifikat'; } ?>';
+    window.luas           = '<?php echo number_format($aset[0]->Luas_M2,2,",","."); ?>';
+    window.alamat         = '<?php echo trim($aset[0]->Alamat); ?>';
+    window.hak_tanah      = '<?php echo $aset[0]->Hak_Tanah; ?>';
+    window.tgl_sertipikat = '<?php echo $aset[0]->Sertifikat_Tanggal; ?>';
+    window.no_sertipikat  = '<?php echo $aset[0]->Sertifikat_Nomor; ?>';
+    window.penggunaan     = '<?php echo $aset[0]->Penggunaan; ?>';
+    window.keterangan     = '<?php echo $aset[0]->Keterangan; ?>';
+    window.warna_map      = '<?php echo $warna_map; ?>';
+    window.ikon_map       = '<?php echo $ikon_map; ?>';
+
+    // Menampilkan Informasi Data
+    window.contentString = '<br>' +
+            '<table width="100%" border="0">' +
+            '<tr>' +
+            '<td width="33%" valign="top" height="25">Nama Aset</td><td valign="top"><center>:</center></td><td valign="top"><b>' + nama_aset + '</b></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">Status Aset</td><td valign="top"><center>:</center></td><td valign="top">' + status_aset + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">Luas</td><td valign="top"><center>:</center></td><td valign="top">' + luas + ' M&sup2;</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">Alamat</td><td valign="top"><center>:</center></td><td valign="top">' + alamat + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">Hak Tanah</td><td valign="top"><center>:</center></td><td valign="top">' + hak_tanah + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">Tgl Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + tgl_sertipikat + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">No Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + no_sertipikat + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">Penggunaan</td><td valign="top"><center>:</center></td><td valign="top">' + penggunaan + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
+            '</tr>' +
+            '</table>';
+
 </script>
 <?php include plugin_dir_path(dirname(__FILE__)) . 'partials/wp-aset-bmd-maps.php'; ?>
