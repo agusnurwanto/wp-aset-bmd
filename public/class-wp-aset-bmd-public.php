@@ -1141,7 +1141,7 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public\partials\wp-aset-bmd-temuan-bpk.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-temuan-bpk.php';
 
 	}
 	
@@ -1152,23 +1152,48 @@ class Wp_Aset_Bmd_Public {
 		}
 
 		$disabled = '';
+		$edit = false;
+		
 		if(!empty($_GET) && !empty($_GET['key'])){
 			$params['key'] = $this->functions->decode_key($_GET['key']);
-			if(!empty($params['key']['detail'])){
+			if(!empty($params['key']['edit'])){
+				$edit = true;
+			}else if(!empty($params['key']['detail'])){
 				$disabled = 'disabled';
 			}
 		}
 		
 		$api_key = get_option('_crb_apikey_simda_bmd');
-		$status_neraca = get_post_meta($post->ID, 'meta_status_neraca', true);
-		$jenis_aset = get_post_meta($post->ID, 'meta_pilih_jenis_aset', true);
-		$pilih_opd_temuan_bpk = get_post_meta($post->ID, 'meta_pilih_opd_temuan_bpk', true);
-		$judul_temuan_bpk = get_post_meta($post->ID, 'meta_judul_temuan_bpk', true);
-		$option_judul_temuan_bpk = $this->get_opsi_jenis_temuan($judul_temuan_bpk);
-		$tanggal_temuan_bpk = get_post_meta($post->ID, 'meta_tanggal_temuan_bpk', true);
-		$keterangan_temuan_bpk = get_post_meta($post->ID, 'meta_keterangan_temuan_bpk', true);
-		$lampiran_temuan_bpk = get_post_meta($post->ID, 'meta_lampiran_temuan_bpk', true);
-		$kode_barang_temuan = get_post_meta($post->ID, 'meta_kode_barang_temuan', true);
+		if(false == $edit && $disabled != 'disabled'){
+			$status_neraca = 1;
+			$jenis_aset = '';
+			$status_neraca = '';
+			$jenis_aset = '';
+			$pilih_opd_temuan_bpk = '';
+			$judul_temuan_bpk = '';
+			$option_judul_temuan_bpk = '';
+			$tanggal_temuan_bpk = '';
+			$keterangan_temuan_bpk = '';
+			$lampiran_temuan_bpk = '';
+			$kode_barang_temuan = '';
+		}else{
+			$status_neraca = get_post_meta($post->ID, 'meta_status_neraca', true);
+			$jenis_aset = get_post_meta($post->ID, 'meta_pilih_jenis_aset', true);
+			$pilih_opd_temuan_bpk = get_post_meta($post->ID, 'meta_pilih_opd_temuan_bpk', true);
+			$judul_temuan_bpk = get_post_meta($post->ID, 'meta_judul_temuan_bpk', true);
+			$option_judul_temuan_bpk = $this->get_opsi_jenis_temuan($judul_temuan_bpk);
+			$tanggal_temuan_bpk = get_post_meta($post->ID, 'meta_tanggal_temuan_bpk', true);
+			$keterangan_temuan_bpk = get_post_meta($post->ID, 'meta_keterangan_temuan_bpk', true);
+			$lampiran_temuan_bpk = get_post_meta($post->ID, 'meta_lampiran_temuan_bpk', true);
+			$kode_barang_temuan = get_post_meta($post->ID, 'meta_kode_barang_temuan', true);
+			$post_id_aset = get_post_meta($post_id, 'meta_post_id_aset', true);
+			$url_aset = '#';
+			$nm_aset = '';
+			if(!empty($post_id_aset)){
+				$url_aset = get_permalink($post_id_aset);
+				$nm_aset = get_post_meta($post_id_aset, 'abm_nama_aset', true);
+			}
+		}
 
 		$checked_sudah_neraca = 'checked';
 		$checked_belum_neraca = '';
@@ -1210,7 +1235,7 @@ class Wp_Aset_Bmd_Public {
 		    }
 		}
 
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public\partials\wp-aset-bmd-tambah-temuan-bpk.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-tambah-temuan-bpk.php';
 
 	}
 
@@ -1524,7 +1549,6 @@ class Wp_Aset_Bmd_Public {
 				}
 
 				if(!empty($post_id)){
-					update_post_meta($post_id, 'meta_data_temuan_bpk', $_POST['post_id_aset']);
 					update_post_meta($post_id, 'meta_post_id_aset', $_POST['post_id_aset']);
 					update_post_meta($post_id, 'meta_status_neraca', $_POST['status_neraca']);
 					update_post_meta($post_id, 'meta_pilih_jenis_aset', $_POST['pilih_jenis_aset']);
@@ -1543,7 +1567,7 @@ class Wp_Aset_Bmd_Public {
 					){
 						$post_status = 'publish';
 					}
-					$x = wp_update_post(array(
+					wp_update_post(array(
 						'ID'    =>  $post_id,
 						'post_status'   =>  $post_status
 					));

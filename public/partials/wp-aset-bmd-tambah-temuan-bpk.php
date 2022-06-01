@@ -1,5 +1,5 @@
 <?php
-$aset_tidak_ditemukan = '<label class="col-form-label" style="color: red">Nama Aset Tidak Ditemukan!</label>';
+// $aset_tidak_ditemukan = '<label class="col-form-label" style="color: red">Nama Aset Tidak Ditemukan!</label>';
 $sql = "
     SELECT 
         u.*, 
@@ -18,10 +18,35 @@ $upbs = $this->functions->CurlSimda(array(
     'query' => $sql,
     'no_debug' => 0
 ));
+
+$kode_barang_url = '<a href="'.$url_aset.'" class="disable-links">'.$kode_barang_temuan.'<br>'.$nm_aset.'</a>';
+
 $pilih_jenis_aset = '<option value="">Pilih Jenis Aset</option>';
 if (!empty($jenis_aset) && $jenis_aset != '' ) {
-    $pilih_jenis_aset = '<option value="">'.$jenis_aset.'</option>';
 }
+
+$list_jenis_aset = array(
+    'tanah'        => 'Tanah',
+    'bangunan'     => 'Bangunan',
+    'mesin'        => 'Mesin',
+    'jalan'        => 'Jalan',
+    'aset_tetap'   => 'Aset Tetap',
+    'bangunan_dalam_pengerjaan' => 'Bangunan Dalam Pengerjaan'
+);
+
+$selected_jenis_aset = '';
+$pilihan_jenis_aset = '<option value="">Pilih Jenis Aset</option>';
+
+foreach ($list_jenis_aset as $key => $value) {
+
+    if (!empty($jenis_aset) && $jenis_aset != '') {
+        $selected_jenis_aset .= 'selected';
+    }
+
+    $pilihan_jenis_aset .= '<option value="'.$key.'" '.$selected_jenis_aset.'>'.$value.'</option>';
+}
+
+
 
 $list_upb = '<option value="">Pilih UPB</option>';
 
@@ -53,6 +78,8 @@ foreach($upbs as $i => $val){
 }
 
 
+
+
 ?>
 <style type="text/css">
     .warning {
@@ -69,7 +96,7 @@ foreach($upbs as $i => $val){
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">OPD yang menindaklanjuti</label>
                 <div class="col-md-10">
-                    <select class="form-control" name="pilih_opd_temuan_bpk" <?php echo $disabled; ?>>
+                    <select class="form-control select2" name="pilih_opd_temuan_bpk" <?php echo $disabled; ?>>
                         <?php echo $list_upb; ?>
                     </select>
                 </div>
@@ -82,14 +109,8 @@ foreach($upbs as $i => $val){
                 </div>
                 <label class="col-md-2 col-form-label">Jenis Aset</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="pilih_jenis_aset" <?php echo $disabled; ?>>
-                        <?php echo $pilih_jenis_aset; ?>
-                        <option value="tanah">Tanah</option>
-                        <option value="bangunan">Bangunan</option>
-                        <option value="mesin">Mesin</option>
-                        <option value="jalan">Jalan</option>
-                        <option value="aset_tetap">Aset Tetap</option>
-                        <option value="bangunan_dalam_pengerjaan">Bangunan Dalam Pengerjaan</option>
+                    <select class="form-control select2" id="pilih_jenis_aset" <?php echo $disabled; ?>>
+                            <?php echo $pilihan_jenis_aset; ?>
                     </select>
                 </div>
                 
@@ -106,14 +127,15 @@ foreach($upbs as $i => $val){
                 </div>
                 <label class="col-md-2 col-form-label">Nama Aset</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="post_id_aset" value="" disabled style="display: none;" />
-                    <span id="link_nama_aset"><?php echo $aset_tidak_ditemukan; ?></span>
+                    <input type="text" class="form-control" name="post_id_aset" value="" disabled style="display: none;" <?php echo $disabled; ?>/>
+                    <span id="link_nama_aset"><?php echo $kode_barang_url; ?></span>
+
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Jenis Temuan BPK</label>
                 <div class="col-md-4">
-                    <select class="form-control" name="judul_temuan_bpk" <?php echo $disabled; ?>>
+                    <select class="form-control select2" name="judul_temuan_bpk" <?php echo $disabled; ?>>
                         <?php echo $option_judul_temuan_bpk; ?>
                     </select>
                 </div>
@@ -199,7 +221,7 @@ foreach($upbs as $i => $val){
 
             };
         <?php 
-            if(!empty($allow_edit_post)){
+            if(!empty($allow_edit_post) && !empty($edit)){
                 echo "data_post.id_post = ".$post->ID.';';
             }
         ?>
@@ -209,6 +231,8 @@ foreach($upbs as $i => $val){
                 data: data_post,
                 dataType: "json",
                 success: function(data){
+                    console.log('testing output');
+                    console.log(data);
                     jQuery('#wrap-loading').hide();
                     alert(data.message);
                 <?php 

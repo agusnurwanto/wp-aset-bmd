@@ -11,7 +11,7 @@ $args = array(
     'posts_per_page' => -1,
     'meta_query' => array(
        array(
-           'key' => 'meta_data_temuan_bpk',
+           'key' => 'meta_judul_temuan_bpk',
            'value' => array(''),
            'compare' => 'NOT IN',
        )
