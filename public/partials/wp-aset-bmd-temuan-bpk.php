@@ -59,7 +59,14 @@ foreach($query->posts as $post){
     $post_id_aset = get_post_meta($post_id, 'meta_post_id_aset', true);
     $url_aset = '#';
     if(!empty($post_id_aset)){
-        $url_aset = get_permalink($post_id_aset);
+        $post_aset = get_post($post_id_aset);
+        $post_aset->custom_url = array(
+            array(
+                'key' =>'detail',
+                'value' => 1
+            )
+        );
+        $url_aset = $this->functions->get_link_post($post_aset);
     }
 
     if($status_neraca == '1'){

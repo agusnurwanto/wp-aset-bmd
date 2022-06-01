@@ -108,7 +108,11 @@
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Tambah Data Barang Milik Daerah<br><?php echo $data_jenis['nama']; ?></h2>
+    <?php if(!empty($disabled)): ?>
+        <h2 class="text-center">Data Detail Aset Belum Masuk Neraca<br>Jenis Aset <?php echo $data_jenis['nama']; ?></h2>
+    <?php else: ?>
+        <h2 class="text-center">Tambah Data Aset Belum Masuk Neraca<br>Jenis Aset <?php echo $data_jenis['nama']; ?></h2>
+    <?php endif; ?>
         <form>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Pilih Unit Pengelola Barang*</label>
