@@ -88,7 +88,7 @@
                     if(empty($disabled)){
                         wp_editor($abm_meta_kronologi,'kronologi',array('textarea_name' => 'kronologi', 'textarea_rows' => 10));
                     }else{
-                        echo $abm_meta_kronologi;
+                        echo do_shortcode($abm_meta_kronologi);
                     }
                 ?>
                 </div>
@@ -100,7 +100,7 @@
                     if(empty($disabled)){
                         wp_editor($abm_meta_foto,'foto',array('textarea_name' => 'foto', 'textarea_rows' => 10));
                     }else{
-                        echo $abm_meta_foto;
+                        echo do_shortcode($abm_meta_foto);
                     }
                 ?>
                 </div>
@@ -112,7 +112,7 @@
                     if(empty($disabled)){
                         wp_editor($abm_meta_video,'video',array('textarea_name' => 'video', 'textarea_rows' => 10));
                     }else{
-                        echo $abm_meta_video;
+                        echo do_shortcode($abm_meta_video);
                     }
                 ?>
                 </div>

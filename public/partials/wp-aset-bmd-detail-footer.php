@@ -11,7 +11,7 @@
         if(!empty($params['key']['edit'])){
             wp_editor($meta_kronologi,'kronologi',array('textarea_name' => 'kronologi', 'textarea_rows' => 20)); 
         }else{
-            echo $meta_kronologi;
+            echo do_shortcode($meta_kronologi);
         }
     ?>
     </div>
@@ -23,7 +23,7 @@
         if(!empty($params['key']['edit'])){
             wp_editor($meta_foto,'foto',array('textarea_name' => 'foto', 'textarea_rows' => 10)); 
         }else{
-            echo $meta_foto;
+            echo do_shortcode($meta_foto);
         }
     ?>
     </div>
@@ -35,7 +35,7 @@
         if(!empty($params['key']['edit'])){
             wp_editor($meta_video,'video',array('textarea_name' => 'video', 'textarea_rows' => 10)); 
         }else{
-            echo $meta_video;
+            echo do_shortcode($meta_video);
         }
     ?>
     </div>
