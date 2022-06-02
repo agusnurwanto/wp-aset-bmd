@@ -142,6 +142,10 @@ foreach($query->posts as $post){
             array(
                 'key' =>'delete',
                 'value' => $post->ID
+            ),
+            array(
+                'key' =>'skip',
+                'value' => 1
             )
         );
         $link_delete = $this->functions->get_link_post($current_post);
