@@ -774,7 +774,17 @@ class Wp_Aset_Bmd_Admin {
 	        		->set_default_value('#005ACC'),
 	        	Field::make( 'image', 'crb_icon_jalan', 'Icon aset Jaringan dan Irigrasi' )
 	        		->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL.'public/images/lokasi.png')
+        			->set_default_value(BMD_PLUGIN_URL.'public/images/lokasi.png'),
+				Field::make( 'color', 'crb_warna_tanah_sdh_bersertifikat', 'Warna garis aset Tanah Sudah Bersertifikat' )
+	        		->set_default_value('#EB00FF'),
+				Field::make( 'image', 'crb_icon_tanah_sdh_bersertifikat', 'Icon aset Tanah Sudah Bersertifikat' )
+	        		->set_value_type('url')
+        			->set_default_value(BMD_PLUGIN_URL.'public/images/lokasi.png'),
+				Field::make( 'color', 'crb_warna_tanah_blm_bersertifikat', 'Warna garis aset Tanah Belum Bersertifikat' )
+	        		->set_default_value('#FFF800'),
+				Field::make( 'image', 'crb_icon_tanah_blm_bersertifikat', 'Icon aset Tanah Belum Bersertifikat' )
+	        		->set_value_type('url')
+        			->set_default_value(BMD_PLUGIN_URL.'public/images/lokasi.png'),
 	        ) );
 	}
 

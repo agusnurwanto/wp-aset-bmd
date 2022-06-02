@@ -181,12 +181,25 @@ foreach($query->posts as $post){
         'show_header' => 1,
         'no_key' => 1
     ));
+
+    $tanggal_sertifikat = substr($aset[0]->Sertifikat_Tanggal,0,10);
+    $no_sertifikat = $aset[0]->Sertifikat_Nomor;
+
     $keterangan = array($this->filter_string($aset[0]->Keterangan));
     $warna_map = '';
     $ikon_map = '';
+
     if ($data_jenis['jenis'] == 'tanah') {
-        $warna_map = get_option('_crb_warna_tanah');
-        $ikon_map  = get_option('_crb_icon_tanah');
+        // $warna_map = get_option('_crb_warna_tanah');
+        // $ikon_map  = get_option('_crb_icon_tanah');
+
+        $warna_map = get_option('_crb_warna_tanah_blm_bersertifikat');
+        $ikon_map  = get_option('_crb_icon_tanah_blm_bersertifikat');
+
+        if (!empty($tanggal_sertifikat) && !empty($no_sertifikat)) {
+            $warna_map = get_option('_crb_warna_tanah_sdh_bersertifikat');
+            $ikon_map  = get_option('_crb_icon_tanah_sdh_bersertifikat');
+        }
     }
     if ($data_jenis['jenis'] == 'bangunan') {
         $warna_map = get_option('_crb_warna_gedung');
@@ -209,6 +222,18 @@ foreach($query->posts as $post){
         // continue;
         $polygon = '[]';
     }
+
+    echo "===================";
+    echo "<br>";
+    echo $nama_skpd;
+    echo "<br>";
+    echo $warna_map;
+    echo "<br>";
+    echo $tanggal_sertifikat;
+    echo "<br>";
+    echo $polygon;
+    echo "<br>";
+    echo "===================";
 
     $map_center = '';
     if(!empty($warna_map)){
