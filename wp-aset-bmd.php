@@ -31,6 +31,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 define( 'BMD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'BMD_PLUGIN_PATH', plugin_dir_path(__FILE__) );
 
 // ============== https://carbonfields.net/ ================
 if(!defined('Carbon_Fields_Plugin\PLUGIN_FILE')){
