@@ -18,13 +18,43 @@ $upbs = $this->functions->CurlSimda(array(
     'query' => $sql,
     'no_debug' => 0
 ));
+
+if($url_aset == '#'){
+    $nama_barang_url = $aset_tidak_ditemukan;
+}else{
+    $nama_barang_url = '<a target="_blank" href="'.$url_aset.'" class="btn btn-outline-primary">'.$nama_barang_temuan.'</a>';
+}
+
+$jenis_tanah = $this->get_nama_jenis_aset(array('jenis_aset' => 'tanah'));
+$jenis_bangunan = $this->get_nama_jenis_aset(array('jenis_aset' => 'bangunan'));
+$jenis_mesin = $this->get_nama_jenis_aset(array('jenis_aset' => 'mesin'));
+$jenis_jalan = $this->get_nama_jenis_aset(array('jenis_aset' => 'jalan'));
+$jenis_aset_tetap = $this->get_nama_jenis_aset(array('jenis_aset' => 'aset_tetap'));
+$jenis_bangunan_dalam_pengerjaan = $this->get_nama_jenis_aset(array('jenis_aset' => 'bangunan_dalam_pengerjaan'));
+
 $pilih_jenis_aset = '<option value="">Pilih Jenis Aset</option>';
-if (!empty($jenis_aset) && $jenis_aset != '' ) {
-    $pilih_jenis_aset = '<option value="">'.$jenis_aset.'</option>';
+$list_jenis_aset = array(
+    $jenis_tanah['jenis']   => $jenis_tanah['nama'],
+    $jenis_bangunan['jenis']    => $jenis_bangunan['nama'],
+    $jenis_mesin['jenis']   => $jenis_mesin['nama'],
+    $jenis_jalan['jenis']   => $jenis_jalan['nama'],
+    $jenis_aset_tetap['jenis']  => $jenis_aset_tetap['nama'],
+    $jenis_bangunan_dalam_pengerjaan['jenis']   => $jenis_bangunan_dalam_pengerjaan['nama']
+);
+
+$selected_jenis_aset = '';
+$pilihan_jenis_aset = '<option value="">Pilih Jenis Aset</option>';
+
+foreach ($list_jenis_aset as $key => $value) {
+
+    if (!empty($jenis_aset) && $jenis_aset != '') {
+        $selected_jenis_aset .= 'selected';
+    }
+
+    $pilihan_jenis_aset .= '<option value="'.$key.'" '.$selected_jenis_aset.'>'.$value.'</option>';
 }
 
 $list_upb = '<option value="">Pilih UPB</option>';
-
 $new_upbs = array();
 foreach($upbs as $i => $val){
     $nama_upb = $val->Nm_UPB;
@@ -51,8 +81,6 @@ foreach($upbs as $i => $val){
     }
     $list_upb .= '<option value="'.$kd_upb.'" '.$selected.'>'.$kd_upb.'-'.$nama_upb.$alamat.'</option>';
 }
-
-
 ?>
 <style type="text/css">
     .warning {
@@ -69,7 +97,7 @@ foreach($upbs as $i => $val){
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">OPD yang menindaklanjuti</label>
                 <div class="col-md-10">
-                    <select class="form-control" name="pilih_opd_temuan_bpk" <?php echo $disabled; ?>>
+                    <select class="form-control select2" name="pilih_opd_temuan_bpk" <?php echo $disabled; ?>>
                         <?php echo $list_upb; ?>
                     </select>
                 </div>
@@ -82,14 +110,8 @@ foreach($upbs as $i => $val){
                 </div>
                 <label class="col-md-2 col-form-label">Jenis Aset</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="pilih_jenis_aset" <?php echo $disabled; ?>>
-                        <?php echo $pilih_jenis_aset; ?>
-                        <option value="tanah">Tanah</option>
-                        <option value="bangunan">Bangunan</option>
-                        <option value="mesin">Mesin</option>
-                        <option value="jalan">Jalan</option>
-                        <option value="aset_tetap">Aset Tetap</option>
-                        <option value="bangunan_dalam_pengerjaan">Bangunan Dalam Pengerjaan</option>
+                    <select class="form-control select2" id="pilih_jenis_aset" <?php echo $disabled; ?>>
+                            <?php echo $pilihan_jenis_aset; ?>
                     </select>
                 </div>
                 
@@ -106,14 +128,16 @@ foreach($upbs as $i => $val){
                 </div>
                 <label class="col-md-2 col-form-label">Nama Aset</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="post_id_aset" value="" disabled style="display: none;" />
-                    <span id="link_nama_aset"><?php echo $aset_tidak_ditemukan; ?></span>
+                    <input type="text" class="form-control" name="post_id_aset" value="" disabled style="display: none;" <?php echo $disabled; ?>/>
+                    <input type="text" class="form-control" name="nama_barang_temuan" value="" disabled style="display: none;" <?php echo $nama_barang_temuan; ?>/>
+                    <span id="link_nama_aset"><?php echo $nama_barang_url; ?></span>
+
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Jenis Temuan BPK</label>
                 <div class="col-md-4">
-                    <select class="form-control" name="judul_temuan_bpk" <?php echo $disabled; ?>>
+                    <select class="form-control select2" name="judul_temuan_bpk" <?php echo $disabled; ?>>
                         <?php echo $option_judul_temuan_bpk; ?>
                     </select>
                 </div>
@@ -196,11 +220,10 @@ foreach($upbs as $i => $val){
                 "keterangan_temuan_bpk": jQuery('textarea[name="keterangan_temuan_bpk"]').val(),
                 "lampiran_temuan_bpk": tinyMCE.get('lampiran_temuan_bpk').getContent(),
                 "kode_barang_temuan": jQuery('input[name="kode_barang_temuan"]').val(),
-                "strtotime": "<?php echo $strtotime; ?>",
-
+                "nama_barang_temuan": jQuery('input[name="nama_barang_temuan"]').val(),
             };
         <?php 
-            if(!empty($allow_edit_post)){
+            if(!empty($allow_edit_post) && !empty($edit)){
                 echo "data_post.id_post = ".$post->ID.';';
             }
         ?>
@@ -213,7 +236,7 @@ foreach($upbs as $i => $val){
                     jQuery('#wrap-loading').hide();
                     alert(data.message);
                 <?php 
-                    if(empty($allow_edit_post)){
+                    if(!empty($allow_edit_post) && empty($edit)){
                         echo "window.location.href='".$data_temuan_bpk['url']."';";
                     }
                 ?>
@@ -225,52 +248,59 @@ foreach($upbs as $i => $val){
         }
     }
 
-    jQuery('#cari-aset').on('click', function(){
-        var kd_upb = jQuery('select[name="pilih_opd_temuan_bpk"]').val();
-        if(kd_upb == ''){
-            return alert('Kode UPB tidak boleh kosong!');
-        }
-        var status_aset = jQuery('input[name="status_neraca"]:checked').val();
-        if(status_aset == ''){
-            return alert('Status aset tidak boleh kosong!');
-        }
-        var jenis_aset = jQuery('#pilih_jenis_aset').val();
-        if(jenis_aset == ''){
-            return alert('Jenis aset tidak boleh kosong!');
-        }
-        var kd_barang = jQuery('input[name="kode_barang_temuan"]').val();
-        if(kd_barang.split('.').length < 8){
-            jQuery('input[name="post_id_aset"]').val('');
-            jQuery('#link_nama_aset').html('<?php echo $aset_tidak_ditemukan; ?>');
-            return alert('Format kode barang harus diisi full dengan termasuk kode register!');
-        }
-        jQuery('#wrap-loading').show();
-        jQuery.ajax({
-            url: ajax.url,
-            type: "post",
-            data: {
-                action: 'get_data_barang',
-                api_key: "<?php echo $api_key; ?>",
-                kd_upb: kd_upb,
-                status_aset: status_aset,
-                jenis_aset: jenis_aset,
-                kd_barang: kd_barang
-            },
-            dataType: "json",
-            success: function(data){
-                jQuery('#wrap-loading').hide();
-                if(data.status == 'success'){
-                    jQuery('input[name="post_id_aset"]').val(data.post_id);
-                    jQuery('#link_nama_aset').html('<a target="_blank" href="'+data.url+'" class="btn btn-outline-primary">'+data.nm_aset+'</a>');
-                }else{
-                    jQuery('input[name="post_id_aset"]').val('');
-                    jQuery('#link_nama_aset').html('<?php echo $aset_tidak_ditemukan; ?>');
-                    alert(data.message);
-                }
-            },
-            error: function(e) {
-                console.log(e);
+    jQuery(document).ready(function(){
+        jQuery('.select2').select2();
+        jQuery('#cari-aset').on('click', function(){
+            var kd_upb = jQuery('select[name="pilih_opd_temuan_bpk"]').val();
+            if(kd_upb == ''){
+                return alert('Kode UPB tidak boleh kosong!');
             }
+            var status_aset = jQuery('input[name="status_neraca"]:checked').val();
+            if(status_aset == ''){
+                return alert('Status aset tidak boleh kosong!');
+            }
+            var jenis_aset = jQuery('#pilih_jenis_aset').val();
+            if(jenis_aset == ''){
+                return alert('Jenis aset tidak boleh kosong!');
+            }
+            var kd_barang = jQuery('input[name="kode_barang_temuan"]').val();
+            if(kd_barang.split('.').length < 8){
+                jQuery('input[name="post_id_aset"]').val('');
+                jQuery('input[name="nama_barang_temuan"]').val('');
+                jQuery('#link_nama_aset').html('<?php echo $aset_tidak_ditemukan; ?>');
+                return alert('Format kode barang harus diisi full dengan termasuk kode register!');
+            }
+
+            jQuery('#wrap-loading').show();
+            jQuery.ajax({
+                url: ajax.url,
+                type: "post",
+                data: {
+                    action: 'get_data_barang',
+                    api_key: "<?php echo $api_key; ?>",
+                    kd_upb: kd_upb,
+                    status_aset: status_aset,
+                    jenis_aset: jenis_aset,
+                    kd_barang: kd_barang
+                },
+                dataType: "json",
+                success: function(data){
+                    jQuery('#wrap-loading').hide();
+                    if(data.status == 'success'){
+                        jQuery('input[name="post_id_aset"]').val(data.post_id);
+                        jQuery('input[name="nama_barang_temuan"]').val(data.nm_aset);
+                        jQuery('#link_nama_aset').html('<a target="_blank" href="'+data.url+'" class="btn btn-outline-primary">'+data.nm_aset+'</a>');
+                    }else{
+                        jQuery('input[name="post_id_aset"]').val('');
+                        jQuery('input[name="nama_barang_temuan"]').val('');
+                        jQuery('#link_nama_aset').html('<?php echo $aset_tidak_ditemukan; ?>');
+                        alert(data.message);
+                    }
+                },
+                error: function(e) {
+                    console.log(e);
+                }
+            });
         });
     });
 </script>

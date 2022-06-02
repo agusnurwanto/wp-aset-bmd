@@ -11,13 +11,14 @@ $args = array(
     'posts_per_page' => -1,
     'meta_query' => array(
        array(
-           'key' => 'meta_data_temuan_bpk',
+           'key' => 'meta_judul_temuan_bpk',
            'value' => array(''),
            'compare' => 'NOT IN',
        )
    )
 );
 
+$alert = '';
 $allow_edit = false;
 if(is_user_logged_in()){
     $user_id = get_current_user_id();
@@ -45,7 +46,6 @@ $query = new WP_Query($args);
 foreach($query->posts as $post){
     $post_id = $post->ID;
     $status_neraca = get_post_meta($post_id, 'meta_status_neraca', true);
-    $strtotime = get_post_meta($post->ID, 'meta_strtotime', true);
     $jenis_aset = get_post_meta($post_id, 'meta_pilih_jenis_aset', true);
     $judul_temuan_bpk = get_post_meta($post_id, 'meta_judul_temuan_bpk', true);
     $option_judul_temuan_bpk = $this->get_opsi_jenis_temuan($judul_temuan_bpk);
@@ -55,12 +55,18 @@ foreach($query->posts as $post){
     $pilih_opd_temuan_bpk = get_post_meta($post_id, 'meta_pilih_opd_temuan_bpk', true);
     $nama_opd_temuan_bpk = get_post_meta($post_id, 'meta_nama_opd_temuan_bpk', true);
     $kode_barang_temuan = get_post_meta($post_id, 'meta_kode_barang_temuan', true);
+    $nm_aset = get_post_meta($post_id, 'meta_nama_barang_temuan', true);
     $post_id_aset = get_post_meta($post_id, 'meta_post_id_aset', true);
     $url_aset = '#';
-    $nm_aset = '';
     if(!empty($post_id_aset)){
-        $url_aset = get_permalink($post_id_aset);
-        $nm_aset = get_post_meta($post_id_aset, 'abm_nama_aset', true);
+        $post_aset = get_post($post_id_aset);
+        $post_aset->custom_url = array(
+            array(
+                'key' =>'detail',
+                'value' => 1
+            )
+        );
+        $url_aset = $this->functions->get_link_post($post_aset);
     }
 
     if($status_neraca == '1'){
@@ -167,7 +173,7 @@ if(is_user_logged_in()){
     </div>
 </div>
 <script type="text/javascript">
-
+<?php echo $alert; ?>
 jQuery(document).on('ready', function(){
     jQuery('#data_temuan_bpk').dataTable({
         columnDefs: [
