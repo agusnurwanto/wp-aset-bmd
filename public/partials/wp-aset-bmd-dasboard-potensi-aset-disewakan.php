@@ -18,6 +18,7 @@ if(empty($lat_default) || empty($lng_default)){
 }
 $args = array(
     'posts_per_page' => -1,
+    'post_status' => 'any',
     'meta_query' => array(
        array(
            'key' => 'meta_disewakan',
