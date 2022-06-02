@@ -223,18 +223,6 @@ foreach($query->posts as $post){
         $polygon = '[]';
     }
 
-    echo "===================";
-    echo "<br>";
-    echo $nama_skpd;
-    echo "<br>";
-    echo $warna_map;
-    echo "<br>";
-    echo $tanggal_sertifikat;
-    echo "<br>";
-    echo $polygon;
-    echo "<br>";
-    echo "===================";
-
     $map_center = '';
     if(!empty($warna_map)){
         $map_center = ' <a style="margin-bottom: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a>';
