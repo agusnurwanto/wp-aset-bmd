@@ -1,7 +1,7 @@
 <div class="form-group row">
     <label class="col-md-2 col-form-label">Sejarah</label>
     <div class="col-md-10">
-        <textarea <?php echo $disabled; ?> class="form-control" name="sejarah"><?php echo $meta_sejarah; ?></textarea>
+        <textarea <?php echo $disabled; ?> class="form-control" name="sejarah" rows="10"><?php echo $meta_sejarah; ?></textarea>
     </div>
 </div>
 <div class="form-group row">
