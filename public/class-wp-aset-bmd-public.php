@@ -197,7 +197,6 @@ class Wp_Aset_Bmd_Public {
 		}
 
 		$jenis_aset = $abm_jenis_aset;
-		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
 		$aset_belum_masuk_neraca = $this->functions->generatePage(array(
 			'nama_page' => 'Aset Belum Masuk Neraca',
 			'content' => '[aset_belum_masuk_neraca]',
@@ -206,31 +205,56 @@ class Wp_Aset_Bmd_Public {
 			'post_status' => 'publish'
 		));
 
+		$Kd_Prov = 0;
+        $Kd_Kab_Kota = 0;
+        $Kd_Bidang = 0;
+        $Kd_Unit = 0;
+        $Kd_Sub = 0;
+        $Kd_UPB = 0;
+        $Kd_Kecamatan = 0;
+        $Kd_Desa = 0;
+		if(!empty($abm_kd_upb)){
+			$kd_lokasi = explode('.', $abm_kd_upb);
+			$Kd_Prov = (int) $kd_lokasi[1];
+	        $Kd_Kab_Kota = (int) $kd_lokasi[2];
+	        $Kd_Bidang = (int) $kd_lokasi[3];
+	        $Kd_Unit = (int) $kd_lokasi[4];
+	        $Kd_Sub = (int) $kd_lokasi[5];
+	        $Kd_UPB = (int) $kd_lokasi[6];
+	        $Kd_Kecamatan = (int) $kd_lokasi[7];
+	        $Kd_Desa = (int) $kd_lokasi[8];
+	    }
+		$allow_edit_post = $this->cek_edit_post(array(
+		    'Kd_Prov' => $Kd_Prov,
+		    'Kd_Kab_Kota' => $Kd_Kab_Kota,
+		    'Kd_Bidang' => $Kd_Bidang,
+		    'Kd_Unit' => $Kd_Unit,
+		    'Kd_Sub' => $Kd_Sub,
+		    'Kd_UPB' => $Kd_UPB,
+		    'Kd_Kecamatan' => $Kd_Kecamatan,
+		    'Kd_Desa' => $Kd_Desa
+		));
+	    $user_id = get_current_user_id();
+	    if($allow_edit_post){
+	    	$post->custom_url = array(
+	            array(
+	                'key' =>'edit',
+	                'value' => 1
+	            )
+	        );
+	        $link_edit = $this->functions->get_link_post($post);
+
+	        $daftar_abm = $aset_belum_masuk_neraca['post'];
+	    	$daftar_abm->custom_url = array(
+	            array(
+	                'key' =>'delete',
+	                'value' => $post->ID
+	            )
+	        );
+	        $link_delete = $this->functions->get_link_post($daftar_abm);
+	    }
+
 		$disabled = '';
-		$allow_edit_post = false;
-		if(is_user_logged_in()){
-		    $user_id = get_current_user_id();
-		    if($this->functions->user_has_role($user_id, 'administrator')){
-		    	$allow_edit_post = true;
-		    	$post->custom_url = array(
-		            array(
-		                'key' =>'edit',
-		                'value' => 1
-		            )
-		        );
-		        $link_edit = $this->functions->get_link_post($post);
-
-		        $daftar_abm = $aset_belum_masuk_neraca['post'];
-		    	$daftar_abm->custom_url = array(
-		            array(
-		                'key' =>'delete',
-		                'value' => $post->ID
-		            )
-		        );
-		        $link_delete = $this->functions->get_link_post($daftar_abm);
-		    }
-		}
-
 		if(!empty($_GET) && !empty($_GET['key'])){
 			$params['key'] = $this->functions->decode_key($_GET['key']);
 			if(!empty($params['key']['jenis_aset'])){
@@ -239,8 +263,10 @@ class Wp_Aset_Bmd_Public {
 				$disabled = 'disabled';
 			}
 		}
+		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
+		
 		if($data_jenis['jenis'] == 'tanah'){
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-tambah-tanah-belum-masuk-neraca.php';
+			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-tanah-belum-masuk-neraca.php';
 		}else{
 			echo "Jenis aset tidak ditemukan!";
 		}
@@ -250,35 +276,35 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-belum-masuk-neraca.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-belum-masuk-neraca.php';
 	}
 
 	function petunjuk_penggunaan(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-petunjuk-penggunaan.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-petunjuk-penggunaan.php';
 	}
 
 	function klasifikasi_aset(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-klasifikasi-aset.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-klasifikasi-aset.php';
 	}
 
 	function peta_aset(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-peta-aset.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-peta-aset.php';
 	}
 
 	function aset_per_unit(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-per-sub-unit.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-per-sub-unit.php';
 	}
 
 	function dashboard_aset(){
@@ -286,7 +312,7 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-homepage.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-homepage.php';
 	}
 
 	function dashboard_galeri(){
@@ -294,7 +320,7 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-galeri.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-galeri.php';
 	}
 
 	function dashboard_aset_pemda(){
@@ -302,7 +328,7 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-total-aset-pemda.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-total-aset-pemda.php';
 	}
 
 	function dashboard_aset_tanah(){
@@ -312,7 +338,7 @@ class Wp_Aset_Bmd_Public {
 		}
 		$api_googlemap = get_option( '_crb_google_api' );
 		$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-aset-tanah.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-aset-tanah.php';
 	}
 
 	function dashboard_aset_disewakan($atts){
@@ -326,9 +352,9 @@ class Wp_Aset_Bmd_Public {
 		$api_googlemap = get_option( '_crb_google_api' );
 		$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
 		if($params['potensi'] == 1){
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-potensi-aset-disewakan.php';
+			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-dasboard-potensi-aset-disewakan.php';
 		}else{
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-aset-disewakan.php';
+			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-dasboard-aset-disewakan.php';
 		}
 	}
 
@@ -343,21 +369,21 @@ class Wp_Aset_Bmd_Public {
 
 		$api_googlemap = get_option( '_crb_google_api' );
 		$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dasboard-perlu-tindak-lanjut.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-dasboard-perlu-tindak-lanjut.php';
 	}
 
 	function update_release(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-release-update.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-release-update.php';
 	}
 	
 	function dokumentasi_sistem(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-dokumentasi-sistem.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-dokumentasi-sistem.php';
 	}
 
 	function dashboard_aset_user(){
@@ -693,19 +719,19 @@ class Wp_Aset_Bmd_Public {
 		    	$api_googlemap .= '&libraries=drawing';
 		    }
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-header.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-detail-header.php';
         if($params['jenis_aset'] == 'tanah'){
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-tanah.php';
+			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-detail-aset-tanah.php';
         }else if($params['jenis_aset'] == 'mesin'){
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-mesin.php';
+			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-detail-aset-mesin.php';
         }else if($params['jenis_aset'] == 'bangunan'){
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-bangunan.php';
+			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-detail-aset-bangunan.php';
         }else if($params['jenis_aset'] == 'jalan'){
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-jalan.php';
+			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-detail-aset-jalan.php';
         }else if($params['jenis_aset'] == 'aset_tetap'){
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-aset_tetap.php';
+			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-detail-aset-aset_tetap.php';
         }else if($params['jenis_aset'] == 'bangunan_dalam_pengerjaan'){
-			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-detail-aset-bangunan_dalam_pengerjaan.php';
+			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-detail-aset-bangunan_dalam_pengerjaan.php';
         }
 	}
 
@@ -734,9 +760,9 @@ class Wp_Aset_Bmd_Public {
 		
 		if(!empty($params['daftar_aset'])){
 			if(!empty($params['kondisi_simata'])){
-				require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset-meta.php';
+				require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-daftar-aset-meta.php';
 			}else{
-				require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset.php';
+				require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-daftar-aset.php';
 			}
 		}else{
 			$kd_lokasi = explode('.', $params['kd_lokasi']);
@@ -749,9 +775,9 @@ class Wp_Aset_Bmd_Public {
             $Kd_Kecamatan = (int) $kd_lokasi[7];
             $Kd_Desa = (int) $kd_lokasi[8];
 			if(!empty($params['kondisi_simata'])){
-				require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset-meta-rinci.php';
+				require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-daftar-aset-meta-rinci.php';
 			}else{
-				require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-daftar-aset-rinci.php';
+				require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-daftar-aset-rinci.php';
 			}
 		}
 	}
@@ -1139,7 +1165,7 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-posts.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-posts.php';
 
 	}
 	
@@ -1147,7 +1173,7 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-temuan-bpk.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-temuan-bpk.php';
 
 	}
 	
@@ -1245,7 +1271,7 @@ class Wp_Aset_Bmd_Public {
 		    }
 		}
 
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-tambah-temuan-bpk.php';
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-temuan-bpk.php';
 
 	}
 

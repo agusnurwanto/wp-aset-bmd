@@ -276,6 +276,13 @@ class Wp_Aset_Bmd_Admin {
         	'no_key' => 1,
 			'post_status' => 'private'
 		));
+		$mutasi_aset = $this->functions->generatePage(array(
+			'nama_page' => 'Mutasi Aset',
+			'content' => '[mutasi_aset]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'private'
+		));
 		$update_release = $this->functions->generatePage(array(
 			'nama_page' => 'Release Update Version',
 			'content' => '[update_release]',

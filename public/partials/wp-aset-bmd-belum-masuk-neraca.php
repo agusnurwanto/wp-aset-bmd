@@ -8,12 +8,16 @@ $tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
 $alert = '';
-
-$allow_edit = false;
+$tampil_tambah = false;
 if(is_user_logged_in()){
     $user_id = get_current_user_id();
-    if($this->functions->user_has_role($user_id, 'administrator')){
-        $allow_edit = true;
+    if(
+        $this->functions->user_has_role($user_id, 'administrator')
+        || $this->functions->user_has_role($user_id, 'user_aset_skpd')
+        || $this->functions->user_has_role($user_id, 'user_aset_unit_skpd')
+        || $this->functions->user_has_role($user_id, 'user_aset_sub_unit_skpd')
+    ){
+        $tampil_tambah = true;
         if(!empty($_GET) && !empty($_GET['key'])){
             $params['key'] = $this->functions->decode_key($_GET['key']);
             if(!empty($params['key']['delete'])){
@@ -46,6 +50,35 @@ $no = 0;
 $data_aset = array();
 foreach($query->posts as $post){
     $kd_upb = get_post_meta($post->ID, 'abm_kd_upb', true);
+    $Kd_Prov = 0;
+    $Kd_Kab_Kota = 0;
+    $Kd_Bidang = 0;
+    $Kd_Unit = 0;
+    $Kd_Sub = 0;
+    $Kd_UPB = 0;
+    $Kd_Kecamatan = 0;
+    $Kd_Desa = 0;
+    if(!empty($kd_upb)){
+        $kd_lokasi = explode('.', $kd_upb);
+        $Kd_Prov = (int) $kd_lokasi[1];
+        $Kd_Kab_Kota = (int) $kd_lokasi[2];
+        $Kd_Bidang = (int) $kd_lokasi[3];
+        $Kd_Unit = (int) $kd_lokasi[4];
+        $Kd_Sub = (int) $kd_lokasi[5];
+        $Kd_UPB = (int) $kd_lokasi[6];
+        $Kd_Kecamatan = (int) $kd_lokasi[7];
+        $Kd_Desa = (int) $kd_lokasi[8];
+    }
+    $allow_edit = $this->cek_edit_post(array(
+        'Kd_Prov' => $Kd_Prov,
+        'Kd_Kab_Kota' => $Kd_Kab_Kota,
+        'Kd_Bidang' => $Kd_Bidang,
+        'Kd_Unit' => $Kd_Unit,
+        'Kd_Sub' => $Kd_Sub,
+        'Kd_UPB' => $Kd_UPB,
+        'Kd_Kecamatan' => $Kd_Kecamatan,
+        'Kd_Desa' => $Kd_Desa
+    ));
     $abm_nama_upb = get_post_meta($post->ID, 'abm_nama_upb', true);
     $jenis_aset = get_post_meta($post->ID, 'abm_jenis_aset', true);
     $abm_kd_barang = get_post_meta($post->ID, 'abm_kd_barang', true);
@@ -149,7 +182,7 @@ foreach($query->posts as $post){
 
 $tombol_tambah = '';
 $pilihan_aset = array();
-if($allow_edit){
+if($tampil_tambah){
     $tombol_tambah = '<button class="btn btn-primary" onclick="jQuery(\'#mod-aset\').modal(\'show\')" style="margin-bottom: 20px;">Tambah Aset Belum Masuk Neraca</button>';
     $judul_form_input = 'Tambah Aset Belum Masuk Neraca';
     $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => 'tanah'));
