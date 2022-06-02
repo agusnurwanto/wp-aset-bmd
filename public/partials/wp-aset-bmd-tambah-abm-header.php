@@ -3,7 +3,7 @@ $nama_pemda = get_option('_crb_bmd_nama_pemda');
 $tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 $api_key = get_option( '_crb_apikey_simda_bmd' );
 $api_googlemap = get_option( '_crb_google_api' );
-$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
+$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places,drawing";
 $warna_map = get_option('_crb_warna_tanah');
 $ikon_map  = get_option('_crb_icon_tanah');
 

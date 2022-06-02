@@ -159,7 +159,7 @@
         ){
 
             geocoder = new google.maps.Geocoder();
-            geocoder.geocode( { 'address': '<?php echo $nama_pemda.' '.$params['nama_skpd'].' '.$alamat.' '.$aset[0]->Keterangan; ?>'}, function(results, status) {
+            geocoder.geocode( { 'address': cari_lokasi_aset}, function(results, status) {
                 if (status == 'OK') {
                     if(
                         <?php echo $koordinatX; ?> == 0 
