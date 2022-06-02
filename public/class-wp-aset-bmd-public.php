@@ -249,6 +249,10 @@ class Wp_Aset_Bmd_Public {
 	            array(
 	                'key' =>'delete',
 	                'value' => $post->ID
+	            ),
+	            array(
+	                'key' =>'skip',
+	                'value' => 1
 	            )
 	        );
 	        $link_delete = $this->functions->get_link_post($daftar_abm);

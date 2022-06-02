@@ -128,6 +128,11 @@ class Wp_Aset_Bmd_Simda
     		&& !empty($_GET['key'])
     	){
     		$key = base64_decode($_GET['key']);
+    		$decode = $this->decode_key($_GET['key']);
+    		if(!empty($decode['skip'])){
+    			return;
+    		}
+    		
     		$key_db = md5(get_option( '_crb_apikey_simda_bmd' ));
     		$key = explode($key_db, $key);
     		$valid = 0;
