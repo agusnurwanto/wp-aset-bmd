@@ -154,6 +154,18 @@ class Wp_Aset_Bmd_Public {
 		$abm_meta_kondisi_aset_simata = get_post_meta($post->ID, 'abm_meta_kondisi_aset_simata', true);
 		$abm_meta_keterangan_kondisi_aset = get_post_meta($post->ID, 'abm_meta_keterangan_kondisi_aset', true);
 		$abm_meta_ket_potensi_penggunaan = get_post_meta($post->ID, 'abm_meta_ket_potensi_penggunaan', true);
+		$abm_no_polisi = get_post_meta($post->ID, 'abm_meta_no_polisi', true);
+		$abm_merk = get_post_meta($post->ID, 'abm_meta_merk', true);
+		$abm_type = get_post_meta($post->ID, 'abm_meta_type', true);
+		$abm_besar_cc = get_post_meta($post->ID, 'abm_meta_besar_cc', true);
+		$abm_bahan = get_post_meta($post->ID, 'abm_meta_bahan', true);
+		$abm_tgl_perolehan = get_post_meta($post->ID, 'abm_meta_tgl_perolehan', true);
+		$abm_no_rangka = get_post_meta($post->ID, 'abm_meta_no_rangka', true);
+		$abm_no_mesin = get_post_meta($post->ID, 'abm_meta_no_mesin', true);
+		$abm_no_pabrik = get_post_meta($post->ID, 'abm_meta_no_pabrik', true);
+		$abm_no_bpkb = get_post_meta($post->ID, 'abm_meta_no_bpkb', true);
+		$abm_kondisi_aset = get_post_meta($post->ID, 'abm_meta_kondisi_aset', true);
+		$abm_kondisi_aset_simda_bmd = get_post_meta($post->ID, 'abm_meta_kondisi_aset_simda_bmd', true);
 		$checked_sewa = '';
 		$checked_tidak_sewa = 'checked';
 		$potensi_disewakan = '';
@@ -242,6 +254,8 @@ class Wp_Aset_Bmd_Public {
 		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
 		if($data_jenis['jenis'] == 'tanah'){
 			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-tambah-tanah-belum-masuk-neraca.php';
+		}else if($data_jenis['jenis'] == 'mesin'){
+			require_once plugin_dir_path(dirname(__FILE__)) . 'public/partials/wp-aset-bmd-tambah-peralatan-mesin-belum-masuk-neraca.php';
 		}else{
 			echo "Jenis aset tidak ditemukan!";
 		}
@@ -1476,6 +1490,22 @@ class Wp_Aset_Bmd_Public {
 					update_post_meta($post_id, 'abm_meta_kondisi_aset_simata', $_POST['kondisi_aset_simata']);
 					update_post_meta($post_id, 'abm_meta_keterangan_kondisi_aset', $_POST['keterangan_kondisi_aset']);
 					update_post_meta($post_id, 'abm_meta_ket_potensi_penggunaan', $_POST['ket_potensi_penggunaan']);
+
+					if($_POST['jenis_aset'] == 'mesin'){
+						update_post_meta($post_id, 'abm_meta_no_polisi', $_POST['no_polisi']);
+						update_post_meta($post_id, 'abm_meta_merk', $_POST['merk']);
+						update_post_meta($post_id, 'abm_meta_type', $_POST['type']);
+						update_post_meta($post_id, 'abm_meta_besar_cc', $_POST['besar_cc']);
+						update_post_meta($post_id, 'abm_meta_bahan', $_POST['bahan']);
+						update_post_meta($post_id, 'abm_meta_tgl_perolehan', $_POST['tgl_perolehan']);
+						update_post_meta($post_id, 'abm_meta_no_rangka', $_POST['no_rangka']);
+						update_post_meta($post_id, 'abm_meta_no_mesin', $_POST['no_mesin']);
+						update_post_meta($post_id, 'abm_meta_no_pabrik', $_POST['no_pabrik']);
+						update_post_meta($post_id, 'abm_meta_no_bpkb', $_POST['no_bpkb']);
+						update_post_meta($post_id, 'abm_meta_kondisi_aset', $_POST['kondisi_aset']);
+						update_post_meta($post_id, 'abm_meta_kondisi_aset_simda_bmd', $_POST['kondisi_aset_simda_bmd']);
+					}
+
 					$post_status = 'private';
 					if(
 						!empty($_POST['status_informasi'])
