@@ -146,7 +146,7 @@
     window.keterangan     = '<?php echo $aset[0]->Keterangan; ?>';
     window.warna_map      = '<?php echo $warna_map; ?>';
     window.ikon_map       = '<?php echo $ikon_map; ?>';
-    window.cari_lokasi_aset = '<?php echo $nama_pemda.' '.$params['nama_skpd'].' '.$aset[0]->Lokasi.' '.$aset[0]->Keterangan; ?>';
+    window.cari_lokasi_aset = '<?php echo $this->filter_string($nama_pemda.' '.$params['nama_skpd'].' '.$aset[0]->Lokasi.' '.$aset[0]->Keterangan); ?>';
 
     // Menampilkan Informasi Data
     window.contentString = '<br>' +

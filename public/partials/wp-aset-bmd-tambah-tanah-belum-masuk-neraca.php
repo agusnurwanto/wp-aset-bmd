@@ -394,7 +394,7 @@
     window.keterangan     = '<?php echo $this->filter_string($abm_keterangan); ?>';
     window.warna_map      = '<?php echo $warna_map; ?>';
     window.ikon_map       = '<?php echo $ikon_map; ?>';
-    window.cari_lokasi_aset = '<?php echo $nama_pemda.' '.$abm_nama_upb.' '.$this->filter_string($abm_keterangan); ?>';
+    window.cari_lokasi_aset = '<?php echo $this->filter_string($nama_pemda.' '.$abm_nama_upb.' '.$abm_keterangan); ?>';
 
     // Menampilkan Informasi Data
     window.contentString = '<br>' +
