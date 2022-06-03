@@ -16,6 +16,7 @@ $all_jenis = array('mesin', 'bangunan', 'jalan', 'aset_tetap');
 $color = array('red', 'green', 'blue', 'orange', 'purple', 'pink');
 $args = array(
     'posts_per_page' => -1,
+    'post_status' => 'any',
     'meta_query' => array(
        array(
            'key' => 'meta_kondisi_aset_simata',

@@ -15,6 +15,7 @@ $datasets = array();
 $all_jenis = array('mesin', 'bangunan', 'jalan', 'aset_tetap');
 $args = array(
     'posts_per_page' => -1,
+    'post_status' => 'any',
     'meta_query' => array(
        array(
            'key' => 'meta_kondisi_aset_simata',

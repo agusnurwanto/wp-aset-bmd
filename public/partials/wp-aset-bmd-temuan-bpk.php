@@ -9,6 +9,7 @@ $body = '';
 
 $args = array(
     'posts_per_page' => -1,
+    'post_status' => 'any',
     'meta_query' => array(
        array(
            'key' => 'meta_judul_temuan_bpk',

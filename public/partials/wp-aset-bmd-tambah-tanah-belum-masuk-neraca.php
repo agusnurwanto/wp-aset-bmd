@@ -78,17 +78,17 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Sejarah</label>
                 <div class="col-md-10">
-                    <textarea <?php echo $disabled; ?> class="form-control" name="sejarah"><?php echo $abm_meta_sejarah; ?></textarea>
+                    <textarea <?php echo $disabled; ?> rows="10" class="form-control" name="sejarah"><?php echo $abm_meta_sejarah; ?></textarea>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Kronologi</label>
+                <label class="col-md-2 col-form-label">Dokumen Kronologi</label>
                 <div class="col-md-10">
                 <?php 
                     if(empty($disabled)){
                         wp_editor($abm_meta_kronologi,'kronologi',array('textarea_name' => 'kronologi', 'textarea_rows' => 10));
                     }else{
-                        echo $abm_meta_kronologi;
+                        echo do_shortcode($abm_meta_kronologi);
                     }
                 ?>
                 </div>
@@ -100,7 +100,7 @@
                     if(empty($disabled)){
                         wp_editor($abm_meta_foto,'foto',array('textarea_name' => 'foto', 'textarea_rows' => 10));
                     }else{
-                        echo $abm_meta_foto;
+                        echo do_shortcode($abm_meta_foto);
                     }
                 ?>
                 </div>
@@ -112,7 +112,7 @@
                     if(empty($disabled)){
                         wp_editor($abm_meta_video,'video',array('textarea_name' => 'video', 'textarea_rows' => 10));
                     }else{
-                        echo $abm_meta_video;
+                        echo do_shortcode($abm_meta_video);
                     }
                 ?>
                 </div>
@@ -356,7 +356,7 @@
                 "ket_potensi_penggunaan": jQuery('textarea[name="ket_potensi_penggunaan"]').val()
             };
         <?php 
-            if(!empty($allow_edit_post)){
+            if(!empty($allow_edit_post) && !empty($edit)){
                 echo "data_post.id_post = ".$post->ID.';';
             }
         ?>
@@ -369,7 +369,7 @@
                     jQuery('#wrap-loading').hide();
                     alert(data.message);
                 <?php 
-                    if(empty($allow_edit_post)){
+                    if(!empty($allow_edit_post) && empty($edit)){
                         echo "window.location.href='".$aset_belum_masuk_neraca['url']."';";
                     }
                 ?>
