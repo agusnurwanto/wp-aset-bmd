@@ -179,6 +179,11 @@ class Wp_Aset_Bmd_Public {
 			$abm_no_bpkb = '';
 			$abm_kondisi_aset = '';
 			$abm_kondisi_aset_simda_bmd = '';
+			$abm_meta_status_tanah = '';
+			$abm_meta_bertingkat = '';
+			$abm_meta_lokasi = '';
+			$abm_meta_tgl_perolehan = '';
+			$abm_meta_luas_lantai = '';
 		}else{
 			$abm_kd_upb = get_post_meta($post->ID, 'abm_kd_upb', true);
 			$abm_jenis_aset = get_post_meta($post->ID, 'abm_jenis_aset', true);
@@ -228,6 +233,11 @@ class Wp_Aset_Bmd_Public {
 			$abm_no_bpkb = get_post_meta($post->ID, 'abm_meta_no_bpkb', true);
 			$abm_kondisi_aset = get_post_meta($post->ID, 'abm_meta_kondisi_aset', true);
 			$abm_kondisi_aset_simda_bmd = get_post_meta($post->ID, 'abm_meta_kondisi_aset_simda_bmd', true);
+			$abm_meta_status_tanah = get_post_meta($post->ID, 'abm_meta_status_tanah', true);
+			$abm_meta_bertingkat = get_post_meta($post->ID, 'abm_meta_bertingkat', true);
+			$abm_meta_lokasi = get_post_meta($post->ID, 'abm_meta_lokasi', true);
+			$abm_meta_tgl_perolehan = get_post_meta($post->ID, 'abm_meta_tgl_perolehan', true);
+			$abm_meta_luas_lantai = get_post_meta($post->ID, 'abm_meta_luas_lantai', true);
 		}
 
 		$checked_sewa = '';
@@ -334,11 +344,13 @@ class Wp_Aset_Bmd_Public {
 	    }
 
 		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
-		
+
 		if($data_jenis['jenis'] == 'tanah'){
 			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-tanah-belum-masuk-neraca.php';
 		}else if($data_jenis['jenis'] == 'mesin'){
 			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-peralatan-mesin-belum-masuk-neraca.php';
+		}else if($data_jenis['jenis'] == 'bangunan'){
+			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-gedung-bangunan-belum-masuk-neraca.php';
 		}else{
 			echo "Jenis aset tidak ditemukan!";
 		}
@@ -1614,6 +1626,14 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post_id, 'abm_meta_no_mesin', $_POST['no_mesin']);
 						update_post_meta($post_id, 'abm_meta_no_pabrik', $_POST['no_pabrik']);
 						update_post_meta($post_id, 'abm_meta_no_bpkb', $_POST['no_bpkb']);
+						update_post_meta($post_id, 'abm_meta_kondisi_aset', $_POST['kondisi_aset']);
+						update_post_meta($post_id, 'abm_meta_kondisi_aset_simda_bmd', $_POST['kondisi_aset_simda_bmd']);
+					}else if($_POST['jenis_aset'] == 'bangunan'){
+						update_post_meta($post_id, 'abm_meta_status_tanah', $_POST['status_tanah']);
+						update_post_meta($post_id, 'abm_meta_bertingkat', $_POST['bertingkat']);
+						update_post_meta($post_id, 'abm_meta_lokasi', $_POST['lokasi']);
+						update_post_meta($post_id, 'abm_meta_tgl_perolehan', $_POST['tgl_perolehan']);
+						update_post_meta($post_id, 'abm_meta_luas_lantai', $_POST['luas_lantai']);
 						update_post_meta($post_id, 'abm_meta_kondisi_aset', $_POST['kondisi_aset']);
 						update_post_meta($post_id, 'abm_meta_kondisi_aset_simda_bmd', $_POST['kondisi_aset_simda_bmd']);
 					}
