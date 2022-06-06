@@ -14,7 +14,7 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Letak / Alamat*</label>
                 <div class="col-md-10">
-                    <textarea <?php echo $disabled; ?> class="form-control" name="alamat"><?php echo $abm_alamat; ?></textarea>
+                    <textarea <?php echo $disabled; ?> class="form-control" name="lokasi"><?php echo $abm_meta_lokasi; ?></textarea>
                 </div>
             </div>
             <div class="form-group row">
@@ -169,6 +169,13 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label">Aset Perlu Mutasi</label>
+                <div class="col-md-10">
+                    <label><input type="checkbox" <?php echo $disabled.' '. $checked_mutasi_aset ?>  name="mutasi_aset" value="1"> Ya / Tidak</label>
+                    <textarea <?php echo $disabled; ?> class="form-control" name="ket_mutasi_aset"><?php echo $abm_meta_ket_mutasi_aset; ?></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Status informasi aset</label>
                 <div class="col-md-10">
                     <label><input type="radio" <?php echo $disabled.' '.$checked_private; ?> name="status_informasi" value="1"> Privasi / rahasia</label>
@@ -306,8 +313,8 @@
 		if(nama_aset == ''){
 			return alert("Nama Aset tidak boleh kosong!");
 		}
-		var alamat = jQuery('textarea[name="alamat"]').val();
-		if(alamat == ''){
+		var lokasi = jQuery('textarea[name="lokasi"]').val();
+		if(lokasi == ''){
 			return alert("Letak / Alamat aset tidak boleh kosong!");
 		}
 		var keterangan = jQuery('textarea[name="keterangan"]').val();
@@ -328,7 +335,7 @@
                 "nama_aset": nama_aset,
                 "penggunaan": jQuery('input[name="penggunaan"]').val(),
                 "luas": jQuery('input[name="luas"]').val(),
-                "alamat": alamat,
+                "lokasi": lokasi,
                 "tgl_pengadaan": jQuery('input[name="tgl_pengadaan"]').val(),
                 "hak": jQuery('input[name="hak"]').val(),
                 "tgl_sertifikat": jQuery('input[name="tgl_sertifikat"]').val(),
@@ -352,6 +359,8 @@
                 "status_informasi": jQuery('input[name="status_informasi"]:checked').val(),
                 "aset_perlu_tindak_lanjut": jQuery('input[name="aset_perlu_tindak_lanjut"]:checked').val(),
                 "ket_aset_perlu_tindak_lanjut": jQuery('textarea[name="ket_aset_perlu_tindak_lanjut"]').val(),
+                "mutasi_aset": jQuery('input[name="mutasi_aset"]:checked').val(),
+                "ket_mutasi_aset": jQuery('textarea[name="ket_mutasi_aset"]').val(),
                 "ket_penggunaan_aset": jQuery('textarea[name="ket_penggunaan_aset"]').val(),
                 "ket_potensi_penggunaan": jQuery('textarea[name="ket_potensi_penggunaan"]').val()
             };
@@ -386,7 +395,7 @@
     window.kode_aset      = '<?php echo $abm_kd_barang; ?>';
     window.status_aset    = '<?php if(!empty($abm_nomor_sertifikat)){ echo 'Bersertipikat'; }else{ echo 'Belum sertifikat'; } ?>';
     window.luas           = '<?php if(!empty($abm_luas)){ echo number_format($abm_luas,2,",","."); }; ?>';
-    window.alamat         = '<?php echo $this->filter_string($abm_alamat); ?>';
+    window.alamat         = '<?php echo $this->filter_string($abm_meta_lokasi); ?>';
     window.hak_tanah      = '<?php echo $abm_hak; ?>';
     window.tgl_sertipikat = '<?php echo $abm_tgl_sertifikat; ?>';
     window.no_sertipikat  = '<?php echo $abm_nomor_sertifikat; ?>';

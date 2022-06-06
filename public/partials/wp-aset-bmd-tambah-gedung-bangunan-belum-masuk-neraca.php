@@ -187,6 +187,13 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label">Aset Perlu Mutasi</label>
+                <div class="col-md-10">
+                    <label><input type="checkbox" <?php echo $disabled.' '. $checked_mutasi_aset ?>  name="mutasi_aset" value="1"> Ya / Tidak</label>
+                    <textarea <?php echo $disabled; ?> class="form-control" name="ket_mutasi_aset"><?php echo $abm_meta_ket_mutasi_aset; ?></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Status informasi aset</label>
                 <div class="col-md-10">
                     <label><input type="radio" <?php echo $disabled.' '.$checked_private; ?> name="status_informasi" value="1"> Privasi / rahasia</label>
@@ -367,6 +374,8 @@
                 "status_informasi": jQuery('input[name="status_informasi"]:checked').val(),
                 "aset_perlu_tindak_lanjut": jQuery('input[name="aset_perlu_tindak_lanjut"]:checked').val(),
                 "ket_aset_perlu_tindak_lanjut": jQuery('textarea[name="ket_aset_perlu_tindak_lanjut"]').val(),
+                "mutasi_aset": jQuery('input[name="mutasi_aset"]:checked').val(),
+                "ket_mutasi_aset": jQuery('textarea[name="ket_mutasi_aset"]').val(),
                 "ket_penggunaan_aset": jQuery('textarea[name="ket_penggunaan_aset"]').val(),
                 "ket_potensi_penggunaan": jQuery('textarea[name="ket_potensi_penggunaan"]').val()
             };

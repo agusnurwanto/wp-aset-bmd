@@ -140,7 +140,6 @@ class Wp_Aset_Bmd_Public {
 			$abm_nama_aset = '';
 			$abm_penggunaan = '';
 			$abm_luas = '';
-			$abm_alamat = '';
 			$abm_tgl_pengadaan = '';
 			$abm_hak = '';
 			$abm_tgl_sertifikat = '';
@@ -184,6 +183,8 @@ class Wp_Aset_Bmd_Public {
 			$abm_meta_lokasi = '';
 			$abm_meta_tgl_perolehan = '';
 			$abm_meta_luas_lantai = '';
+			$abm_meta_mutasi_aset = '';
+			$abm_meta_ket_mutasi_aset = '';
 		}else{
 			$abm_kd_upb = get_post_meta($post->ID, 'abm_kd_upb', true);
 			$abm_jenis_aset = get_post_meta($post->ID, 'abm_jenis_aset', true);
@@ -193,7 +194,6 @@ class Wp_Aset_Bmd_Public {
 			$abm_nama_aset = get_post_meta($post->ID, 'abm_nama_aset', true);
 			$abm_penggunaan = get_post_meta($post->ID, 'abm_penggunaan', true);
 			$abm_luas = get_post_meta($post->ID, 'abm_luas', true);
-			$abm_alamat = get_post_meta($post->ID, 'abm_alamat', true);
 			$abm_tgl_pengadaan = get_post_meta($post->ID, 'abm_tgl_pengadaan', true);
 			$abm_hak = get_post_meta($post->ID, 'abm_hak', true);
 			$abm_tgl_sertifikat = get_post_meta($post->ID, 'abm_tgl_sertifikat', true);
@@ -238,6 +238,8 @@ class Wp_Aset_Bmd_Public {
 			$abm_meta_lokasi = get_post_meta($post->ID, 'abm_meta_lokasi', true);
 			$abm_meta_tgl_perolehan = get_post_meta($post->ID, 'abm_meta_tgl_perolehan', true);
 			$abm_meta_luas_lantai = get_post_meta($post->ID, 'abm_meta_luas_lantai', true);
+			$abm_meta_mutasi_aset = get_post_meta($post->ID, 'abm_meta_mutasi_aset', true);
+			$abm_meta_ket_mutasi_aset = get_post_meta($post->ID, 'abm_meta_ket_mutasi_aset', true);
 		}
 
 		$checked_sewa = '';
@@ -261,6 +263,10 @@ class Wp_Aset_Bmd_Public {
 		if($post->post_status == 'private'){
 			$checked_private = 'checked';
 			$checked_publish = '';
+		}
+		$checked_mutasi_aset = '';
+		if($abm_meta_mutasi_aset == '1'){
+			$checked_mutasi_aset = 'checked';
 		}
 		$lat_default = $koordinatX;
 		$lng_default = $koordinatY;
@@ -344,13 +350,15 @@ class Wp_Aset_Bmd_Public {
 	    }
 
 		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
-
+		// untuk menentukan form input sesuai jenis aset
 		if($data_jenis['jenis'] == 'tanah'){
 			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-tanah-belum-masuk-neraca.php';
 		}else if($data_jenis['jenis'] == 'mesin'){
 			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-peralatan-mesin-belum-masuk-neraca.php';
 		}else if($data_jenis['jenis'] == 'bangunan'){
 			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-gedung-bangunan-belum-masuk-neraca.php';
+		}else if($data_jenis['jenis'] == 'jalan'){
+			require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-jalan-belum-masuk-neraca.php';
 		}else{
 			echo "Jenis aset tidak ditemukan!";
 		}
@@ -1587,7 +1595,7 @@ class Wp_Aset_Bmd_Public {
 					update_post_meta($post_id, 'abm_nama_aset', $_POST['nama_aset']);
 					update_post_meta($post_id, 'abm_penggunaan', $_POST['penggunaan']);
 					update_post_meta($post_id, 'abm_luas', $_POST['luas']);
-					update_post_meta($post_id, 'abm_alamat', $_POST['alamat']);
+					update_post_meta($post_id, 'abm_meta_lokasi', $_POST['lokasi']);
 					update_post_meta($post_id, 'abm_tgl_pengadaan', $_POST['tgl_pengadaan']);
 					update_post_meta($post_id, 'abm_hak', $_POST['hak']);
 					update_post_meta($post_id, 'abm_tgl_sertifikat', $_POST['tgl_sertifikat']);
@@ -1614,6 +1622,11 @@ class Wp_Aset_Bmd_Public {
 					update_post_meta($post_id, 'abm_meta_kondisi_aset_simata', $_POST['kondisi_aset_simata']);
 					update_post_meta($post_id, 'abm_meta_keterangan_kondisi_aset', $_POST['keterangan_kondisi_aset']);
 					update_post_meta($post_id, 'abm_meta_ket_potensi_penggunaan', $_POST['ket_potensi_penggunaan']);
+					update_post_meta($post_id, 'abm_meta_mutasi_aset', $_POST['mutasi_aset']);
+					update_post_meta($post_id, 'abm_meta_ket_mutasi_aset', $_POST['ket_mutasi_aset']);
+					update_post_meta($post_id, 'abm_meta_kondisi_aset', $_POST['kondisi_aset']);
+					update_post_meta($post_id, 'abm_meta_kondisi_aset_simda_bmd', $_POST['kondisi_aset_simda_bmd']);
+					update_post_meta($post_id, 'abm_meta_tgl_perolehan', $_POST['tgl_perolehan']);
 
 					if($_POST['jenis_aset'] == 'mesin'){
 						update_post_meta($post_id, 'abm_meta_no_polisi', $_POST['no_polisi']);
@@ -1621,21 +1634,24 @@ class Wp_Aset_Bmd_Public {
 						update_post_meta($post_id, 'abm_meta_type', $_POST['type']);
 						update_post_meta($post_id, 'abm_meta_besar_cc', $_POST['besar_cc']);
 						update_post_meta($post_id, 'abm_meta_bahan', $_POST['bahan']);
-						update_post_meta($post_id, 'abm_meta_tgl_perolehan', $_POST['tgl_perolehan']);
 						update_post_meta($post_id, 'abm_meta_no_rangka', $_POST['no_rangka']);
 						update_post_meta($post_id, 'abm_meta_no_mesin', $_POST['no_mesin']);
 						update_post_meta($post_id, 'abm_meta_no_pabrik', $_POST['no_pabrik']);
 						update_post_meta($post_id, 'abm_meta_no_bpkb', $_POST['no_bpkb']);
-						update_post_meta($post_id, 'abm_meta_kondisi_aset', $_POST['kondisi_aset']);
-						update_post_meta($post_id, 'abm_meta_kondisi_aset_simda_bmd', $_POST['kondisi_aset_simda_bmd']);
-					}else if($_POST['jenis_aset'] == 'bangunan'){
-						update_post_meta($post_id, 'abm_meta_status_tanah', $_POST['status_tanah']);
+					}
+					if($_POST['jenis_aset'] == 'bangunan'){
 						update_post_meta($post_id, 'abm_meta_bertingkat', $_POST['bertingkat']);
-						update_post_meta($post_id, 'abm_meta_lokasi', $_POST['lokasi']);
-						update_post_meta($post_id, 'abm_meta_tgl_perolehan', $_POST['tgl_perolehan']);
 						update_post_meta($post_id, 'abm_meta_luas_lantai', $_POST['luas_lantai']);
-						update_post_meta($post_id, 'abm_meta_kondisi_aset', $_POST['kondisi_aset']);
-						update_post_meta($post_id, 'abm_meta_kondisi_aset_simda_bmd', $_POST['kondisi_aset_simda_bmd']);
+					}
+					if($_POST['jenis-aset'] == 'jalan'){
+						update_post_meta($post_id, 'abm_meta_kontruksi', $_POST['kontruksi']);
+						update_post_meta($post_id, 'abm_meta_panjang', $_POST['panjang']);
+						update_post_meta($post_id, 'abm_meta_lebar', $_POST['lebar']);
+						update_post_meta($post_id, 'abm_meta_dokumen_tanggal', $_POST['dokumen_tanggal']);
+						update_post_meta($post_id, 'abm_meta_dokumen_nomor', $_POST['dokumen_nomor']);
+					}
+					if($_POST['jenis_aset'] == 'bangunan' || $_POST['jenis_aset'] == 'jalan'){
+						update_post_meta($post_id, 'abm_meta_status_tanah', $_POST['status_tanah']);
 					}
 
 					$post_status = 'private';

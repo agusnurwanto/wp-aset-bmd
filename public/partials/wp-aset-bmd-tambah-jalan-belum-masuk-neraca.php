@@ -1,4 +1,4 @@
-<?php
+<?php 
     $list_kondisi = ['Pilih Kondisi','Baik','Rusak Ringan','Rusak Berat','Hilang'];
     $kondisi_aset = '';
     foreach ($list_kondisi as $value) {
@@ -10,71 +10,67 @@
         $selected = $abm_kondisi_aset_simda_bmd == $value ? 'selected' : '';
         $kondisi_aset_simda_bmd .= '<option '.$selected.' value="'.$value.'">'.$value.'</option>';
     }
-    
+
     require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-abm-header.php';
 ?>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Nomor Polisi</label>
-                <div class="col-md-4">
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="no_polisi" value="<?php echo $abm_no_polisi; ?>">
-                </div>
-                <label class="col-md-2 col-form-label">Merk</label>
-                <div class="col-md-4">
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="merk" value="<?php echo $abm_merk; ?>">
+                <label class="col-md-2 col-form-label">Lokasi</label>
+                <div class="col-md-10">
+                    <input <?php echo $disabled; ?> type="text" class="form-control" name="lokasi" value="<?php echo $abm_meta_lokasi; ?>">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Type</label>
+                <label class="col-md-2 col-form-label">Kontruksi</label>
                 <div class="col-md-4">
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="type" value="<?php echo $abm_type; ?>">
+                    <input <?php echo $disabled; ?> type="text" class="form-control" name="kontruksi" value="<?php echo $abm_meta_kontruksi; ?>">
                 </div>
-                <label class="col-md-2 col-form-label">CC</label>
+                <label class="col-md-2 col-form-label">Luas (M2)</label>
                 <div class="col-md-4">
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="besar_cc" value="<?php echo $abm_besar_cc; ?>">
+                    <input <?php echo $disabled; ?> type="text"  class="form-control" name="luas" value="<?php echo $abm_meta_luas; ?>">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Bahan</label>
+                <label class="col-md-2 col-form-label">Panjang</label>
                 <div class="col-md-4">
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="bahan" value="<?php echo $abm_bahan; ?>">
+                    <input <?php echo $disabled; ?> type="text" class="form-control" name="panjang" value="<?php echo $abm_meta_panjang; ?>">
                 </div>
+                <label class="col-md-2 col-form-label">Lebar</label>
+                <div class="col-md-4">
+                    <input <?php echo $disabled; ?> type="text"  class="form-control" name="lebar" value="<?php echo $abm_meta_lebar; ?>">
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Tanggal Perolehan</label>
                 <div class="col-md-4">
-                    <input type="date" <?php echo $disabled; ?> class="form-control" name="tgl_perolehan" value="<?php echo $abm_tgl_perolehan; ?>">
+                    <input <?php echo $disabled; ?> type="date"  class="form-control" name="tgl_perolehan" value="<?php echo $abm_meta_tgl_perolehan; ?>">
+                </div>
+                <label class="col-md-2 col-form-label">Status Tanah</label>
+                <div class="col-md-4">
+                    <input <?php echo $disabled; ?> type="text" class="form-control" name="status_tanah" value="<?php echo $abm_meta_status_tanah; ?>">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Nomor Rangka</label>
+                <label class="col-md-2 col-form-label">Dokumen Tanggal</label>
                 <div class="col-md-4">
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="no_rangka" value="<?php echo $abm_no_rangka; ?>">
+                    <input <?php echo $disabled; ?> type="text"  class="form-control" name="dokumen_tanggal" value="<?php echo $abm_meta_dokumen_tanggal; ?>">
                 </div>
-                <label class="col-md-2 col-form-label">Nomor Mesin</label>
+                <label class="col-md-2 col-form-label">Dokumen Nomor</label>
                 <div class="col-md-4">
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="no_mesin" value="<?php echo $abm_no_mesin; ?>">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label">Nomor Pabrik</label>
-                <div class="col-md-4">
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="no_pabrik" value="<?php echo $abm_no_pabrik; ?>">
-                </div>
-                <label class="col-md-2 col-form-label">Nomor BPKB</label>
-                <div class="col-md-4">
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="no_bpkb" value="<?php echo $abm_no_bpkb; ?>">
+                    <input <?php echo $disabled; ?> type="text" class="form-control" name="dokumen_nomor" value="<?php echo $abm_meta_dokumen_nomor; ?>">
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Asal Usul</label>
                 <div class="col-md-4">
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="asal_usul" value="<?php echo $abm_asal_usul; ?>">
+                    <input <?php echo $disabled; ?> type="text"  class="form-control" name="asal_usul" value="<?php echo $abm_asal_usul; ?>">
                 </div>
-                <label class="col-md-2 col-form-label">Harga</label>
+                <label class="col-md-2 col-form-label">Harga (Rp)</label>
                 <div class="col-md-4">
-                    <input type="text" <?php echo $disabled; ?> class="form-control" name="harga" value="<?php echo $abm_harga; ?>">
+                    <input <?php echo $disabled; ?> type="text"  class="form-control" name="harga" value="<?php echo $abm_harga; ?>">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Keterangan</label>
+                <label class="col-md-2 col-form-label">Keterangan*</label>
                 <div class="col-md-10">
                     <textarea <?php echo $disabled; ?>  class="form-control" name="keterangan"><?php echo $abm_keterangan; ?></textarea>
                 </div>
@@ -96,9 +92,31 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-md-2 col-form-label">Koordinat Latitude</label>
+                <div class="col-md-4">
+                    <input <?php echo $disabled; ?> type="text" class="form-control" name="latitude" value="<?php echo $koordinatX; ?>" placeholder="-7.7524434396470605">
+                </div>
+                <label class="col-md-2 col-form-label">Koordinat Longitude</label>
+                <div class="col-md-4">
+                    <input <?php echo $disabled; ?> type="text" class="form-control" name="longitude" value="<?php echo $koordinatY; ?>" placeholder="111.51809306769144">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Polygon / Shape</label>
+                <div class="col-md-10">
+                    <textarea <?php echo $disabled; ?> class="form-control" name="polygon" placeholder="[{lat: -7.751975, lng: 111.517829},{lat: -7.752092, lng: 111.518424},{lat: -7.752815, lng: 111.518344},{lat: -7.752661, lng: 111.5177}]"><?php echo $polygon; ?></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2">Map</label>
+                <div class="col-md-10">
+                	<div style="height:600px; width: 100%;" id="map-canvas"></div>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-2 col-form-label">Sejarah</label>
                 <div class="col-md-10">
-                    <textarea <?php echo $disabled; ?> class="form-control" name="sejarah"><?php echo $abm_meta_sejarah; ?></textarea>
+                    <textarea <?php echo $disabled; ?> rows="10" class="form-control" name="sejarah"><?php echo $abm_meta_sejarah; ?></textarea>
                 </div>
             </div>
             <div class="form-group row">
@@ -227,7 +245,7 @@
                 </div>
             </div>
         <?php endif; ?>
-        </form>
+       	</form>
     </div>
 </div>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/select2.min.js"></script>
@@ -349,16 +367,15 @@
                 "nama_upb": upb.join(' '),
                 "kd_barang": jQuery('input[name="kd_barang"]').val(),
                 "nama_aset": nama_aset,
-                "no_polisi": jQuery('input[name="no_polisi"]').val(),
-                "merk": jQuery('input[name="merk"]').val(),
-                "type": jQuery('input[name="type"]').val(),
-                "besar_cc": jQuery('input[name="besar_cc"]').val(),
-                "bahan": jQuery('input[name="bahan"]').val(),
+                "lokasi": jQuery('input[name="lokasi"]').val(),
+                "kontruksi": jQuery('input[name="kontruksi"]').val(),
+                "luas": jQuery('input[name="luas"]').val(),
+                "panjang": jQuery('input[name="panjang"]').val(),
+                "lebar": jQuery('input[name="lebar"]').val(),
                 "tgl_perolehan": jQuery('input[name="tgl_perolehan"]').val(),
-                "no_rangka": jQuery('input[name="no_rangka"]').val(),
-                "no_mesin": jQuery('input[name="no_mesin"]').val(),
-                "no_pabrik": jQuery('input[name="no_pabrik"]').val(),
-                "no_bpkb": jQuery('input[name="no_bpkb"]').val(),
+                "status_tanah": jQuery('input[name="status_tanah"]').val(),
+                "dokumen_tanggal": jQuery('input[name="dokumen_tanggal"]').val(),
+                "dokumen_nomor": jQuery('input[name="dokumen_nomor"]').val(),
                 "asal_usul": jQuery('input[name="asal_usul"]').val(),
                 "harga": jQuery('input[name="harga"]').val(),
                 "keterangan": keterangan,
@@ -369,26 +386,28 @@
                 "kronologi": tinyMCE.get('kronologi').getContent(),
                 "foto": tinyMCE.get('foto').getContent(),
                 "video": tinyMCE.get('video').getContent(),
+                "latitude": jQuery('input[name="latitude"]').val(),
+                "longitude": jQuery('input[name="longitude"]').val(),
+                "polygon": jQuery('textarea[name="polygon"]').val(),
                 "disewakan": jQuery('input[name="disewakan"]:checked').val(),
-                "ket_potensi_penggunaan": jQuery('textarea[name="ket_potensi_penggunaan"]').val(),
                 "nilai_sewa": jQuery('input[name="nilai_sewa"]').val(),
                 "nama_sewa": jQuery('input[name="nama_sewa"]').val(),
                 "alamat_sewa": jQuery('input[name="alamat_sewa"]').val(),
                 "waktu_sewa_awal": jQuery('input[name="waktu_sewa_awal"]').val(),
                 "waktu_sewa_akhir": jQuery('input[name="waktu_sewa_akhir"]').val(),
-                "ket_penggunaan_aset": jQuery('textarea[name="ket_penggunaan_aset"]').val(),
+                "status_informasi": jQuery('input[name="status_informasi"]:checked').val(),
                 "aset_perlu_tindak_lanjut": jQuery('input[name="aset_perlu_tindak_lanjut"]:checked').val(),
                 "ket_aset_perlu_tindak_lanjut": jQuery('textarea[name="ket_aset_perlu_tindak_lanjut"]').val(),
                 "mutasi_aset": jQuery('input[name="mutasi_aset"]:checked').val(),
                 "ket_mutasi_aset": jQuery('textarea[name="ket_mutasi_aset"]').val(),
-                "status_informasi": jQuery('input[name="status_informasi"]:checked').val()
+                "ket_penggunaan_aset": jQuery('textarea[name="ket_penggunaan_aset"]').val(),
+                "ket_potensi_penggunaan": jQuery('textarea[name="ket_potensi_penggunaan"]').val()
             };
-            <?php 
-                if(!empty($allow_edit_post) && !empty($edit)){
-                    echo "data_post.id_post = ".$post->ID.';';
-                }
-            ?>
-        
+        <?php 
+            if(!empty($allow_edit_post) && !empty($edit)){
+                echo "data_post.id_post = ".$post->ID.';';
+            }
+        ?>
             jQuery.ajax({
                 url: ajax.url,
                 type: "post",
@@ -409,4 +428,56 @@
             });
         }
     }
+
+    // Variabel Informasi Data
+    window.nama_aset      = '<?php echo $abm_nama_aset; ?>';
+    window.kode_aset      = '<?php echo $abm_kd_barang; ?>';
+    window.luas           = '<?php if(!empty($abm_luas)){ echo number_format($abm_luas,2,",","."); }; ?>';
+    window.keterangan     = '<?php echo $this->filter_string($abm_keterangan); ?>';
+    window.warna_map      = '<?php echo $warna_map; ?>';
+    window.ikon_map       = '<?php echo $ikon_map; ?>';
+    window.cari_lokasi_aset = '<?php echo $this->filter_string($nama_pemda.' '.$abm_nama_upb.' '.$abm_keterangan); ?>';
+
+    // Menampilkan Informasi Data
+    window.contentString = '<br>' +
+        '<table width="100%" border="0">' +
+        '<tr>' +
+        '<td width="33%" valign="top" height="25">Nama Aset</td><td valign="top"><center>:</center></td><td valign="top"><b>' + nama_aset + '</b></td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">Luas (M2)</td><td valign="top"><center>:</center></td><td valign="top">' + luas + ' M&sup2;</td>' +
+        '<tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
+        '</tr>' +
+        '</table>';
 </script>
+<?php
+    if(empty($disabled)){
+        $allow_edit_post = true;
+        if(
+            empty($params)
+            || empty($params['key'])
+            || empty($params['key']['edit'])
+        ){
+            $params = array('key' => array('edit' => true));
+        }else{
+            $params['key']['edit'] = true;
+        }
+    }else{
+        $allow_edit_post = false;
+        if(
+            empty($params)
+            || empty($params['key'])
+            || empty($params['key']['edit'])
+        ){
+            $params = array('key' => array('edit' => false));
+        }else{
+            $params['key']['edit'] = false;
+        }
+    }
+    include plugin_dir_path(dirname(__FILE__)) . 'partials/wp-aset-bmd-maps.php'; 
+?>
