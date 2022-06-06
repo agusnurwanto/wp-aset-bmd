@@ -93,14 +93,8 @@ foreach($upbs as $i => $val){
     if($abm_kd_upb == $kd_upb){
         $selected = 'selected';
     }
-	$list_upb .= '<option value="'.$kd_upb.'" '.$selected.'>'.$kd_upb.'-'.$nama_upb.$alamat.'</option>';
+	$list_upb .= '<option value="'.$kd_upb.'" '.$selected.'>'.$kd_upb.' '.$nama_upb.$alamat.'</option>';
 }
-$rek_0_selected = '1.3';
-$rek_1_selected = '1.3.01';
-$rek_2_selected = '1.3.01.01';
-$rek_3_selected = '1.3.01.01';
-$rek_4_selected = '';
-$rek_5_selected = '';
 if(!empty($abm_kd_barang)){
     $kd_barang = explode('.', $abm_kd_barang);
     $rek_0_selected = $kd_barang[0].'.'.$kd_barang[1];
