@@ -183,8 +183,14 @@ foreach($query->posts as $post){
         'no_key' => 1
     ));
 
-    $tanggal_sertifikat = substr($aset[0]->Sertifikat_Tanggal,0,10);
-    $no_sertifikat = $aset[0]->Sertifikat_Nomor;
+    $tanggal_sertifikat = '';
+    $no_sertifikat = '';
+    if(!empty($aset[0]->Sertifikat_Tanggal)){
+        $tanggal_sertifikat = substr($aset[0]->Sertifikat_Tanggal,0,10);
+    }
+    if(!empty($aset[0]->Sertifikat_Nomor)){
+        $no_sertifikat = $aset[0]->Sertifikat_Nomor;
+    }
 
     $keterangan = array($this->filter_string($aset[0]->Keterangan));
     $warna_map = '';
