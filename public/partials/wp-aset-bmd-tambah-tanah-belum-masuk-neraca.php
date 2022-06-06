@@ -78,17 +78,17 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Sejarah</label>
                 <div class="col-md-10">
-                    <textarea <?php echo $disabled; ?> class="form-control" name="sejarah"><?php echo $abm_meta_sejarah; ?></textarea>
+                    <textarea <?php echo $disabled; ?> rows="10" class="form-control" name="sejarah"><?php echo $abm_meta_sejarah; ?></textarea>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Kronologi</label>
+                <label class="col-md-2 col-form-label">Dokumen Kronologi</label>
                 <div class="col-md-10">
                 <?php 
                     if(empty($disabled)){
                         wp_editor($abm_meta_kronologi,'kronologi',array('textarea_name' => 'kronologi', 'textarea_rows' => 10));
                     }else{
-                        echo $abm_meta_kronologi;
+                        echo do_shortcode($abm_meta_kronologi);
                     }
                 ?>
                 </div>
@@ -100,7 +100,7 @@
                     if(empty($disabled)){
                         wp_editor($abm_meta_foto,'foto',array('textarea_name' => 'foto', 'textarea_rows' => 10));
                     }else{
-                        echo $abm_meta_foto;
+                        echo do_shortcode($abm_meta_foto);
                     }
                 ?>
                 </div>
@@ -112,7 +112,7 @@
                     if(empty($disabled)){
                         wp_editor($abm_meta_video,'video',array('textarea_name' => 'video', 'textarea_rows' => 10));
                     }else{
-                        echo $abm_meta_video;
+                        echo do_shortcode($abm_meta_video);
                     }
                 ?>
                 </div>
@@ -204,7 +204,6 @@
     </div>
 </div>
 <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/js/select2.min.js"></script>
-<script async defer src="<?php echo $api_googlemap ?>&libraries=drawing"></script>
 <script type="text/javascript">
 	window.upb = <?php echo json_encode($new_upbs); ?>;
 	jQuery(document).ready(function(){
@@ -357,7 +356,7 @@
                 "ket_potensi_penggunaan": jQuery('textarea[name="ket_potensi_penggunaan"]').val()
             };
         <?php 
-            if(!empty($allow_edit_post)){
+            if(!empty($allow_edit_post) && !empty($edit)){
                 echo "data_post.id_post = ".$post->ID.';';
             }
         ?>
@@ -370,7 +369,7 @@
                     jQuery('#wrap-loading').hide();
                     alert(data.message);
                 <?php 
-                    if(empty($allow_edit_post)){
+                    if(!empty($allow_edit_post) && empty($edit)){
                         echo "window.location.href='".$aset_belum_masuk_neraca['url']."';";
                     }
                 ?>
@@ -382,206 +381,79 @@
         }
     }
 
-    var map;
-    var nama_aset;
-    var kode_aset;
-    var status_aset;
-    var luas;
-    var alamat;
-    var hak_tanah;
-    var tgl_sertifikat;
-    var no_sertipikat;
-    var penggunaan;
-    var keterangan;
-    var warna_map = "<?php echo $warna_map; ?>";
-    var ikon_map = "<?php echo $ikon_map; ?>";
-    
-    function initMap() {
-        var lokasi_aset = new google.maps.LatLng(<?php echo $lat_default; ?>, <?php echo $lng_default; ?>);
-        // Setting Map
-        var mapOptions = {
-            zoom: 18,
-            center: lokasi_aset,
-            mapTypeId: google.maps.MapTypeId.HYBRID
-        };
-        // Membuat Map
-        map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+    // Variabel Informasi Data
+    window.nama_aset      = '<?php echo $abm_nama_aset; ?>';
+    window.kode_aset      = '<?php echo $abm_kd_barang; ?>';
+    window.status_aset    = '<?php if(!empty($abm_nomor_sertifikat)){ echo 'Bersertipikat'; }else{ echo 'Belum sertifikat'; } ?>';
+    window.luas           = '<?php if(!empty($abm_luas)){ echo number_format($abm_luas,2,",","."); }; ?>';
+    window.alamat         = '<?php echo $this->filter_string($abm_alamat); ?>';
+    window.hak_tanah      = '<?php echo $abm_hak; ?>';
+    window.tgl_sertipikat = '<?php echo $abm_tgl_sertifikat; ?>';
+    window.no_sertipikat  = '<?php echo $abm_nomor_sertifikat; ?>';
+    window.penggunaan     = '<?php echo $abm_penggunaan; ?>';
+    window.keterangan     = '<?php echo $this->filter_string($abm_keterangan); ?>';
+    window.warna_map      = '<?php echo $warna_map; ?>';
+    window.ikon_map       = '<?php echo $ikon_map; ?>';
+    window.cari_lokasi_aset = '<?php echo $this->filter_string($nama_pemda.' '.$abm_nama_upb.' '.$abm_keterangan); ?>';
 
-        // Define the LatLng coordinates for the shape.
-        var Coords1 = <?php echo $polygon; ?>;
-        
-        // Variabel Informasi Data
-        nama_aset      = '<?php echo $abm_nama_aset; ?>';
-        kode_aset      = '<?php echo $abm_kd_barang; ?>';
-        status_aset    = '<?php if(!empty($abm_nomor_sertifikat)){ echo 'Bersertipikat'; }else{ echo 'Belum sertifikat'; } ?>';
-        luas           = '<?php if(!empty($abm_luas)){ echo number_format($abm_luas,2,",","."); }; ?>';
-        alamat         = '<?php echo trim($abm_alamat); ?>';
-        hak_tanah      = '<?php echo $abm_hak; ?>';
-        tgl_sertipikat = '<?php echo $abm_tgl_sertifikat; ?>';
-        no_sertipikat  = '<?php echo $abm_nomor_sertifikat; ?>';
-        penggunaan     = '<?php echo $abm_penggunaan; ?>';
-        keterangan     = '<?php echo $abm_keterangan; ?>';
-        warna_map      = '<?php echo $warna_map; ?>';
-        ikon_map       = '<?php echo $ikon_map; ?>';
-
-        // Menampilkan Marker
-        window.evm = new google.maps.Marker({
-            position: lokasi_aset,
-            map: map,
-            icon: ikon_map,
-        <?php if(empty($disabled)): ?>
-            draggable: true,
-        <?php endif; ?>
-            title: 'Lokasi Aset'
-        });
-
-        // Menampilkan Informasi Data
-        var contentString = '<br>' +
-            '<table width="100%" border="0">' +
-            '<tr>' +
-            '<td width="33%" valign="top" height="25">Nama Aset</td><td valign="top"><center>:</center></td><td valign="top"><b>' + nama_aset + '</b></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Status Aset</td><td valign="top"><center>:</center></td><td valign="top">' + status_aset + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Luas</td><td valign="top"><center>:</center></td><td valign="top">' + luas + ' M&sup2;</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Alamat</td><td valign="top"><center>:</center></td><td valign="top">' + alamat + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Hak Tanah</td><td valign="top"><center>:</center></td><td valign="top">' + hak_tanah + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Tgl Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + tgl_sertipikat + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">No Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + no_sertipikat + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Penggunaan</td><td valign="top"><center>:</center></td><td valign="top">' + penggunaan + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
-            '</tr>' +
-            '</table>';
-
-        // Membuat Shape
-        window.evp = new google.maps.Polygon({
-            paths: Coords1,
-            strokeColor: warna_map,
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: warna_map,
-            fillOpacity: 0.45,
-        <?php if(empty($disabled)): ?>
-            editable: true,
-            draggable: true,
-        <?php endif; ?>
-        });
-
-        evp.setMap(map);
-        infoWindow = new google.maps.InfoWindow({
-            content: contentString
-        });
-        google.maps.event.addListener(evp, 'click', function(event) {
-            infoWindow.setPosition(event.latLng);
-            infoWindow.open(map);
-        });
-        google.maps.event.addListener(evm, 'click', function(event) {
-            infoWindow.setPosition(event.latLng);
-            infoWindow.open(map);
-        });
-
-    <?php if(empty($disabled)): ?>
-        google.maps.event.addListener(evm, 'mouseup', function(event) {
-            jQuery('input[name="latitude"]').val(event.latLng.lat());
-            jQuery('input[name="longitude"]').val(event.latLng.lng());
-        });
-        google.maps.event.addListener(evp, 'mouseup', function(event) {
-            jQuery('textarea[name="polygon"]').val(JSON.stringify(evp.getPath().getArray()));
-        });
-
-        window.drawingManager = new google.maps.drawing.DrawingManager({
-            drawingControl: true,
-            drawingControlOptions: {
-                position: google.maps.ControlPosition.TOP_CENTER,
-                drawingModes: [
-                    google.maps.drawing.OverlayType.MARKER,
-                    google.maps.drawing.OverlayType.POLYGON
-                ],
-            },
-            markerOptions: {
-                icon: ikon_map,
-                draggable: true
-            },
-            polygonOptions: {
-                strokeColor: warna_map,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: warna_map,
-                fillOpacity: 0.45,
-                editable: true,
-                draggable: true,
-                zIndex: 1
-            }
-        });
-        drawingManager.setMap(map);
-
-        google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event_draw) {
-            if(event_draw.type == 'marker'){
-                evm.setMap(null);
-                evm = event_draw.overlay;
-                google.maps.event.addListener(evm, 'mouseup', function(event) {
-                    jQuery('input[name="latitude"]').val(event.latLng.lat());
-                    jQuery('input[name="longitude"]').val(event.latLng.lng());
-                });
-                google.maps.event.addListener(evm, 'click', function(event) {
-                    infoWindow.setPosition(event.latLng);
-                    infoWindow.open(map);
-                });
-                jQuery('input[name="latitude"]').val(evm.position.lat());
-                jQuery('input[name="longitude"]').val(evm.position.lng());
-            }else if(event_draw.type == 'polygon'){
-                evp.setMap(null);
-                evp = event_draw.overlay;
-                google.maps.event.addListener(evp, 'mouseup', function(event) {
-                    jQuery('textarea[name="polygon"]').val(JSON.stringify(evp.getPath().getArray()));
-                });
-                google.maps.event.addListener(evp, 'click', function(event) {
-                    infoWindow.setPosition(event.latLng);
-                    infoWindow.open(map);
-                });
-                jQuery('textarea[name="polygon"]').val(JSON.stringify(evp.getPath().getArray()));
-            }
-        });
-
-        // cek jika koordinat kosong maka lokasi center di setting ke alamat pemda
-        if(
-            <?php echo $koordinatX; ?> == 0 
-            || <?php echo $koordinatY; ?> == 0
-            || '<?php echo $polygon; ?>' == '[]'
-        ){
-
-            geocoder = new google.maps.Geocoder();
-            geocoder.geocode( { 'address': '<?php echo $nama_pemda.' '.$abm_nama_upb.' '.$abm_keterangan; ?>'}, function(results, status) {
-                if (status == 'OK') {
-                    if(
-                        <?php echo $koordinatX; ?> == 0 
-                        || <?php echo $koordinatY; ?> == 0
-                    ){
-                        // ganti center map
-                        map.setCenter(results[0].geometry.location);
-                    }
-                } else {
-                    alert('Geocode was not successful for the following reason: ' + status);
-                }
-            });
-        }
-    <?php endif; ?>
-    }
+    // Menampilkan Informasi Data
+    window.contentString = '<br>' +
+        '<table width="100%" border="0">' +
+        '<tr>' +
+        '<td width="33%" valign="top" height="25">Nama Aset</td><td valign="top"><center>:</center></td><td valign="top"><b>' + nama_aset + '</b></td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">Status Aset</td><td valign="top"><center>:</center></td><td valign="top">' + status_aset + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">Luas</td><td valign="top"><center>:</center></td><td valign="top">' + luas + ' M&sup2;</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">Alamat</td><td valign="top"><center>:</center></td><td valign="top">' + alamat + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">Hak Tanah</td><td valign="top"><center>:</center></td><td valign="top">' + hak_tanah + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">Tgl Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + tgl_sertipikat + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">No Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + no_sertipikat + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">Penggunaan</td><td valign="top"><center>:</center></td><td valign="top">' + penggunaan + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
+        '</tr>' +
+        '</table>';
 </script>
+<?php
+    if(empty($disabled)){
+        $allow_edit_post = true;
+        if(
+            empty($params)
+            || empty($params['key'])
+            || empty($params['key']['edit'])
+        ){
+            $params = array('key' => array('edit' => true));
+        }else{
+            $params['key']['edit'] = true;
+        }
+    }else{
+        $allow_edit_post = false;
+        if(
+            empty($params)
+            || empty($params['key'])
+            || empty($params['key']['edit'])
+        ){
+            $params = array('key' => array('edit' => false));
+        }else{
+            $params['key']['edit'] = false;
+        }
+    }
+    include plugin_dir_path(dirname(__FILE__)) . 'partials/wp-aset-bmd-maps.php'; 
+?>

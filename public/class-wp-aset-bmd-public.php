@@ -119,41 +119,93 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		$abm_kd_upb = get_post_meta($post->ID, 'abm_kd_upb', true);
-		$abm_jenis_aset = get_post_meta($post->ID, 'abm_jenis_aset', true);
-		$abm_nama_upb = get_post_meta($post->ID, 'abm_nama_upb', true);
-		$abm_kd_barang = get_post_meta($post->ID, 'abm_kd_barang', true);
-		$abm_kd_register = get_post_meta($post->ID, 'abm_kd_register', true);
-		$abm_nama_aset = get_post_meta($post->ID, 'abm_nama_aset', true);
-		$abm_penggunaan = get_post_meta($post->ID, 'abm_penggunaan', true);
-		$abm_luas = get_post_meta($post->ID, 'abm_luas', true);
-		$abm_alamat = get_post_meta($post->ID, 'abm_alamat', true);
-		$abm_tgl_pengadaan = get_post_meta($post->ID, 'abm_tgl_pengadaan', true);
-		$abm_hak = get_post_meta($post->ID, 'abm_hak', true);
-		$abm_tgl_sertifikat = get_post_meta($post->ID, 'abm_tgl_sertifikat', true);
-		$abm_nomor_sertifikat = get_post_meta($post->ID, 'abm_nomor_sertifikat', true);
-		$abm_asal_usul = get_post_meta($post->ID, 'abm_asal_usul', true);
-		$abm_harga = get_post_meta($post->ID, 'abm_harga', true);
-		$abm_keterangan = get_post_meta($post->ID, 'abm_keterangan', true);
-		$koordinatX = get_post_meta($post->ID, 'abm_latitude', true);
-		$koordinatY = get_post_meta($post->ID, 'abm_longitude', true);
-		$polygon = get_post_meta($post->ID, 'abm_polygon', true);
-		$abm_meta_sejarah = get_post_meta($post->ID, 'abm_meta_sejarah', true);
-		$abm_meta_kronologi = get_post_meta($post->ID, 'abm_meta_kronologi', true);
-		$abm_meta_foto = get_post_meta($post->ID, 'abm_meta_foto', true);
-		$abm_meta_video = get_post_meta($post->ID, 'abm_meta_video', true);
-		$abm_meta_disewakan = get_post_meta($post->ID, 'abm_meta_disewakan', true);
-		$abm_meta_nilai_sewa = get_post_meta($post->ID, 'abm_meta_nilai_sewa', true);
-		$abm_meta_nama_sewa = get_post_meta($post->ID, 'abm_meta_nama_sewa', true);
-		$abm_meta_alamat_sewa = get_post_meta($post->ID, 'abm_meta_alamat_sewa', true);
-		$abm_meta_waktu_sewa_awal = get_post_meta($post->ID, 'abm_meta_waktu_sewa_awal', true);
-		$abm_meta_waktu_sewa_akhir = get_post_meta($post->ID, 'abm_meta_waktu_sewa_akhir', true);
-		$abm_meta_aset_perlu_tindak_lanjut = get_post_meta($post->ID, 'abm_meta_aset_perlu_tindak_lanjut', true);
-		$abm_meta_keterangan_aset_perlu_tindak_lanjut = get_post_meta($post->ID, 'abm_meta_keterangan_aset_perlu_tindak_lanjut', true);
-		$abm_meta_ket_penggunaan_aset = get_post_meta($post->ID, 'abm_meta_ket_penggunaan_aset', true);
-		$abm_meta_kondisi_aset_simata = get_post_meta($post->ID, 'abm_meta_kondisi_aset_simata', true);
-		$abm_meta_keterangan_kondisi_aset = get_post_meta($post->ID, 'abm_meta_keterangan_kondisi_aset', true);
-		$abm_meta_ket_potensi_penggunaan = get_post_meta($post->ID, 'abm_meta_ket_potensi_penggunaan', true);
+		$disabled = '';
+		$edit = false;
+		if(!empty($_GET) && !empty($_GET['key'])){
+			$params['key'] = $this->functions->decode_key($_GET['key']);
+			if(!empty($params['key']['jenis_aset'])){
+				$jenis_aset = $params['key']['jenis_aset'];
+			}else if(!empty($params['key']['detail'])){
+				$disabled = 'disabled';
+			}else if(!empty($params['key']['edit'])){
+				$edit = true;
+			}
+		}
+		if(false == $edit && $disabled == ''){
+			$abm_kd_upb = '';
+			$abm_jenis_aset = '';
+			$abm_nama_upb = '';
+			$abm_kd_barang = '';
+			$abm_kd_register = '';
+			$abm_nama_aset = '';
+			$abm_penggunaan = '';
+			$abm_luas = '';
+			$abm_alamat = '';
+			$abm_tgl_pengadaan = '';
+			$abm_hak = '';
+			$abm_tgl_sertifikat = '';
+			$abm_nomor_sertifikat = '';
+			$abm_asal_usul = '';
+			$abm_harga = '';
+			$abm_keterangan = '';
+			$koordinatX = '';
+			$koordinatY = '';
+			$polygon = '';
+			$abm_meta_sejarah = '';
+			$abm_meta_kronologi = '';
+			$abm_meta_foto = '';
+			$abm_meta_video = '';
+			$abm_meta_disewakan = '';
+			$abm_meta_nilai_sewa = '';
+			$abm_meta_nama_sewa = '';
+			$abm_meta_alamat_sewa = '';
+			$abm_meta_waktu_sewa_awal = '';
+			$abm_meta_waktu_sewa_akhir = '';
+			$abm_meta_aset_perlu_tindak_lanjut = '';
+			$abm_meta_keterangan_aset_perlu_tindak_lanjut = '';
+			$abm_meta_ket_penggunaan_aset = '';
+			$abm_meta_kondisi_aset_simata = '';
+			$abm_meta_keterangan_kondisi_aset = '';
+			$abm_meta_ket_potensi_penggunaan = '';
+		}else{
+			$abm_kd_upb = get_post_meta($post->ID, 'abm_kd_upb', true);
+			$abm_jenis_aset = get_post_meta($post->ID, 'abm_jenis_aset', true);
+			$abm_nama_upb = get_post_meta($post->ID, 'abm_nama_upb', true);
+			$abm_kd_barang = get_post_meta($post->ID, 'abm_kd_barang', true);
+			$abm_kd_register = get_post_meta($post->ID, 'abm_kd_register', true);
+			$abm_nama_aset = get_post_meta($post->ID, 'abm_nama_aset', true);
+			$abm_penggunaan = get_post_meta($post->ID, 'abm_penggunaan', true);
+			$abm_luas = get_post_meta($post->ID, 'abm_luas', true);
+			$abm_alamat = get_post_meta($post->ID, 'abm_alamat', true);
+			$abm_tgl_pengadaan = get_post_meta($post->ID, 'abm_tgl_pengadaan', true);
+			$abm_hak = get_post_meta($post->ID, 'abm_hak', true);
+			$abm_tgl_sertifikat = get_post_meta($post->ID, 'abm_tgl_sertifikat', true);
+			$abm_nomor_sertifikat = get_post_meta($post->ID, 'abm_nomor_sertifikat', true);
+			$abm_asal_usul = get_post_meta($post->ID, 'abm_asal_usul', true);
+			$abm_harga = get_post_meta($post->ID, 'abm_harga', true);
+			$abm_keterangan = get_post_meta($post->ID, 'abm_keterangan', true);
+			$koordinatX = get_post_meta($post->ID, 'abm_latitude', true);
+			$koordinatY = get_post_meta($post->ID, 'abm_longitude', true);
+			$polygon = get_post_meta($post->ID, 'abm_polygon', true);
+			$abm_meta_sejarah = get_post_meta($post->ID, 'abm_meta_sejarah', true);
+			$abm_meta_kronologi = get_post_meta($post->ID, 'abm_meta_kronologi', true);
+			$abm_meta_foto = get_post_meta($post->ID, 'abm_meta_foto', true);
+			$abm_meta_video = get_post_meta($post->ID, 'abm_meta_video', true);
+			$abm_meta_disewakan = get_post_meta($post->ID, 'abm_meta_disewakan', true);
+			$abm_meta_nilai_sewa = get_post_meta($post->ID, 'abm_meta_nilai_sewa', true);
+			$abm_meta_nama_sewa = get_post_meta($post->ID, 'abm_meta_nama_sewa', true);
+			$abm_meta_alamat_sewa = get_post_meta($post->ID, 'abm_meta_alamat_sewa', true);
+			$abm_meta_waktu_sewa_awal = get_post_meta($post->ID, 'abm_meta_waktu_sewa_awal', true);
+			$abm_meta_waktu_sewa_akhir = get_post_meta($post->ID, 'abm_meta_waktu_sewa_akhir', true);
+			$abm_meta_aset_perlu_tindak_lanjut = get_post_meta($post->ID, 'abm_meta_aset_perlu_tindak_lanjut', true);
+			$abm_meta_keterangan_aset_perlu_tindak_lanjut = get_post_meta($post->ID, 'abm_meta_keterangan_aset_perlu_tindak_lanjut', true);
+			$abm_meta_ket_penggunaan_aset = get_post_meta($post->ID, 'abm_meta_ket_penggunaan_aset', true);
+			$abm_meta_kondisi_aset_simata = get_post_meta($post->ID, 'abm_meta_kondisi_aset_simata', true);
+			$abm_meta_keterangan_kondisi_aset = get_post_meta($post->ID, 'abm_meta_keterangan_kondisi_aset', true);
+			$abm_meta_ket_potensi_penggunaan = get_post_meta($post->ID, 'abm_meta_ket_potensi_penggunaan', true);
+			$jenis_aset = $abm_jenis_aset;
+		}
+
 		$checked_sewa = '';
 		$checked_tidak_sewa = 'checked';
 		$potensi_disewakan = '';
@@ -196,7 +248,6 @@ class Wp_Aset_Bmd_Public {
 			$polygon = '[]';
 		}
 
-		$jenis_aset = $abm_jenis_aset;
 		$aset_belum_masuk_neraca = $this->functions->generatePage(array(
 			'nama_page' => 'Aset Belum Masuk Neraca',
 			'content' => '[aset_belum_masuk_neraca]',
@@ -249,20 +300,15 @@ class Wp_Aset_Bmd_Public {
 	            array(
 	                'key' =>'delete',
 	                'value' => $post->ID
+	            ),
+	            array(
+	                'key' =>'skip',
+	                'value' => 1
 	            )
 	        );
 	        $link_delete = $this->functions->get_link_post($daftar_abm);
 	    }
 
-		$disabled = '';
-		if(!empty($_GET) && !empty($_GET['key'])){
-			$params['key'] = $this->functions->decode_key($_GET['key']);
-			if(!empty($params['key']['jenis_aset'])){
-				$jenis_aset = $params['key']['jenis_aset'];
-			}else if(!empty($params['key']['detail'])){
-				$disabled = 'disabled';
-			}
-		}
 		$data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
 		
 		if($data_jenis['jenis'] == 'tanah'){

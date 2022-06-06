@@ -16,6 +16,7 @@ $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&cal
 $where = 'AND a.Sertifikat_Nomor is null';
 $title_sertifikat = 'Belum';
 $thead_sertifikat = '';
+$colspan = '6';
 if(!empty($_GET) && !empty($_GET['sertifikat'])){
     $where = 'AND a.Sertifikat_Nomor is not null';
     if($_GET['sertifikat'] == 1){
@@ -23,6 +24,8 @@ if(!empty($_GET) && !empty($_GET['sertifikat'])){
         $thead_sertifikat = '<th class="text-center">Nomor Sertifikat</th>';
         $warna_map = get_option('_crb_warna_tanah_sdh_bersertifikat');
         $ikon_map  = get_option('_crb_icon_tanah_sdh_bersertifikat');
+        
+        $colspan = '5';
     }
 }
 
@@ -181,7 +184,7 @@ if(!empty($_GET) && !empty($_GET['sertifikat'])){
                 <?php echo $body; ?>
             </tbody>
             <tfoot>
-                <th colspan="6" class="text-center">Total Nilai</th>
+                <th colspan="<?php echo $colspan; ?>" class="text-center">Total Nilai</th>
                 <th class="text-right" id="total_aset">0</th>
                 <th></th>
             <tfoot>
@@ -256,7 +259,7 @@ function initMap() {
             var marker1 = new google.maps.Marker({
                 position: lokasi_aset,
                 map,
-                icon: ikon_map,
+                icon: aset.ikon_map,
                 title: 'Lokasi Aset'
             });
             
@@ -319,10 +322,10 @@ function initMap() {
             // Membuat Shape
             var bentuk_bidang1 = new google.maps.Polygon({
                 paths: Coords1,
-                strokeColor: warna_map,
+                strokeColor: aset.warna_map,
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillColor: warna_map,
+                fillColor: aset.warna_map,
                 fillOpacity: 0.45,
                 html: contentString
             });

@@ -36,13 +36,15 @@ if(is_user_logged_in()){
 }
 
 $args = array(
+    'post_type' => 'post',
+    'post_status' => 'any',
     'posts_per_page' => -1,
     'meta_query' => array(
-       array(
-           'key' => 'abm_kd_register',
-           'value' => array(''),
-           'compare' => 'NOT IN',
-       )
+        array(
+            'key' => 'abm_kd_register',
+            'value' => array(''),
+            'compare' => 'NOT IN',
+        )
    )
 );
 $query = new WP_Query($args);
@@ -125,6 +127,10 @@ foreach($query->posts as $post){
         array(
             'key' =>'detail',
             'value' => 1
+        ),
+        array(
+            'key' =>'skip',
+            'value' => 1
         )
     );
     $link_detail = $this->functions->get_link_post($post);
@@ -135,6 +141,10 @@ foreach($query->posts as $post){
             array(
                 'key' =>'edit',
                 'value' => 1
+            ),
+            array(
+                'key' =>'skip',
+                'value' => 1
             )
         );
         $link_edit = $this->functions->get_link_post($post);
@@ -142,6 +152,10 @@ foreach($query->posts as $post){
             array(
                 'key' =>'delete',
                 'value' => $post->ID
+            ),
+            array(
+                'key' =>'skip',
+                'value' => 1
             )
         );
         $link_delete = $this->functions->get_link_post($current_post);
@@ -152,7 +166,7 @@ foreach($query->posts as $post){
         <tr>
             <td class="text-center">'.$kd_upb.'<br>'.$abm_nama_upb.'</td>
             <td class="text-center">'.$data_jenis['nama'].'</td>
-            <td class="text-center">'.$abm_kd_barang.'.'.$abm_kd_register.'</td>
+            <td class="text-center">'.$abm_kd_barang.'.'.$this->functions->CekNull($abm_kd_register, 6).'</td>
             <td>'.$nama_aset.'</td>
             <td>'.$column_lokasi.'</td>
             <td>'.$keterangan.'</td>
