@@ -4,8 +4,12 @@ $nama_pemda = get_option('_crb_bmd_nama_pemda');
 $tahun_anggaran = get_option('_crb_bmd_tahun_anggaran');
 $api_key = get_option( '_crb_apikey_simda_bmd' );
 $body = '';
-$warna_map = get_option('_crb_warna_tanah');
-$ikon_map  = get_option('_crb_icon_tanah');
+// $warna_map = get_option('_crb_warna_tanah');
+// $ikon_map  = get_option('_crb_icon_tanah');
+
+$warna_map = get_option('_crb_warna_tanah_blm_bersertifikat');
+$ikon_map  = get_option('_crb_icon_tanah_blm_bersertifikat');
+
 $api_googlemap = get_option( '_crb_google_api' );
 $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
 
@@ -18,6 +22,9 @@ if(!empty($_GET) && !empty($_GET['sertifikat'])){
     if($_GET['sertifikat'] == 1){
         $title_sertifikat = 'Sudah';
         $thead_sertifikat = '<th class="text-center">Nomor Sertifikat</th>';
+        $warna_map = get_option('_crb_warna_tanah_sdh_bersertifikat');
+        $ikon_map  = get_option('_crb_icon_tanah_sdh_bersertifikat');
+        
         $colspan = '5';
     }
 }
@@ -99,6 +106,7 @@ foreach($aset as $k => $val){
     }else{
         $alamat = '';
     }
+
     $keterangan = array($this->filter_string($val->Keterangan));
     $tanggal_sertifikat = substr($val->Sertifikat_Tanggal,0,10);
     $tanggal_sertifikat = $val->Sertifikat_Tanggal == '' ? '-' : date("d-m-Y", strtotime($tanggal_sertifikat));

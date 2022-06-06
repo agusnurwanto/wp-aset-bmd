@@ -1318,7 +1318,7 @@ class Wp_Aset_Bmd_Public {
 			$nama_barang_temuan = get_post_meta($post->ID, 'meta_nama_barang_temuan', true);
 			$post_id_aset = get_post_meta($post->ID, 'meta_post_id_aset', true);
 			if(!empty($post_id_aset)){
-				$url_aset = get_permalink($post_id_aset);
+				$url_aset = get_permalink($post_id_aset);	
 				$nm_aset = get_post_meta($post_id_aset, 'abm_nama_aset', true);
 			}
 		}
