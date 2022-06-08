@@ -363,6 +363,7 @@ class Wp_Aset_Bmd_Admin {
 	            		<li><b>Dokumentasi Sistem: <a target="_blank" href="'.$dokumentasi_sistem['url'].'">'.$dokumentasi_sistem['title'].'</a></b></li>
 	            		<li><b>Aset Belum Masuk Neraca: <a target="_blank" href="'.$aset_belum_masuk_neraca['url'].'">'.$aset_belum_masuk_neraca['title'].'</a></b></li>
 	            		<li><b>Temuan BPK: <a target="_blank" href="'.$temuan_bpk['url'].'">'.$temuan_bpk['title'].'</a></b></li>
+	            		<li><b>Mutasi Aset: <a target="_blank" href="'.$mutasi_aset['url'].'">'.$mutasi_aset['title'].'</a></b></li>
 						<li><b>Release Update Version: <a target="_blank" href="'.$update_release['url'].'">'.$update_release['title'].'</a></b></li>
 	            	</ul>
 	            	' ),
@@ -562,6 +563,15 @@ class Wp_Aset_Bmd_Admin {
 		        Field::make( 'text', 'crb_menu_url_14', __( 'URL Menu 14' ) )
         			->set_default_value($temuan_bpk['url']),
 		        Field::make( 'rich_text', 'crb_menu_keterangan_14', __( 'Keterangan Menu 14' ) )
+		        	->set_default_value('keterangan'),
+		        Field::make( 'image', 'crb_menu_logo_15', __( 'Gambar Menu 15' ) )
+		        	->set_value_type('url')
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/mutasi-aset.png'),
+		        Field::make( 'text', 'crb_menu_text_15', __( 'Text Menu 15' ) )
+        			->set_default_value('Mutasi Aset'),
+		        Field::make( 'text', 'crb_menu_url_15', __( 'URL Menu 15' ) )
+        			->set_default_value($mutasi_aset['url']),
+		        Field::make( 'rich_text', 'crb_menu_keterangan_15', __( 'Keterangan Menu 15' ) )
 		        	->set_default_value('keterangan')
 		    ) )
 			->add_tab( __( 'Sub Unit' ), array(

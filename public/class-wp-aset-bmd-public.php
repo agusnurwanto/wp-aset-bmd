@@ -417,6 +417,15 @@ class Wp_Aset_Bmd_Public {
 		$api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&callback=initMap&libraries=places";
 		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-dasboard-perlu-tindak-lanjut.php';
 	}
+	
+	function mutasi_aset(){
+		// untuk disable render shortcode di halaman edit page/post
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-dasboard-mutasi-aset.php';
+	}
 
 	function update_release(){
 		if(!empty($_GET) && !empty($_GET['post'])){
