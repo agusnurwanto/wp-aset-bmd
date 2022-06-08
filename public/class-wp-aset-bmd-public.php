@@ -119,15 +119,17 @@ class Wp_Aset_Bmd_Public {
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
-		$disabled = '';
+		$disabled = 'disabled';
 		$edit = false;
 		if(!empty($_GET) && !empty($_GET['key'])){
 			$params['key'] = $this->functions->decode_key($_GET['key']);
 			if(!empty($params['key']['jenis_aset'])){
 				$jenis_aset = $params['key']['jenis_aset'];
+				$disabled = '';
 			}else if(!empty($params['key']['detail'])){
 				$disabled = 'disabled';
 			}else if(!empty($params['key']['edit'])){
+				$disabled = '';
 				$edit = true;
 			}
 		}
@@ -194,6 +196,7 @@ class Wp_Aset_Bmd_Public {
 			$abm_meta_pencipta = '';
 			$abm_meta_ukuran = '';
 		}else{
+			$this->allow_comment($post);
 			$abm_kd_upb = get_post_meta($post->ID, 'abm_kd_upb', true);
 			$abm_jenis_aset = get_post_meta($post->ID, 'abm_jenis_aset', true);
 			$abm_nama_upb = get_post_meta($post->ID, 'abm_nama_upb', true);
@@ -384,6 +387,13 @@ class Wp_Aset_Bmd_Public {
 		}
 	}
 
+	function tanggapan_publik(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-komentar.php';
+	}
+
 	function aset_belum_masuk_neraca(){
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
@@ -542,6 +552,7 @@ class Wp_Aset_Bmd_Public {
 		}
 		global $post;
 		global $wpdb;
+		$this->allow_comment($post);
 		$params = shortcode_atts( array(
 			'kd_lokasi' => '0.0.0.0.0.0.0.0',
 			'kd_barang' => '0.0.0.0.0.0.0',
@@ -2255,24 +2266,27 @@ class Wp_Aset_Bmd_Public {
 		return addslashes(trim(preg_replace('/\s\s+/', ' ', $text)));
 	}
 
-	function get_comment($url){
-		return '
-			<div class="form-group row">
-                <label class="col-md-2 col-form-label">Tanggapan Publik</label>
-                <div class="col-md-10">
-                    <div id="fb-root"></div>
-                    <script>
-                        (function (d, s, id) {
-                        var js, fjs = d.getElementsByTagName(s)[0];
-                        if (d.getElementById(id)) return;
-                        js = d.createElement(s); js.id = id;
-                        js.src = "//connect.facebook.net/id_ID/all.js#xfbml=1&appId=255775617964700";
-                        fjs.parentNode.insertBefore(js, fjs);
-                        }(document, "script", "facebook-jssdk"));
-                    </script>
-                    <div style="margin: auto;" class="fb-comments" data-href="'.$url.'" data-width="700" data-numposts="5"></div>
-                </div>
-            </div>
-		';
+	function comment_form_title( $default ) {
+		return sprintf( 'Tanggapan Publik: %1$s komentar', number_format_i18n( get_comments_number() ));
+	}
+
+	function comment_form( $default ) {
+		$default['title_reply'] = 'Tambahkan tanggapan';
+		$default['label_submit'] = 'Simpan &raquo;';
+		$default['cancel_reply_link'] = 'Batalkan tanggapan';
+		$default['title_reply_to'] = 'Balas tanggapan untuk %s';
+		return $default;
+	}
+
+	function allow_comment($post){
+		if($post->comment_status != 'open'){
+			wp_update_post(array(
+		        'ID'    =>  $post->ID,
+		        'comment_status'   =>  'open'
+	        ));
+		}
+        add_filter( 'astra_comment_form_title', array($this, 'comment_form_title') );
+        add_filter( 'comment_form_defaults', array($this, 'comment_form') );
+	    return;
 	}
 }

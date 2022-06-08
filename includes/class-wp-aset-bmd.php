@@ -195,7 +195,7 @@ class Wp_Aset_Bmd {
 		$this->loader->add_action('wp_ajax_nopriv_get_rek_barang',  $plugin_public, 'get_rek_barang');
 
 		$this->loader->add_action('wp_ajax_get_data_barang',  $plugin_public, 'get_data_barang');
-		$this->loader->add_action('wp_ajax_nopriv_get_data_barang',  $plugin_public, 'get_rek_barang');
+		$this->loader->add_action('wp_ajax_nopriv_get_data_barang',  $plugin_public, 'get_data_barang');
 
 		$this->loader->add_action('wp_ajax_simpan_aset_belum_masuk_neraca',  $plugin_public, 'simpan_aset_belum_masuk_neraca');
 		$this->loader->add_action('wp_ajax_simpan_aset',  $plugin_public, 'simpan_aset');
@@ -222,6 +222,7 @@ class Wp_Aset_Bmd {
 		add_shortcode('mutasi_aset',  array($plugin_public, 'mutasi_aset'));
 		add_shortcode('update_release',  array($plugin_public, 'update_release'));
 		add_shortcode('dokumentasi_sistem',  array($plugin_public, 'dokumentasi_sistem'));
+		add_shortcode('tanggapan_publik',  array($plugin_public, 'tanggapan_publik'));
 	}
 
 	/**
