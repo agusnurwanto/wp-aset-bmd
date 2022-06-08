@@ -283,6 +283,13 @@ class Wp_Aset_Bmd_Admin {
         	'no_key' => 1,
 			'post_status' => 'private'
 		));
+		$tanggapan_publik = $this->functions->generatePage(array(
+			'nama_page' => 'Tanggapan Publik',
+			'content' => '[tanggapan_publik]',
+			'show_header' => 1,
+			'no_key' => 1,
+			'post_status' => 'publish'
+		));
 		$update_release = $this->functions->generatePage(array(
 			'nama_page' => 'Release Update Version',
 			'content' => '[update_release]',
@@ -364,6 +371,7 @@ class Wp_Aset_Bmd_Admin {
 	            		<li><b>Aset Belum Masuk Neraca: <a target="_blank" href="'.$aset_belum_masuk_neraca['url'].'">'.$aset_belum_masuk_neraca['title'].'</a></b></li>
 	            		<li><b>Temuan BPK: <a target="_blank" href="'.$temuan_bpk['url'].'">'.$temuan_bpk['title'].'</a></b></li>
 	            		<li><b>Mutasi Aset: <a target="_blank" href="'.$mutasi_aset['url'].'">'.$mutasi_aset['title'].'</a></b></li>
+						<li><b>Tanggapan Publik: <a target="_blank" href="'.$tanggapan_publik['url'].'">'.$tanggapan_publik['title'].'</a></b></li>
 						<li><b>Release Update Version: <a target="_blank" href="'.$update_release['url'].'">'.$update_release['title'].'</a></b></li>
 	            	</ul>
 	            	' ),
@@ -572,6 +580,15 @@ class Wp_Aset_Bmd_Admin {
 		        Field::make( 'text', 'crb_menu_url_15', __( 'URL Menu 15' ) )
         			->set_default_value($mutasi_aset['url']),
 		        Field::make( 'rich_text', 'crb_menu_keterangan_15', __( 'Keterangan Menu 15' ) )
+		        	->set_default_value('keterangan'),
+		        Field::make( 'image', 'crb_menu_logo_16', __( 'Gambar Menu 16' ) )
+		        	->set_value_type('url')
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/mutasi-aset.png'),
+		        Field::make( 'text', 'crb_menu_text_16', __( 'Text Menu 16' ) )
+        			->set_default_value('Tanggapan Publik'),
+		        Field::make( 'text', 'crb_menu_url_16', __( 'URL Menu 16' ) )
+        			->set_default_value($tanggapan_publik['url']),
+		        Field::make( 'rich_text', 'crb_menu_keterangan_16', __( 'Keterangan Menu 16' ) )
 		        	->set_default_value('keterangan')
 		    ) )
 			->add_tab( __( 'Sub Unit' ), array(

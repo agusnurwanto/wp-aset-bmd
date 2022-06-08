@@ -493,7 +493,15 @@ class Wp_Aset_Bmd_Public {
 		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-dasboard-mutasi-aset.php';
 	}
 
+	function tanggapan_publik(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tanggapan-publik.php';
+	}
+
 	function update_release(){
+		// untuk disable render shortcode di halaman edit page/post
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}
@@ -501,6 +509,7 @@ class Wp_Aset_Bmd_Public {
 	}
 	
 	function dokumentasi_sistem(){
+		// untuk disable render shortcode di halaman edit page/post
 		if(!empty($_GET) && !empty($_GET['post'])){
 			return '';
 		}

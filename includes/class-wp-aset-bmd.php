@@ -220,6 +220,7 @@ class Wp_Aset_Bmd {
 		add_shortcode('tambah_data_temuan_bpk',  array($plugin_public, 'tambah_data_temuan_bpk'));
 		add_shortcode('temuan_bpk',  array($plugin_public, 'temuan_bpk'));
 		add_shortcode('mutasi_aset',  array($plugin_public, 'mutasi_aset'));
+		add_shortcode('tanggapan_publik',  array($plugin_public, 'tanggapan_publik'));
 		add_shortcode('update_release',  array($plugin_public, 'update_release'));
 		add_shortcode('dokumentasi_sistem',  array($plugin_public, 'dokumentasi_sistem'));
 	}

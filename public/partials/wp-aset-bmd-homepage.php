@@ -300,6 +300,15 @@
                     <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_15'); ?></h3>
                 </a>
             </div>
+            <div class="col-md-2 col-xs-6 animated" data-animation="fadeInUp" data-animation-delay="200">
+                <div class="setbulet bg-info pull-up">
+                    <a href="<?php echo get_option('_crb_menu_url_16'); ?>" target="_blank">
+                        <img src="<?php echo get_option('_crb_menu_logo_16'); ?>">
+                    </a>
+                </div>
+                <a href="<?php echo get_option('_crb_menu_url_16'); ?>" target="_blank">
+                    <h3 class="normal text-white text-xbold text-shadow"><?php echo get_option('_crb_menu_text_16'); ?></h3>
+                </a
         </div>
     </div>
 </section>
