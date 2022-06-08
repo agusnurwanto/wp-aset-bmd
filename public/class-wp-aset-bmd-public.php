@@ -347,7 +347,11 @@ class Wp_Aset_Bmd_Public {
 	            array(
 	                'key' =>'edit',
 	                'value' => 1
-	            )
+				),
+				array(
+					'key' =>'skip',
+					'value' => 1
+				)
 	        );
 	        $link_edit = $this->functions->get_link_post($post);
 
@@ -841,7 +845,11 @@ class Wp_Aset_Bmd_Public {
 		        array(
 		            'key' =>'edit',
 		            'value' => 1
-		        )
+		        ),
+				array(
+					'key' =>'skip',
+					'value' => 1
+				)
 		    );
 		    $link_edit = $this->functions->get_link_post($post);
 		    if(!empty($params['key']['edit'])){
@@ -1386,7 +1394,11 @@ class Wp_Aset_Bmd_Public {
 		            array(
 		                'key' =>'edit',
 		                'value' => 1
-		            )
+		            ),
+					array(
+						'key' =>'skip',
+						'value' => 1
+					)
 		        );
 		        $link_edit = $this->functions->get_link_post($post);
 

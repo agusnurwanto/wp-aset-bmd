@@ -583,7 +583,7 @@ class Wp_Aset_Bmd_Admin {
 		        	->set_default_value('keterangan'),
 		        Field::make( 'image', 'crb_menu_logo_16', __( 'Gambar Menu 16' ) )
 		        	->set_value_type('url')
-        			->set_default_value(BMD_PLUGIN_URL . 'public/images/mutasi-aset.png'),
+        			->set_default_value(BMD_PLUGIN_URL . 'public/images/tanggapan-publik.png'),
 		        Field::make( 'text', 'crb_menu_text_16', __( 'Text Menu 16' ) )
         			->set_default_value('Tanggapan Publik'),
 		        Field::make( 'text', 'crb_menu_url_16', __( 'URL Menu 16' ) )

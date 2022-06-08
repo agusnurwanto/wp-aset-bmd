@@ -90,6 +90,10 @@ foreach($query->posts as $post){
             array(
                 'key' =>'edit',
                 'value' => 1
+            ),
+            array(
+                'key' =>'skip',
+                'value' => 1
             )
         );
         $link_edit = $this->functions->get_link_post($post);
