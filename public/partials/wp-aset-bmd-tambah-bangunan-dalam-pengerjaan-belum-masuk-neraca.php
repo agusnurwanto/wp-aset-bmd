@@ -12,9 +12,9 @@ foreach ($list_kondisi as $value) {
 }
 $rek_0_selected = '1.3';
 $rek_1_selected = '1.3.06';
-$rek_2_selected = '1.3.06';
-$rek_3_selected = '';
-$rek_4_selected = '';
+$rek_2_selected = '1.3.06.01';
+$rek_3_selected = '1.3.06.01.01';
+$rek_4_selected = '1.3.06.01.01.01';
 $rek_5_selected = '';
 
 require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-abm-header.php';
