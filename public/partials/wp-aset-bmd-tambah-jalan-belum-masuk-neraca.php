@@ -32,7 +32,7 @@ require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-abm-header.ph
                 </div>
                 <label class="col-md-2 col-form-label">Luas (M2)</label>
                 <div class="col-md-4">
-                    <input <?php echo $disabled; ?> type="text"  class="form-control" name="luas" value="<?php echo $abm_meta_luas; ?>">
+                    <input <?php echo $disabled; ?> type="text"  class="form-control" name="luas" value="<?php echo $abm_luas; ?>">
                 </div>
             </div>
             <div class="form-group row">

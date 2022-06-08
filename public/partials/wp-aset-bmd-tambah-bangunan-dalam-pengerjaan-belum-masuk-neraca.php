@@ -11,8 +11,8 @@ foreach ($list_kondisi as $value) {
     $kondisi_aset_simda_bmd .= '<option '.$selected.' value="'.$value.'">'.$value.'</option>';
 }
 $rek_0_selected = '1.3';
-$rek_1_selected = '1.3.03';
-$rek_2_selected = '1.3.03';
+$rek_1_selected = '1.3.06';
+$rek_2_selected = '1.3.06';
 $rek_3_selected = '';
 $rek_4_selected = '';
 $rek_5_selected = '';
