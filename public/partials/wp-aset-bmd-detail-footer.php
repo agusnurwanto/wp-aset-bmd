@@ -119,3 +119,4 @@
         <a onclick="simpan_aset(); return false;" href="#" class="btn btn-primary">Simpan</a> <a style="margin-left: 10px;" href="<?php echo $link_post; ?>" class="btn btn-danger">Kembali</a>
     </div>
 </div>
+<?php endif; ?>
