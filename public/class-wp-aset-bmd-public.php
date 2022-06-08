@@ -1800,16 +1800,16 @@ class Wp_Aset_Bmd_Public {
         }
         $skpd = $this->functions->CurlSimda(array(
             'query' => '
-                select 
-                    '.$select_custom.'
+           		select
+            		'.$select_custom.'
                     a.Kd_Prov, 
                     a.Kd_Kab_Kota, 
                     a.Kd_Bidang, 
                     a.Kd_Unit, 
                     a.Kd_Sub, 
                     a.Kd_UPB, 
-                    a.Kd_Kecamatan, 
-                    a.Kd_Desa, 
+                    u.Kd_Kecamatan, 
+                    u.Kd_Desa, 
                     COUNT(a.Harga) as jml, 
                     sum(a.Harga) as harga,
                     u.Nm_UPB,
@@ -1829,13 +1829,13 @@ class Wp_Aset_Bmd_Public {
                     AND a.Kd_Unit = u.Kd_Unit 
                     AND a.Kd_Sub = u.Kd_Sub 
                     AND a.Kd_UPB = u.Kd_UPB 
-                LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=a.Kd_Prov
-                    AND k.Kd_Kab_Kota = a.Kd_Kab_Kota 
-                    AND k.Kd_Kecamatan = a.Kd_Kecamatan
-                LEFT JOIN Ref_Desa d ON d.Kd_Prov=a.Kd_Prov
-                    AND d.Kd_Kab_Kota = a.Kd_Kab_Kota 
-                    AND d.Kd_Kecamatan = a.Kd_Kecamatan
-                    AND d.Kd_Desa = a.Kd_Desa
+                LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
+                    AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
+                    AND k.Kd_Kecamatan = u.Kd_Kecamatan
+                LEFT JOIN Ref_Desa d ON d.Kd_Prov=u.Kd_Prov
+                    AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
+                    AND d.Kd_Kecamatan = u.Kd_Kecamatan
+                    AND d.Kd_Desa = u.Kd_Desa
                 '.$where.'
                 group by a.Kd_Prov, 
                     a.Kd_Kab_Kota, 
@@ -1843,8 +1843,8 @@ class Wp_Aset_Bmd_Public {
                     a.Kd_Unit, 
                     a.Kd_Sub, 
                     a.Kd_UPB, 
-                    a.Kd_Kecamatan, 
-                    a.Kd_Desa,
+                    u.Kd_Kecamatan, 
+                    u.Kd_Desa,
                     s.Nm_Sub_Unit,
                     u.Nm_UPB,
                     k.Nm_Kecamatan,
