@@ -1,46 +1,48 @@
 <?php 
+$list_kondisi = ['Pilih Kondisi','Baik','Rusak Ringan','Rusak Berat','Hilang'];
+$kondisi_aset = '';
+foreach ($list_kondisi as $value) {
+    $selected = $abm_kondisi_aset == $value ? 'selected' : '';
+    $kondisi_aset .= '<option '.$selected.' value="'.$value.'">'.$value.'</option>';
+}
+$kondisi_aset_simda_bmd = '';
+foreach ($list_kondisi as $value) {
+    $selected = $abm_kondisi_aset_simda_bmd == $value ? 'selected' : '';
+    $kondisi_aset_simda_bmd .= '<option '.$selected.' value="'.$value.'">'.$value.'</option>';
+}
 $rek_0_selected = '1.3';
-$rek_1_selected = '1.3.01';
-$rek_2_selected = '1.3.01.01';
-$rek_3_selected = '1.3.01.01';
+$rek_1_selected = '1.3.05';
+$rek_2_selected = '1.3.05';
+$rek_3_selected = '';
 $rek_4_selected = '';
 $rek_5_selected = '';
+
 require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-abm-header.php';
 ?>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Penggunaan</label>
+                <label class="col-md-2 col-form-label">Judul</label>
                 <div class="col-md-4">
-                    <input <?php echo $disabled; ?> type="text" class="form-control" name="penggunaan" value="<?php echo $abm_penggunaan; ?>">
+                    <input <?php echo $disabled; ?> type="text" class="form-control" name="judul" value="<?php echo $abm_meta_judul; ?>">
                 </div>
-                <label class="col-md-2 col-form-label">Luas (M2)</label>
+                <label class="col-md-2 col-form-label">Pencipta</label>
                 <div class="col-md-4">
-                    <input <?php echo $disabled; ?> type="text"  class="form-control" name="luas" value="<?php echo $abm_luas; ?>">
+                    <input <?php echo $disabled; ?> type="text"  class="form-control" name="pencipta" value="<?php echo $abm_meta_pencipta; ?>">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Letak / Alamat*</label>
+                <label class="col-md-2 col-form-label">Bahan</label>
+                <div class="col-md-4">
+                    <input type="text" <?php echo $disabled; ?> class="form-control" name="bahan" value="<?php echo $abm_bahan; ?>">
+                </div>
+                <label class="col-md-2 col-form-label">Ukuran</label>
+                <div class="col-md-4">
+                    <input type="text" <?php echo $disabled; ?> class="form-control" name="ukuran" value="<?php echo $abm_meta_ukuran; ?>">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Tanggal Perolehan</label>
                 <div class="col-md-10">
-                    <textarea <?php echo $disabled; ?> class="form-control" name="lokasi"><?php echo $abm_meta_lokasi; ?></textarea>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label">Tahun Pengadaan</label>
-                <div class="col-md-4">
-                    <input <?php echo $disabled; ?> type="date"  class="form-control" name="tgl_pengadaan" value="<?php echo $abm_tgl_pengadaan; ?>">
-                </div>
-                <label class="col-md-2 col-form-label">Hak</label>
-                <div class="col-md-4">
-                    <input <?php echo $disabled; ?> type="text"  class="form-control" name="hak" value="<?php echo $abm_hak; ?>">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label">Tanggal Sertifikat</label>
-                <div class="col-md-4">
-                    <input <?php echo $disabled; ?> type="date"  class="form-control" name="tgl_sertifikat" value="<?php echo $abm_tgl_sertifikat; ?>">
-                </div>
-                <label class="col-md-2 col-form-label">Nomor Sertifikat</label>
-                <div class="col-md-4">
-                    <input <?php echo $disabled; ?> type="number"  class="form-control" name="nomor_sertifikat" value="<?php echo $abm_nomor_sertifikat; ?>">
+                    <input <?php echo $disabled; ?> type="date"  class="form-control" name="tgl_perolehan" value="<?php echo $abm_meta_tgl_perolehan; ?>">
                 </div>
             </div>
             <div class="form-group row">
@@ -60,25 +62,19 @@ require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-abm-header.ph
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Koordinat Latitude</label>
+                <label class="col-md-2 col-form-label">Kondisi Aset</label>
                 <div class="col-md-4">
-                    <input <?php echo $disabled; ?> type="text" class="form-control" name="latitude" value="<?php echo $koordinatX; ?>" placeholder="-7.7524434396470605">
+                    <select <?php echo $disabled; ?> id="kondisi_aset" name="kondisi_aset" class="form-control"><?php echo $kondisi_aset; ?></select>
                 </div>
-                <label class="col-md-2 col-form-label">Koordinat Longitude</label>
+                <label class="col-md-2 col-form-label">Kondisi Aset SIMDA BMD</label>
                 <div class="col-md-4">
-                    <input <?php echo $disabled; ?> type="text" class="form-control" name="longitude" value="<?php echo $koordinatY; ?>" placeholder="111.51809306769144">
+                    <select <?php echo $disabled; ?> id="kondisi_aset_simda_bmd" name="kondisi_aset_simda_bmd" class="form-control"><?php echo $kondisi_aset_simda_bmd; ?></select>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label">Polygon / Shape</label>
+                <label class="col-md-2 col-form-label">Keterangan Kondisi Aset</label>
                 <div class="col-md-10">
-                    <textarea <?php echo $disabled; ?> class="form-control" name="polygon" placeholder="[{lat: -7.751975, lng: 111.517829},{lat: -7.752092, lng: 111.518424},{lat: -7.752815, lng: 111.518344},{lat: -7.752661, lng: 111.5177}]"><?php echo $polygon; ?></textarea>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2">Map</label>
-                <div class="col-md-10">
-                	<div style="height:600px; width: 100%;" id="map-canvas"></div>
+                    <textarea <?php echo $disabled; ?>  class="form-control" name="keterangan_kondisi_aset"><?php echo $abm_meta_keterangan_kondisi_aset; ?></textarea>
                 </div>
             </div>
 <?php require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-abm-footer.php'; ?>
@@ -185,10 +181,6 @@ require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-abm-header.ph
 		if(nama_aset == ''){
 			return alert("Nama Aset tidak boleh kosong!");
 		}
-		var lokasi = jQuery('textarea[name="lokasi"]').val();
-		if(lokasi == ''){
-			return alert("Letak / Alamat aset tidak boleh kosong!");
-		}
 		var keterangan = jQuery('textarea[name="keterangan"]').val();
 		if(keterangan == ''){
 			return alert("Keterangan aset tidak boleh kosong!");
@@ -205,23 +197,21 @@ require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-abm-header.ph
                 "nama_upb": upb.join(' '),
                 "kd_barang": jQuery('input[name="kd_barang"]').val(),
                 "nama_aset": nama_aset,
-                "penggunaan": jQuery('input[name="penggunaan"]').val(),
-                "luas": jQuery('input[name="luas"]').val(),
-                "lokasi": lokasi,
-                "tgl_pengadaan": jQuery('input[name="tgl_pengadaan"]').val(),
-                "hak": jQuery('input[name="hak"]').val(),
-                "tgl_sertifikat": jQuery('input[name="tgl_sertifikat"]').val(),
-                "nomor_sertifikat": jQuery('input[name="nomor_sertifikat"]').val(),
+                "judul": jQuery('input[name="judul"]').val(),
+                "pencipta": jQuery('input[name="pencipta"]').val(),
+                "bahan": jQuery('input[name="bahan"]').val(),
+                "ukuran": jQuery('input[name="ukuran"]').val(),
+                "tgl_perolehan": jQuery('input[name="tgl_perolehan"]').val(),
                 "asal_usul": jQuery('input[name="asal_usul"]').val(),
                 "harga": jQuery('input[name="harga"]').val(),
                 "keterangan": keterangan,
+                "kondisi_aset": jQuery('#kondisi_aset :selected').val(),
+                "kondisi_aset_simda_bmd": jQuery('#kondisi_aset_simda_bmd :selected').val(),
+                "keterangan_kondisi_aset": jQuery('textarea[name="keterangan_kondisi_aset"]').val(),
                 "sejarah": jQuery('textarea[name="sejarah"]').val(),
                 "kronologi": tinyMCE.get('kronologi').getContent(),
                 "foto": tinyMCE.get('foto').getContent(),
                 "video": tinyMCE.get('video').getContent(),
-                "latitude": jQuery('input[name="latitude"]').val(),
-                "longitude": jQuery('input[name="longitude"]').val(),
-                "polygon": jQuery('textarea[name="polygon"]').val(),
                 "disewakan": jQuery('input[name="disewakan"]:checked').val(),
                 "nilai_sewa": jQuery('input[name="nilai_sewa"]').val(),
                 "nama_sewa": jQuery('input[name="nama_sewa"]').val(),
@@ -261,56 +251,6 @@ require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-abm-header.ph
             });
         }
     }
-
-    // Variabel Informasi Data
-    window.nama_aset      = '<?php echo $abm_nama_aset; ?>';
-    window.kode_aset      = '<?php echo $abm_kd_barang; ?>';
-    window.status_aset    = '<?php if(!empty($abm_nomor_sertifikat)){ echo 'Bersertipikat'; }else{ echo 'Belum sertifikat'; } ?>';
-    window.luas           = '<?php if(!empty($abm_luas)){ echo number_format($abm_luas,2,",","."); }; ?>';
-    window.alamat         = '<?php echo $this->filter_string($abm_meta_lokasi); ?>';
-    window.hak_tanah      = '<?php echo $abm_hak; ?>';
-    window.tgl_sertipikat = '<?php echo $abm_tgl_sertifikat; ?>';
-    window.no_sertipikat  = '<?php echo $abm_nomor_sertifikat; ?>';
-    window.penggunaan     = '<?php echo $abm_penggunaan; ?>';
-    window.keterangan     = '<?php echo $this->filter_string($abm_keterangan); ?>';
-    window.warna_map      = '<?php echo $warna_map; ?>';
-    window.ikon_map       = '<?php echo $ikon_map; ?>';
-    window.cari_lokasi_aset = '<?php echo $this->filter_string($nama_pemda.' '.$abm_nama_upb.' '.$abm_keterangan); ?>';
-
-    // Menampilkan Informasi Data
-    window.contentString = '<br>' +
-        '<table width="100%" border="0">' +
-        '<tr>' +
-        '<td width="33%" valign="top" height="25">Nama Aset</td><td valign="top"><center>:</center></td><td valign="top"><b>' + nama_aset + '</b></td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td valign="top" height="25">Kode Aset</td><td width="2%" valign="top"><center>:</center></td><td width="65%" valign="top">' + kode_aset + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td valign="top" height="25">Status Aset</td><td valign="top"><center>:</center></td><td valign="top">' + status_aset + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td valign="top" height="25">Luas</td><td valign="top"><center>:</center></td><td valign="top">' + luas + ' M&sup2;</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td valign="top" height="25">Alamat</td><td valign="top"><center>:</center></td><td valign="top">' + alamat + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td valign="top" height="25">Hak Tanah</td><td valign="top"><center>:</center></td><td valign="top">' + hak_tanah + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td valign="top" height="25">Tgl Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + tgl_sertipikat + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td valign="top" height="25">No Sertipikat</td><td valign="top"><center>:</center></td><td valign="top">' + no_sertipikat + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td valign="top" height="25">Penggunaan</td><td valign="top"><center>:</center></td><td valign="top">' + penggunaan + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td valign="top" height="25">Keterangan</td><td valign="top"><center>:</center></td><td valign="top">' + keterangan + '</td>' +
-        '</tr>' +
-        '</table>';
 </script>
 <?php
     if(empty($disabled)){
@@ -336,5 +276,4 @@ require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-tambah-abm-header.ph
             $params['key']['edit'] = false;
         }
     }
-    include plugin_dir_path(dirname(__FILE__)) . 'partials/wp-aset-bmd-maps.php'; 
 ?>

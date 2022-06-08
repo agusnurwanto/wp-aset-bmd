@@ -89,8 +89,8 @@ foreach($query->posts as $post){
     if(empty($nilai_aset)){
         $nilai_aset = 0;
     }
-    $alamat_aset = get_post_meta($post->ID, 'abm_alamat', true);
-    $alamat_aset = get_post_meta($post->ID, 'abm_alamat', true);
+    $alamat_aset = get_post_meta($post->ID, 'abm_meta_lokasi', true);
+    $alamat_aset = get_post_meta($post->ID, 'abm_meta_lokasi', true);
     $koordinatX = get_post_meta($post->ID, 'abm_latitude', true);
     if(empty($koordinatX)){
         $koordinatX = '0';
@@ -104,7 +104,10 @@ foreach($query->posts as $post){
     $keterangan_tindak_lanjut = get_post_meta($post->ID, 'abm_meta_keterangan_aset_perlu_tindak_lanjut', true);
     $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $jenis_aset));
     $nama_aset = get_post_meta($post->ID, 'abm_nama_aset', true);
-    $column_lokasi = get_post_meta($post->ID, 'abm_alamat', true);
+    $column_lokasi = get_post_meta($post->ID, 'abm_meta_lokasi', true);
+    if(empty($column_lokasi)){
+        $column_lokasi = '-';
+    }
 
     $warna_map = '';
     $ikon_map = '';
