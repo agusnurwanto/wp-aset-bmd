@@ -53,3 +53,13 @@
 .ast-single-post .entry-content a, .ast-comment-content a:not(.ast-comment-edit-reply-wrap a) {
     text-decoration: none !important;
 }
+#page {
+    min-height: 100vh !important;
+    position: relative !important;
+    padding-bottom: 8rem !important;
+}
+footer {
+    position: absolute !important;
+    width: 100% !important;
+    bottom: 0 !important;
+}
