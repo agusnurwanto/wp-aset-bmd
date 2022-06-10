@@ -1769,6 +1769,9 @@ class Wp_Aset_Bmd_Public {
 					if($judul != $title){
 						$options['post_id'] = $post_id;
 						$this->functions->generatePage($options);
+					}else {
+						$ret['status'] = 'error';
+						$ret['message'] = 'Data sudah ada!';
 					}
 				}
 

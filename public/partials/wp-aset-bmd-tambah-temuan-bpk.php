@@ -44,14 +44,12 @@ $list_jenis_aset = array(
 
 $selected_jenis_aset = '';
 $pilihan_jenis_aset = '<option value="">Pilih Jenis Aset</option>';
-
 foreach ($list_jenis_aset as $key => $value) {
-
-    if (!empty($jenis_aset) && $jenis_aset != '') {
-        $selected_jenis_aset .= 'selected';
+    if ($value == $jenis_aset) {
+        $pilihan_jenis_aset .= '<option value="'.$key.'" selected>'.$value.'</option>';
+    }else {
+        $pilihan_jenis_aset .= '<option value="'.$key.'" '.$selected_jenis_aset.'>'.$value.'</option>';
     }
-
-    $pilihan_jenis_aset .= '<option value="'.$key.'" '.$selected_jenis_aset.'>'.$value.'</option>';
 }
 
 $list_upb = '<option value="">Pilih UPB</option>';
@@ -176,7 +174,7 @@ foreach($upbs as $i => $val){
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Aksi</label>
                 <div class="col-md-10">
-                    <a href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a> <a onclick="return confirm('Apakah anda yakin untuk menghapus aset ini?');" href="<?php echo $link_delete; ?>" class="btn btn-danger">Delete Post</a>
+                    <a href="<?php echo $link_edit; ?>" class="btn btn-primary">Edit Post</a><a style="margin-left: 10px;" href="<?php echo $data_temuan_bpk['url']; ?>" class="btn btn-info">Kembali</a> <a onclick="return confirm('Apakah anda yakin untuk menghapus aset ini?');" href="<?php echo $link_delete; ?>" class="btn btn-danger" style="position: absolute;right:25%;top:0" >Delete Post</a>
                 </div>
             </div>
         <?php endif; ?>
