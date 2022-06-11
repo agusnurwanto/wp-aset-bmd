@@ -16,7 +16,7 @@ $api_googlemap = "https://maps.googleapis.com/maps/api/js?key=$api_googlemap&cal
 $where = 'AND a.Sertifikat_Nomor is null';
 $title_sertifikat = 'Belum';
 $thead_sertifikat = '';
-$colspan = '6';
+$colspan = '5';
 if(!empty($_GET) && !empty($_GET['sertifikat'])){
     $where = 'AND a.Sertifikat_Nomor is not null';
     if($_GET['sertifikat'] == 1){
@@ -24,8 +24,7 @@ if(!empty($_GET) && !empty($_GET['sertifikat'])){
         $thead_sertifikat = '<th class="text-center">Nomor Sertifikat</th>';
         $warna_map = get_option('_crb_warna_tanah_sdh_bersertifikat');
         $ikon_map  = get_option('_crb_icon_tanah_sdh_bersertifikat');
-        
-        $colspan = '5';
+        $colspan = '6';
     }
 }
 
@@ -209,7 +208,7 @@ jQuery(document).on('ready', function(){
         lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "All"]],
         footerCallback: function ( row, data, start, end, display ) {
             var api = this.api();
-            var total_page = api.column( 6, { page: 'current'} )
+            var total_page = api.column( <?php echo $colspan; ?>, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return a + to_number(b);
