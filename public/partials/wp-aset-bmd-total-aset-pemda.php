@@ -245,8 +245,8 @@ update_option('_crb_total_per_jenis', json_encode(array(
             <table class="table table-bordered" id="table-aset-skpd">
                 <thead id="data_header">
                     <tr>
-                        <th class="text-center">Kode Unit</th>
-                        <th class="text-center">Nama Unit</th>
+                        <th class="text-center">Kode Sub Unit</th>
+                        <th class="text-center">Nama Sub Unit</th>
                         <th class="text-center">Nilai (Rupiah)</th>
                         <th class="text-center">Aksi</th>
                     </tr>
