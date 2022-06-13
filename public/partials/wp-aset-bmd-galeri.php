@@ -300,6 +300,12 @@
     .navbar-fixed-bottom .navbar-collapse, .navbar-fixed-top .navbar-collapse {
         max-height: inherit;
     }
+    #page {
+        padding-bottom: 0 !important;
+    }
+    footer {
+        position: relative !important;
+    }
 </style>
 <header id="header">
     <div class="stars"></div>

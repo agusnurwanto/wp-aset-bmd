@@ -56,10 +56,10 @@
 #page {
     min-height: 100vh !important;
     position: relative !important;
-    padding-bottom: 8rem !important;
+    padding-bottom: 8rem;
 }
 footer {
-    position: absolute !important;
+    position: absolute;
     width: 100% !important;
     bottom: 0 !important;
 }
