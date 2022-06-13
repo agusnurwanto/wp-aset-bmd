@@ -1749,7 +1749,6 @@ class Wp_Aset_Bmd_Public {
 
 		if (!empty($_POST)) {
 			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
-				
 				$judul = 'Temuan BPK '.$_POST['judul_temuan_bpk'].' '.$_POST['pilih_opd_temuan_bpk'].' '.$_POST['kode_barang_temuan'];
 				$post_type = 'post';
 				$options = array(
@@ -1761,17 +1760,22 @@ class Wp_Aset_Bmd_Public {
 					'no_key' => 1
 				);
 				if(empty($_POST['id_post'])){
-					$link = $this->functions->generatePage($options);
-					$post_id = $link['id'];
-				}else{
-					$post_id = $_POST['id_post'];
-					$title = get_the_title($post_id);
-					if($judul != $title){
-						$options['post_id'] = $post_id;
-						$this->functions->generatePage($options);
+					$get_title = get_page_by_title( $judul, OBJECT, 'post' );
+					if ($get_title == false) {
+						$link = $this->functions->generatePage($options);
+						$post_id = $link['id'];
+						$title = get_the_title($post_id);
 					}else {
 						$ret['status'] = 'error';
 						$ret['message'] = 'Data sudah ada!';
+						die(json_encode($ret));
+					}
+				}else{
+					$title = get_the_title($post_id);
+					$post_id = $_POST['id_post'];
+					if($judul != $title){
+						$options['post_id'] = $post_id;
+						$this->functions->generatePage($options);
 					}
 				}
 
