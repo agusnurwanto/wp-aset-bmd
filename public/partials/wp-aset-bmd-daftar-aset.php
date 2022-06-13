@@ -190,7 +190,7 @@ foreach($skpd as $k => $val){
     $kd_sub_unit = explode(".", $kd_lokasi);
     $kd_sub_unit = $kd_sub_unit[0].'.'.$kd_sub_unit[1].'.'.$kd_sub_unit[2].'.'.$kd_sub_unit[3].'.'.$kd_sub_unit[4].'.'.$kd_sub_unit[5];
     if(empty($filter_sub_unit[$kd_sub_unit]) && empty($params['user'])){
-        continue;
+        // continue;
     }
     $body_skpd .= '
         <tr>

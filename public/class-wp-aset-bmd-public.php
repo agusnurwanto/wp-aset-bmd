@@ -1021,14 +1021,21 @@ class Wp_Aset_Bmd_Public {
 				            u.Kd_Kab_Kota, 
 				            u.Kd_Bidang, 
 				            u.Kd_Unit, 
+				            u.Kd_Sub, 
 				            b.Nm_Bidang, 
-				            n.Nm_Unit
+				            n.Nm_Unit, 
+            				s.Nm_Sub_Unit
 				        from ref_upb u
 				        LEFT JOIN ref_bidang b ON b.Kd_Bidang=u.Kd_Bidang
 				        LEFT JOIN Ref_Unit n ON n.Kd_Prov=u.Kd_Prov
 				            AND n.Kd_Kab_Kota=u.Kd_Kab_Kota
 				            AND n.Kd_Bidang=u.Kd_Bidang
 				            AND n.Kd_Unit=u.Kd_Unit
+				        INNER JOIN ref_sub_unit s ON u.Kd_Prov=s.Kd_Prov
+				            AND u.Kd_Kab_Kota = s.Kd_Kab_Kota 
+				            AND u.Kd_Bidang = s.Kd_Bidang 
+				            AND u.Kd_Unit = s.Kd_Unit 
+				            AND u.Kd_Sub = s.Kd_Sub
 				        '
 				));
 				$no=0;
@@ -1037,7 +1044,7 @@ class Wp_Aset_Bmd_Public {
 				$all_bidang = array();
 				foreach($skpd as $k => $val){
 				    $kd_bidang = '12.'.$this->functions->CekNull($val->Kd_Prov).'.'.$this->functions->CekNull($val->Kd_Kab_Kota).'.'.$this->functions->CekNull($val->Kd_Bidang);
-				    $kd_lokasi = $kd_bidang.'.'.$this->functions->CekNull($val->Kd_Unit);
+				    $kd_lokasi = $kd_bidang.'.'.$this->functions->CekNull($val->Kd_Unit).'.'.$this->functions->CekNull($val->Kd_Sub);
 				    if(empty($cek_skpd[$kd_lokasi])){
 				        $cek_skpd[$kd_lokasi] = $kd_lokasi;
 				    }else{
@@ -1053,13 +1060,13 @@ class Wp_Aset_Bmd_Public {
 				    $body_skpd .= '
 				        <tr>
 				            <td class="text-center">'.$kd_lokasi.'</td>
-				            <td>'.$val->Nm_Unit.'</td>
+				            <td>'.$val->Nm_Sub_Unit.'</td>
 				            <td class="text-right harga_total" data-kd_lokasi="'.$kd_lokasi.'" data-order="'.$total['data']['total_asli'].'">'.$total['data']['total'].'</td>
-				            <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('kd_lokasi' => $kd_lokasi, 'nama_skpd' => $val->Nm_Unit, 'daftar_aset' => 1))).'" class="btn btn-primary">Detail</a></td>
+				            <td class="text-center"><a target="_blank" href="'.$this->get_link_daftar_aset(array('get' => array('kd_lokasi' => $kd_lokasi, 'nama_skpd' => $val->Nm_Sub_Unit, 'daftar_aset' => 1))).'" class="btn btn-primary">Detail</a></td>
 				        </tr>
 				    ';
 				    $all_skpd[$kd_lokasi] = array(
-				    	'nama' => $val->Nm_Unit,
+				    	'nama' => $val->Nm_Sub_Unit,
 				    	'total' => $total['data']['total_asli']
 				    );
 				    if(empty($all_bidang[$kd_bidang])){
@@ -1749,7 +1756,6 @@ class Wp_Aset_Bmd_Public {
 
 		if (!empty($_POST)) {
 			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
-				
 				$judul = 'Temuan BPK '.$_POST['judul_temuan_bpk'].' '.$_POST['pilih_opd_temuan_bpk'].' '.$_POST['kode_barang_temuan'];
 				$post_type = 'post';
 				$options = array(
@@ -1761,17 +1767,22 @@ class Wp_Aset_Bmd_Public {
 					'no_key' => 1
 				);
 				if(empty($_POST['id_post'])){
-					$link = $this->functions->generatePage($options);
-					$post_id = $link['id'];
-				}else{
-					$post_id = $_POST['id_post'];
-					$title = get_the_title($post_id);
-					if($judul != $title){
-						$options['post_id'] = $post_id;
-						$this->functions->generatePage($options);
+					$get_title = get_page_by_title( $judul, OBJECT, 'post' );
+					if ($get_title == false) {
+						$link = $this->functions->generatePage($options);
+						$post_id = $link['id'];
+						$title = get_the_title($post_id);
 					}else {
 						$ret['status'] = 'error';
 						$ret['message'] = 'Data sudah ada!';
+						die(json_encode($ret));
+					}
+				}else{
+					$title = get_the_title($post_id);
+					$post_id = $_POST['id_post'];
+					if($judul != $title){
+						$options['post_id'] = $post_id;
+						$this->functions->generatePage($options);
 					}
 				}
 
@@ -1835,57 +1846,58 @@ class Wp_Aset_Bmd_Public {
         	$select_custom .= '\''.$params['jenis_aset'].'\' as jenis_aset, ';
         	$select_custom .= '\''.$params['nama_aset'].'\' as nama_aset, ';
         }
+        $sql = '
+        	select
+        		'.$select_custom.'
+                a.Kd_Prov, 
+                a.Kd_Kab_Kota, 
+                a.Kd_Bidang, 
+                a.Kd_Unit, 
+                a.Kd_Sub, 
+                a.Kd_UPB, 
+                u.Kd_Kecamatan, 
+                u.Kd_Desa, 
+                COUNT(a.Harga) as jml, 
+                sum(a.Harga) as harga,
+                u.Nm_UPB,
+                k.Nm_Kecamatan,
+                d.Nm_Desa,
+                s.Nm_Sub_Unit,
+                \''.$table_simda.'\' as table_simda
+            from '.$table_simda.' a
+            INNER JOIN ref_sub_unit s ON a.Kd_Prov=s.Kd_Prov
+                AND a.Kd_Kab_Kota = s.Kd_Kab_Kota 
+                AND a.Kd_Bidang = s.Kd_Bidang 
+                AND a.Kd_Unit = s.Kd_Unit 
+                AND a.Kd_Sub = s.Kd_Sub 
+            LEFT JOIN ref_upb u ON a.Kd_Prov=u.Kd_Prov
+                AND a.Kd_Kab_Kota = u.Kd_Kab_Kota 
+                AND a.Kd_Bidang = u.Kd_Bidang 
+                AND a.Kd_Unit = u.Kd_Unit 
+                AND a.Kd_Sub = u.Kd_Sub 
+                AND a.Kd_UPB = u.Kd_UPB 
+            LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
+                AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
+                AND k.Kd_Kecamatan = u.Kd_Kecamatan
+            LEFT JOIN Ref_Desa d ON d.Kd_Prov=u.Kd_Prov
+                AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
+                AND d.Kd_Kecamatan = u.Kd_Kecamatan
+                AND d.Kd_Desa = u.Kd_Desa
+            '.$where.'
+            group by a.Kd_Prov, 
+                a.Kd_Kab_Kota, 
+                a.Kd_Bidang, 
+                a.Kd_Unit, 
+                a.Kd_Sub, 
+                a.Kd_UPB, 
+                u.Kd_Kecamatan, 
+                u.Kd_Desa,
+                s.Nm_Sub_Unit,
+                u.Nm_UPB,
+                k.Nm_Kecamatan,
+                d.Nm_Desa';
         $skpd = $this->functions->CurlSimda(array(
-            'query' => '
-           		select
-            		'.$select_custom.'
-                    a.Kd_Prov, 
-                    a.Kd_Kab_Kota, 
-                    a.Kd_Bidang, 
-                    a.Kd_Unit, 
-                    a.Kd_Sub, 
-                    a.Kd_UPB, 
-                    u.Kd_Kecamatan, 
-                    u.Kd_Desa, 
-                    COUNT(a.Harga) as jml, 
-                    sum(a.Harga) as harga,
-                    u.Nm_UPB,
-                    k.Nm_Kecamatan,
-                    d.Nm_Desa,
-                    s.Nm_Sub_Unit,
-                    \''.$table_simda.'\' as table_simda
-                from '.$table_simda.' a
-                INNER JOIN ref_sub_unit s ON a.Kd_Prov=s.Kd_Prov
-                    AND a.Kd_Kab_Kota = s.Kd_Kab_Kota 
-                    AND a.Kd_Bidang = s.Kd_Bidang 
-                    AND a.Kd_Unit = s.Kd_Unit 
-                    AND a.Kd_Sub = s.Kd_Sub 
-                LEFT JOIN ref_upb u ON a.Kd_Prov=u.Kd_Prov
-                    AND a.Kd_Kab_Kota = u.Kd_Kab_Kota 
-                    AND a.Kd_Bidang = u.Kd_Bidang 
-                    AND a.Kd_Unit = u.Kd_Unit 
-                    AND a.Kd_Sub = u.Kd_Sub 
-                    AND a.Kd_UPB = u.Kd_UPB 
-                LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
-                    AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
-                    AND k.Kd_Kecamatan = u.Kd_Kecamatan
-                LEFT JOIN Ref_Desa d ON d.Kd_Prov=u.Kd_Prov
-                    AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
-                    AND d.Kd_Kecamatan = u.Kd_Kecamatan
-                    AND d.Kd_Desa = u.Kd_Desa
-                '.$where.'
-                group by a.Kd_Prov, 
-                    a.Kd_Kab_Kota, 
-                    a.Kd_Bidang, 
-                    a.Kd_Unit, 
-                    a.Kd_Sub, 
-                    a.Kd_UPB, 
-                    u.Kd_Kecamatan, 
-                    u.Kd_Desa,
-                    s.Nm_Sub_Unit,
-                    u.Nm_UPB,
-                    k.Nm_Kecamatan,
-                    d.Nm_Desa'
+            'query' => $sql
         ));
         return $skpd;
 	}

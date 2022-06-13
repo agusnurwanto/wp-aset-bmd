@@ -135,7 +135,7 @@ if(is_user_logged_in()){
             'show_header' => 1,
         ));
 
-        $tombol_tambah = '<a type="button" class="btn btn-primary" href="'.$link['url'].'" target="_blank" style="margin-bottom: 20px;">Tambah Temuan BPK</a>';
+        $tombol_tambah = '<a type="button" class="btn btn-primary" href="'.$link['url'].'" style="margin-bottom: 20px;">Tambah Temuan BPK</a>';
     }
 }
 ?>
