@@ -602,19 +602,19 @@ class Wp_Aset_Bmd_Admin {
 				        Field::make( 'text', 'jenis', 'Judul' )
 		        			->set_default_value('Belum ada nilai aset')
 	        		) )
-		    ) )
-			->add_tab( __( 'Petunjuk Penggunaan' ), array(
-				Field::make( 'complex', 'crb_petunjuk_penggunaan', 'Keterangan Tambahan' )
-		    		->add_fields( 'keterangan', array(
-				        Field::make( 'text', 'judul', 'Judul' )
-		        			->set_default_value('Petunjuk'),
-				        Field::make( 'image', 'gambar', 'Gambar' )
-		        			->set_value_type('url')
-		        			->set_default_value('https://via.placeholder.com/100x100'),
-				        Field::make( 'rich_text', 'deskripsi', 'Deskripsi' )
-		        			->set_default_value('Penjelasan')
-	        		) )
 		    ) );
+			// ->add_tab( __( 'Petunjuk Penggunaan' ), array(
+			// 	Field::make( 'complex', 'crb_petunjuk_penggunaan', 'Keterangan Tambahan' )
+		    // 		->add_fields( 'keterangan', array(
+			// 	        Field::make( 'text', 'judul', 'Judul' )
+		    //     			->set_default_value('Petunjuk'),
+			// 	        Field::make( 'image', 'gambar', 'Gambar' )
+		    //     			->set_value_type('url')
+		    //     			->set_default_value('https://via.placeholder.com/100x100'),
+			// 	        Field::make( 'rich_text', 'deskripsi', 'Deskripsi' )
+		    //     			->set_default_value('Penjelasan')
+	        // 		) )
+		    // ) );
 
 		Container::make( 'theme_options', __( 'Tampilan Galeri' ) )
 			->set_page_parent( $basic_options_container )
