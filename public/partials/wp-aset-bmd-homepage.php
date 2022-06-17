@@ -117,6 +117,7 @@
     }
     .site-logo {
         max-width: 500px;
+	width: 100%;
     }
 </style>
 <section id="sewa_aset">
