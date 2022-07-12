@@ -33,7 +33,8 @@ $link_detail_unit = $this->get_link_daftar_aset(
         )
     )
 );
-
+$Kd_Kecamatan='';
+$Kd_Desa='';
 $where = '';
 if(!empty($Kd_Kecamatan)){
     $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
