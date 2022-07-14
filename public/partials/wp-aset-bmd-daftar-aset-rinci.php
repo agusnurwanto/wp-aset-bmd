@@ -27,7 +27,7 @@ $kd_lokasi_upb = '.'.$this->functions->CekNull($Kd_Sub).'.'.$this->functions->Ce
 $link_detail_unit = $this->get_link_daftar_aset(
     array('get' => 
         array(
-            'kd_lokasi' => $kd_lokasi_unit, 
+            'kd_lokasi' => $params['kd_lokasi'], 
             'nama_skpd' => $params['nama_skpd'], 
             'daftar_aset' => 1
         )
@@ -245,7 +245,7 @@ foreach($aset as $k => $val){
 </style>
 <div class="cetak">
     <div style="padding: 10px;">
-        <h2 class="text-center">Data Barang Milik Daerah<br><a href="<?php echo $link_detail_unit; ?>"><?php echo $kd_lokasi_unit; ?></a><?php echo $kd_lokasi_upb.'<br>'; ?><?php echo $params['nama_skpd']; ?><br><?php echo $nama_jenis_aset; ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
+        <h2 class="text-center">Data Barang Milik Daerah<br><a href="<?php echo $link_detail_unit; ?>"><?php echo $kd_lokasi_unit; ?><?php echo $kd_lokasi_upb.'</a><br>'; ?><?php echo $params['nama_skpd']; ?><br><?php echo $nama_jenis_aset; ?><br><?php echo $nama_pemda; ?><br>Tahun <?php echo $tahun_anggaran; ?></h2>
     <?php
         if($show_map){
             echo '<div style="height:600px; width: 100%; margin-bottom: 15px;" id="map-canvas"></div>';
