@@ -197,7 +197,7 @@ foreach($skpd as $k => $val){
             <td class="text-center">'.$val->nama_aset.'</td>
             <td class="text-center">'.$kd_lokasi.'</td>
             <td>'.$val->Nm_Sub_Unit.'</td>
-            <td>'.$val->Nm_UPB.' '.$alamat.'</td>
+            <td>'.$val->Nm_UPB.'</td>
             <td class="text-right" data-sort="'.$val->jml.'">'.$jumlah.'</td>
             <td class="text-center">'.$satuan.'</td>
             <td class="text-right" data-kd_lokasi="'.$kd_lokasi.'" data-sort="'.$val->harga.'">'.number_format($val->harga,2,",",".").'</td>
