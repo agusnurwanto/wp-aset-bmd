@@ -60,55 +60,25 @@ foreach($query->posts as $post){
     $sql = "
         SELECT 
             u.Nm_UPB, 
-            k.Nm_Kecamatan,
-            s.Nm_Sub_Unit,
-            d.Nm_Desa
+            s.Nm_Sub_Unit
         from ref_upb u
         INNER JOIN ref_sub_unit s ON u.Kd_Prov=s.Kd_Prov
             AND u.Kd_Kab_Kota = s.Kd_Kab_Kota 
             AND u.Kd_Bidang = s.Kd_Bidang 
             AND u.Kd_Unit = s.Kd_Unit 
             AND u.Kd_Sub = s.Kd_Sub 
-        LEFT JOIN Ref_Kecamatan k ON k.Kd_Prov=u.Kd_Prov
-            AND k.Kd_Kab_Kota = u.Kd_Kab_Kota 
-            AND k.Kd_Kecamatan = u.Kd_Kecamatan
-        LEFT JOIN Ref_Desa d ON d.Kd_Prov=u.Kd_Prov
-            AND d.Kd_Kab_Kota = u.Kd_Kab_Kota 
-            AND d.Kd_Kecamatan = u.Kd_Kecamatan
-            AND d.Kd_Desa = u.Kd_Desa
         where u.Kd_Prov = $Kd_Prov
         AND u.Kd_Kab_Kota = $Kd_Kab_Kota 
         AND u.Kd_Bidang = $Kd_Bidang 
         AND u.Kd_Unit = $Kd_Unit 
         AND u.Kd_Sub = $Kd_Sub 
         AND u.Kd_UPB = $Kd_UPB
-        AND (
-            u.Kd_Kecamatan = $Kd_Kecamatan
-            OR u.Kd_Kecamatan is null
-        ) 
-        AND (
-            u.Kd_Desa = $Kd_Desa
-            OR u.Kd_Desa is null
-        )
     ";
     $nama_skpd_db = $this->functions->CurlSimda(array(
         'query' => $sql,
         'no_debug' => 0
     ));
-    $alamat = array();
-    if(!empty($nama_skpd_db[0]->Nm_Kecamatan)){
-        $alamat[] = 'Kec. '.$nama_skpd_db[0]->Nm_Kecamatan;
-    }
-    if(!empty($nama_skpd_db[0]->Nm_Desa)){
-        $alamat[] = 'Desa/Kel. '.$nama_skpd_db[0]->Nm_Desa;
-    }
-    if(!empty($alamat)){
-        $alamat = ' ('.implode(', ', $alamat).')';
-    }else{
-        $alamat = '';
-    }
-
-    $nama_skpd = $nama_skpd_db[0]->Nm_UPB.$alamat;
+    $nama_skpd = $nama_skpd_db[0]->Nm_UPB;
     $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params['jenis_aset']));
     $nama_jenis_aset[$data_jenis['nama']] = $data_jenis['nama'];
 
