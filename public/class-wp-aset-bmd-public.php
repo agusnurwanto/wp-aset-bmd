@@ -1954,7 +1954,7 @@ class Wp_Aset_Bmd_Public {
         if($table_simda == 'Ta_KIB_A'){
             $select_custom .= 'sum(a.Luas_M2) as luas, ';
         }
-        $where = '';
+        $where = ' WHERE 1=1';
         if(!empty($params['kd_lokasi'])){
         	$kode = explode('.', $params['kd_lokasi']);
         	$Kd_Prov = (int) $kode[1];
@@ -1962,7 +1962,7 @@ class Wp_Aset_Bmd_Public {
             $Kd_Bidang = (int) $kode[3];
             $Kd_Unit = (int) $kode[4];
             $Kd_Sub = (int) $kode[5];
-            $where .= $wpdb->prepare(' WHERE a.Kd_Prov=%d', $Kd_Prov);
+            $where .= $wpdb->prepare(' AND a.Kd_Prov=%d', $Kd_Prov);
             $where .= $wpdb->prepare(' AND a.Kd_Kab_Kota=%d', $Kd_Kab_Kota);
             $where .= $wpdb->prepare(' AND a.Kd_Bidang=%d', $Kd_Bidang);
             $where .= $wpdb->prepare(' AND a.Kd_Unit=%d', $Kd_Unit);
@@ -2010,6 +2010,10 @@ class Wp_Aset_Bmd_Public {
                 AND d.Kd_Kecamatan = u.Kd_Kecamatan
                 AND d.Kd_Desa = u.Kd_Desa
             '.$where.'
+		        AND a.Kd_Hapus= \'0\' 
+		        AND a.Kd_Data != \'3\' 
+		        AND a.Kd_KA= \'1\'
+		        AND a.Harga > 0
             group by a.Kd_Prov, 
                 a.Kd_Kab_Kota, 
                 a.Kd_Bidang, 
@@ -2022,6 +2026,10 @@ class Wp_Aset_Bmd_Public {
                 u.Nm_UPB,
                 k.Nm_Kecamatan,
                 d.Nm_Desa';
+        echo "
+			<!-- DEBUG
+			    ".$sql."
+			-->";
         $skpd = $this->functions->CurlSimda(array(
             'query' => $sql
         ));

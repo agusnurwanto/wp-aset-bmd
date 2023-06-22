@@ -33,18 +33,13 @@ $link_detail_unit = $this->get_link_daftar_aset(
         )
     )
 );
-$Kd_Kecamatan='';
-$Kd_Desa='';
+
 $where = '';
 if(!empty($Kd_Kecamatan)){
     $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
-}else{
-    $where .= ' AND a.Kd_Kecamatan is null';
 }
 if(!empty($Kd_Desa)){
     $where .= $wpdb->prepare(' AND a.Kd_Desa=%d', $Kd_Desa);
-}else{
-    $where .= ' AND a.Kd_Desa is null';
 }
 
 $body_skpd = '';
@@ -96,6 +91,11 @@ $sql = $wpdb->prepare('
         AND a.Harga > 0
         '.$where.'
     ', $Kd_Prov, $Kd_Kab_Kota, $Kd_Bidang, $Kd_Unit, $Kd_Sub, $Kd_UPB);
+echo "
+<!-- DEBUG
+    ".$sql."
+-->";
+
 $aset = $this->functions->CurlSimda(array(
     'query' => $sql 
 ));
