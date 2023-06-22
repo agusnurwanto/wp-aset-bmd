@@ -1767,7 +1767,7 @@ class Wp_Aset_Bmd_Public {
 					'no_key' => 1
 				);
 				if(empty($_POST['id_post'])){
-					$get_title = get_page_by_title( $judul, OBJECT, 'post' );
+					$get_title = $this->functions->get_page_by_title( $judul, OBJECT, 'post' );
 					if ($get_title == false) {
 						$link = $this->functions->generatePage($options);
 						$post_id = $link['id'];
