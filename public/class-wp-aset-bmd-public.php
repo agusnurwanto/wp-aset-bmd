@@ -755,6 +755,11 @@ class Wp_Aset_Bmd_Public {
 		    $Kd_Aset85,
 		    $No_Reg8
 		);
+
+	    echo "
+	    <!-- DEBUG
+	        ".$sql."
+	    -->";
 		$aset = $this->functions->CurlSimda(array(
 		    'query' => $sql 
 		));
@@ -1948,7 +1953,7 @@ class Wp_Aset_Bmd_Public {
 		}
 	}
 
-	function get_total_aset_upb($table_simda, $params = array()){
+	function get_total_aset_upb($table_simda, $params = array(), $data_jenis){
 		global $wpdb;
 		$select_custom = '';
         if($table_simda == 'Ta_KIB_A'){
@@ -1984,13 +1989,15 @@ class Wp_Aset_Bmd_Public {
                 u.Kd_Kecamatan, 
                 u.Kd_Desa, 
                 COUNT(a.Harga) as jml, 
-                sum(a.Harga) as harga,
+                sum(a.Harga) as harga_lama,
+                sum(b.Harga) as harga,
                 u.Nm_UPB,
                 k.Nm_Kecamatan,
                 d.Nm_Desa,
                 s.Nm_Sub_Unit,
                 \''.$table_simda.'\' as table_simda
             from '.$table_simda.' a
+    		LEFT JOIN '.$data_jenis['table_simda_harga'].' b ON a.IDPemda = b.IDPemda
             INNER JOIN ref_sub_unit s ON a.Kd_Prov=s.Kd_Prov
                 AND a.Kd_Kab_Kota = s.Kd_Kab_Kota 
                 AND a.Kd_Bidang = s.Kd_Bidang 
@@ -2013,7 +2020,7 @@ class Wp_Aset_Bmd_Public {
 		        AND a.Kd_Hapus= \'0\' 
 		        AND a.Kd_Data != \'3\' 
 		        AND a.Kd_KA= \'1\'
-		        AND a.Harga > 0
+		        AND b.harga > 0
             group by a.Kd_Prov, 
                 a.Kd_Kab_Kota, 
                 a.Kd_Bidang, 

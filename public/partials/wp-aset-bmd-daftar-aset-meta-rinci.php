@@ -164,6 +164,11 @@ foreach($query->posts as $post){
         $Kd_Aset85,
         $No_Reg8
     );
+    echo "
+    <!-- DEBUG
+        ".$sql."
+    -->";
+    
     $aset = $this->functions->CurlSimda(array(
         'query' => $sql 
     ));

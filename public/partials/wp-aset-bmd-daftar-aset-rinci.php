@@ -88,7 +88,7 @@ $sql = $wpdb->prepare('
         AND a.Kd_Hapus= \'0\' 
         AND a.Kd_Data != \'3\' 
         AND a.Kd_KA= \'1\'
-        AND a.Harga > 0
+        AND b.Harga > 0
         '.$where.'
     ', $Kd_Prov, $Kd_Kab_Kota, $Kd_Bidang, $Kd_Unit, $Kd_Sub, $Kd_UPB);
 echo "

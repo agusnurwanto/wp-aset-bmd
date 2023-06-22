@@ -13,7 +13,7 @@ if(!empty($params['jenis_aset'])){
         die('Jenis Aset tidak ditemukan!');
     }else{
         $nama_jenis_aset_all[] = $nama_jenis_aset;
-        $skpd = $this->get_total_aset_upb($table_simda, $params);
+        $skpd = $this->get_total_aset_upb($table_simda, $params, $data_jenis);
     }
     $datasets[] = array(
         'label' => $nama_jenis_aset,
@@ -32,7 +32,7 @@ if(!empty($params['jenis_aset'])){
     $table_simda = $data_jenis['table_simda'];
     if(!empty($nama_jenis_aset)){
         $nama_jenis_aset_all[] = $nama_jenis_aset;
-        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params));
+        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params, $data_jenis));
     }
     $datasets[] = array(
         'label' => $nama_jenis_aset,
@@ -49,7 +49,7 @@ if(!empty($params['jenis_aset'])){
     $table_simda = $data_jenis['table_simda'];
     if(!empty($nama_jenis_aset)){
         $nama_jenis_aset_all[] = $nama_jenis_aset;
-        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params));
+        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params, $data_jenis));
     }
     $datasets[] = array(
         'label' => $nama_jenis_aset,
@@ -66,7 +66,7 @@ if(!empty($params['jenis_aset'])){
     $table_simda = $data_jenis['table_simda'];
     if(!empty($nama_jenis_aset)){
         $nama_jenis_aset_all[] = $nama_jenis_aset;
-        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params));
+        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params, $data_jenis));
     }
     $datasets[] = array(
         'label' => $nama_jenis_aset,
@@ -83,7 +83,7 @@ if(!empty($params['jenis_aset'])){
     $table_simda = $data_jenis['table_simda'];
     if(!empty($nama_jenis_aset)){
         $nama_jenis_aset_all[] = $nama_jenis_aset;
-        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params));
+        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params, $data_jenis));
     }
     $datasets[] = array(
         'label' => $nama_jenis_aset,
@@ -100,7 +100,7 @@ if(!empty($params['jenis_aset'])){
     $table_simda = $data_jenis['table_simda'];
     if(!empty($nama_jenis_aset)){
         $nama_jenis_aset_all[] = $nama_jenis_aset;
-        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params));
+        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params, $data_jenis));
     }
     $datasets[] = array(
         'label' => $nama_jenis_aset,
@@ -117,7 +117,7 @@ if(!empty($params['jenis_aset'])){
     $table_simda = $data_jenis['table_simda'];
     if(!empty($nama_jenis_aset)){
         $nama_jenis_aset_all[] = $nama_jenis_aset;
-        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params));
+        $skpd = array_merge($skpd, $this->get_total_aset_upb($table_simda, $params, $data_jenis));
     }
     $datasets[] = array(
         'label' => $nama_jenis_aset,

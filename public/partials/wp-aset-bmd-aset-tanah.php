@@ -31,6 +31,7 @@ if(!empty($_GET) && !empty($_GET['sertifikat'])){
 $sql = '
     select 
         a.*,
+        b.Harga as harga_asli,
         r.Nm_Aset5,
         d.Nm_UPB,
         e.Nm_Kecamatan,
@@ -63,6 +64,11 @@ $sql = '
         AND a.Kd_Data != 3 
         AND a.Kd_KA= 1
     '.$where;
+
+echo "
+<!-- DEBUG
+    ".$sql."
+-->";
 
 $aset = $this->functions->CurlSimda(array(
     'query' => $sql 
@@ -121,7 +127,7 @@ foreach($aset as $k => $val){
             <td>'.$val->Alamat.'</td>
             '.$column_sertifikat.'
             <td>'.implode(' | ', $keterangan).'</td>
-            <td class="text-right" data-sort="'.$val->Harga.'">'.number_format($val->Harga,2,",",".").'</td>
+            <td class="text-right" data-sort="'.$val->harga_asli.'">'.number_format($val->harga_asli,2,",",".").'</td>
             <td class="text-center"><a target="_blank" href="'.$link['url'].'" class="btn btn-primary">Detail</a><br><a style="margin-top: 5px;" onclick="setCenter(\''.$koordinatX.'\',\''.$koordinatY.'\');" href="#" class="btn btn-danger">Map</a></td>
         </tr>
     ';
@@ -131,7 +137,7 @@ foreach($aset as $k => $val){
         'lng' => $koordinatX,
         'ltd' => $koordinatY,
         'polygon' => $polygon,
-        'nilai' => number_format($val->Harga,2,",","."),
+        'nilai' => number_format($val->harga_asli,2,",","."),
         'nama_skpd' => $val->Nm_UPB.' '.$alamat,
         'kd_barang' => $kd_barang.'.'.$kd_register,
         'kd_lokasi' => $kd_lokasi,
