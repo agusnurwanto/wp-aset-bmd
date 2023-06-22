@@ -68,12 +68,14 @@ foreach($query->posts as $post){
     }
 
     $where = '';
+    /*
     if(!empty($Kd_Kecamatan)){
         $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
     }
     if(!empty($Kd_Desa)){
         $where .= $wpdb->prepare(' AND a.Kd_Desa=%d', $Kd_Desa);
     }
+    */
 
     $kd_barang = explode('.', $params_post['kd_barang']);
     $Kd_Aset8 = (int) $kd_barang[0];
@@ -86,6 +88,9 @@ foreach($query->posts as $post){
 
     $kd_barang = $params_post['kd_barang'];
     $No_Reg8 = (int) $params_post['kd_register'];
+    if($data_jenis['table_simda'] != 'Ta_KIB_F'){
+        $where .= ' AND a.Kd_Data != \'3\' AND a.Kd_KA= \'1\'';
+    }
 
     $sql = $wpdb->prepare('
         select 
@@ -145,8 +150,6 @@ foreach($query->posts as $post){
             AND a.Kd_Aset85=%d
             AND a.No_Reg8=%d
             AND a.Kd_Hapus=0
-            AND a.Kd_Data!=3
-            AND a.Kd_KA=1
             '.$where.'
         ',
         $Kd_Prov,
@@ -168,7 +171,7 @@ foreach($query->posts as $post){
     <!-- DEBUG
         ".$sql."
     -->";
-    
+
     $aset = $this->functions->CurlSimda(array(
         'query' => $sql 
     ));

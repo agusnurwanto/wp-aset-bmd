@@ -1236,9 +1236,7 @@ class Wp_Aset_Bmd_Public {
 			if (!empty($_POST['api_key']) && $_POST['api_key'] == get_option( '_crb_apikey_simda_bmd' )) {
 				if (!empty($_POST['data'])) {
 					$where = ' where 
-						B.Kd_Hapus= \'0\' 
-			            AND B.Kd_Data != \'3\' 
-			            AND B.Kd_KA= \'1\'
+						B.Kd_Hapus= \'0\'
 						and B.Kd_Prov=\''.$_POST['data']['Kd_Prov'].'\' 
 						and B.Kd_Kab_Kota=\''.$_POST['data']['Kd_Kab_Kota'].'\' 
 						and B.Kd_Bidang=\''.$_POST['data']['Kd_Bidang'].'\' 
@@ -1260,8 +1258,10 @@ class Wp_Aset_Bmd_Public {
 					    }
 					}
 
+					$where_khusus = ' AND B.Kd_Data != \'3\' AND B.Kd_KA= \'1\'';
 				    $harga = 0;
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'tanah'){
+				    	$where .= $where_khusus;
 					    $tanah = $this->functions->CurlSimda(array(
 					        'query' => "
 					        	select 
@@ -1276,6 +1276,7 @@ class Wp_Aset_Bmd_Public {
 				    	$harga += $tanah[0]->harga;
 					}
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'mesin'){
+				    	$where .= $where_khusus;
 					    $mesin = $this->functions->CurlSimda(array(
 					        'query' => "
 					        	select 
@@ -1289,6 +1290,7 @@ class Wp_Aset_Bmd_Public {
 				    	$harga += $mesin[0]->harga;
 				    }
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'bangunan'){
+				    	$where .= $where_khusus;
 					    $gedung = $this->functions->CurlSimda(array(
 					        'query' => "
 					        	select 
@@ -1302,6 +1304,7 @@ class Wp_Aset_Bmd_Public {
 				    	$harga += $gedung[0]->harga;
 				    }
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'jalan'){
+				    	$where .= $where_khusus;
 					    $jalan = $this->functions->CurlSimda(array(
 					        'query' => "
 					        	select 
@@ -1315,6 +1318,7 @@ class Wp_Aset_Bmd_Public {
 				    	$harga += $jalan[0]->harga;
 				    }
 				    if(empty($_POST['jenis_aset']) || $_POST['jenis_aset'] == 'aset_tetap'){
+				    	$where .= $where_khusus;
 					    $tetap_lainnya = $this->functions->CurlSimda(array(
 					        'query' => "
 					        	select 
@@ -1955,10 +1959,6 @@ class Wp_Aset_Bmd_Public {
 
 	function get_total_aset_upb($table_simda, $params = array(), $data_jenis){
 		global $wpdb;
-		$select_custom = '';
-        if($table_simda == 'Ta_KIB_A'){
-            $select_custom .= 'sum(a.Luas_M2) as luas, ';
-        }
         $where = ' WHERE 1=1';
         if(!empty($params['kd_lokasi'])){
         	$kode = explode('.', $params['kd_lokasi']);
@@ -1973,6 +1973,14 @@ class Wp_Aset_Bmd_Public {
             $where .= $wpdb->prepare(' AND a.Kd_Unit=%d', $Kd_Unit);
             $where .= $wpdb->prepare(' AND a.Kd_Sub=%d', $Kd_Sub);
         }
+
+		$select_custom = '';
+        if($table_simda == 'Ta_KIB_A'){
+            $select_custom .= 'sum(a.Luas_M2) as luas, ';
+        }else if($table_simda != 'Ta_KIB_F'){
+            $where .= ' AND a.Kd_Data != \'3\' AND a.Kd_KA= \'1\'';
+        }
+
         if(!empty($params['jenis_aset'])){
         	$select_custom .= '\''.$params['jenis_aset'].'\' as jenis_aset, ';
         	$select_custom .= '\''.$params['nama_aset'].'\' as nama_aset, ';
@@ -2017,9 +2025,7 @@ class Wp_Aset_Bmd_Public {
                 AND d.Kd_Kecamatan = u.Kd_Kecamatan
                 AND d.Kd_Desa = u.Kd_Desa
             '.$where.'
-		        AND a.Kd_Hapus= \'0\' 
-		        AND a.Kd_Data != \'3\' 
-		        AND a.Kd_KA= \'1\'
+		        AND a.Kd_Hapus= \'0\'
 		        AND b.harga > 0
             group by a.Kd_Prov, 
                 a.Kd_Kab_Kota, 

@@ -52,12 +52,14 @@ foreach($query->posts as $post){
     $Kd_Desa = (int) $kd_lokasi[8];
 
     $where = '';
+    /*
     if(!empty($Kd_Kecamatan)){
         $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
     }
     if(!empty($Kd_Desa)){
         $where .= $wpdb->prepare(' AND a.Kd_Desa=%d', $Kd_Desa);
     }
+    */
 
     $kd_barang = explode('.', $params_post['kd_barang']);
     $Kd_Aset8 = (int) $kd_barang[0];
@@ -71,6 +73,9 @@ foreach($query->posts as $post){
 
     $data_jenis = $this->get_nama_jenis_aset(array('jenis_aset' => $params_post['jenis_aset']));
     $nama_jenis_aset[$data_jenis['nama']] = $data_jenis['nama'];
+    if($data_jenis['table_simda'] != 'Ta_KIB_F'){
+        $where .= ' AND a.Kd_Data != \'3\' AND a.Kd_KA= \'1\'';
+    }
 
     $sql = $wpdb->prepare('
         select 
@@ -122,8 +127,6 @@ foreach($query->posts as $post){
             AND a.Kd_Aset85=%d
             AND a.No_Reg8=%d
             AND a.Kd_Hapus=0
-            AND a.Kd_Data!=3
-            AND a.Kd_KA=1
             '.$where.'
         ',
         $Kd_Prov,

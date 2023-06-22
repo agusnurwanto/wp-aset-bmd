@@ -35,11 +35,16 @@ $link_detail_unit = $this->get_link_daftar_aset(
 );
 
 $where = '';
+/*
 if(!empty($Kd_Kecamatan)){
     $where .= $wpdb->prepare(' AND a.Kd_Kecamatan=%d', $Kd_Kecamatan);
 }
 if(!empty($Kd_Desa)){
     $where .= $wpdb->prepare(' AND a.Kd_Desa=%d', $Kd_Desa);
+}
+*/
+if($data_jenis['table_simda'] != 'Ta_KIB_F'){
+    $where .= ' AND a.Kd_Data != \'3\' AND a.Kd_KA= \'1\'';
 }
 
 $body_skpd = '';
@@ -86,8 +91,6 @@ $sql = $wpdb->prepare('
         AND a.Kd_Sub=%d 
         AND a.Kd_UPB=%d
         AND a.Kd_Hapus= \'0\' 
-        AND a.Kd_Data != \'3\' 
-        AND a.Kd_KA= \'1\'
         AND b.Harga > 0
         '.$where.'
     ', $Kd_Prov, $Kd_Kab_Kota, $Kd_Bidang, $Kd_Unit, $Kd_Sub, $Kd_UPB);
