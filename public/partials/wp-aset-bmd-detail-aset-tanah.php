@@ -1,3 +1,23 @@
+<?php
+    if(empty($aset[0]->Penggunaan)){
+        $aset[0]->Penggunaan = '';
+    }
+    if(empty($aset[0]->Luas_M2)){
+        $aset[0]->Luas_M2 = '';
+    }
+    if(empty($aset[0]->Alamat)){
+        $aset[0]->Alamat = '';
+    }
+    if(empty($aset[0]->Hak_Tanah)){
+        $aset[0]->Hak_Tanah = '';
+    }
+    if(empty($aset[0]->Sertifikat_Tanggal)){
+        $aset[0]->Sertifikat_Tanggal = '';
+    }
+    if(empty($aset[0]->Sertifikat_Nomor)){
+        $aset[0]->Sertifikat_Nomor = '';
+    }
+?>
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Penggunaan</label>
                 <div class="col-md-4">
