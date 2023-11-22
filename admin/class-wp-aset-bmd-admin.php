@@ -297,6 +297,13 @@ class Wp_Aset_Bmd_Admin {
         	'no_key' => 1,
 			'post_status' => 'publish'
 		));
+		$cek_plat_no = $this->functions->generatePage(array(
+			'nama_page' => 'Cek Plat Nomor Mesin',
+			'content' => '[cek_plat_no]',
+        	'show_header' => 1,
+        	'no_key' => 1,
+			'post_status' => 'publish'
+		));
 
         $status = $this->get_status_simda();
         $nama_pemda = $status['data']['nama_pemda'];
@@ -373,6 +380,7 @@ class Wp_Aset_Bmd_Admin {
 	            		<li><b>Mutasi Aset: <a target="_blank" href="'.$mutasi_aset['url'].'">'.$mutasi_aset['title'].'</a></b></li>
 						<li><b>Tanggapan Publik: <a target="_blank" href="'.$tanggapan_publik['url'].'">'.$tanggapan_publik['title'].'</a></b></li>
 						<li><b>Release Update Version: <a target="_blank" href="'.$update_release['url'].'">'.$update_release['title'].'</a></b></li>
+						<li><b>Cek Plat Nomor Mesin: <a target="_blank" href="'.$cek_plat_no['url'].'">'.$cek_plat_no['title'].'</a></b></li>
 	            	</ul>
 	            	' ),
 	        	Field::make( 'html', 'crb_simda_bmd_referensi_html' )

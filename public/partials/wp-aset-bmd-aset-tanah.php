@@ -31,7 +31,7 @@ if(!empty($_GET) && !empty($_GET['sertifikat'])){
 $sql = '
     select 
         a.*,
-        b.Harga as harga_asli,
+        c.Harga as harga_asli,
         r.Nm_Aset5,
         d.Nm_UPB,
         e.Nm_Kecamatan,

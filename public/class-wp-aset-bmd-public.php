@@ -1461,6 +1461,14 @@ class Wp_Aset_Bmd_Public {
 
 	}
 	
+	function cek_plat_no(){
+		if(!empty($_GET) && !empty($_GET['post'])){
+			return '';
+		}
+		require_once BMD_PLUGIN_PATH . 'public/partials/wp-aset-bmd-cek-plat-no-mesin.php';
+
+	}
+	
 	function tambah_data_temuan_bpk($atts){
 		global $post;
 		if(!empty($_GET) && !empty($_GET['post'])){

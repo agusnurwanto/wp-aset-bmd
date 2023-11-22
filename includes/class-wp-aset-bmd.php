@@ -223,7 +223,7 @@ class Wp_Aset_Bmd {
 		add_shortcode('tanggapan_publik',  array($plugin_public, 'tanggapan_publik'));
 		add_shortcode('update_release',  array($plugin_public, 'update_release'));
 		add_shortcode('dokumentasi_sistem',  array($plugin_public, 'dokumentasi_sistem'));
-		add_shortcode('tanggapan_publik',  array($plugin_public, 'tanggapan_publik'));
+		add_shortcode('cek_plat_no',  array($plugin_public, 'cek_plat_no'));
 	}
 
 	/**
