@@ -281,7 +281,7 @@ foreach($query->posts as $post){
             <td>'.implode(' | ', $keterangan).'</td>
             <td>'.$keterangan_mutasi_aset.'</td>
             <td class="text-right" data-sort="'.$nilai_aset.'">'.number_format($nilai_aset,2,",",".").'</td>
-            <td class="text-center"><a href="'.$link['url'].'" class="btn btn-primary">Detail</a></td>
+            <td class="text-center"><a title="'.$link['title'].'" href="'.$link['url'].'" class="btn btn-primary">Detail</a></td>
         </tr>
     ';
 
