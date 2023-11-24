@@ -217,6 +217,13 @@ foreach($query->posts as $post){
     $aset = $this->functions->CurlSimda(array(
         'query' => $sql 
     ));
+    if(
+        empty($aset)
+        || empty($aset[0])
+        || empty($aset[0]->harga_asli)
+    ){
+        continue;
+    }
     $nilai_aset = $aset[0]->harga_asli;
     $no++;
     $kd_register = $this->functions->CekNull($aset[0]->No_Reg8, 6);
