@@ -242,6 +242,7 @@ class Wp_Aset_Bmd_Simda
 				FROM $wpdb->posts
 				WHERE post_title = %s
 					AND post_type IN ($post_type_in_string)
+				ORDER BY post_date ASC
 			", $page_title);
 		} else {
 			$sql = $wpdb->prepare("
@@ -249,8 +250,22 @@ class Wp_Aset_Bmd_Simda
 				FROM $wpdb->posts
 				WHERE post_title = %s
 					AND post_type = %s
+				ORDER BY post_date ASC
 			", $page_title, $post_type);
 		}
+
+		// untuk menghapus double post / page
+		$pages = $wpdb->get_results( $sql );
+		if(count($pages) > 1){
+			foreach($pages as $k => $p){
+				if($k == 0){
+					continue;
+				}
+				wp_trash_post($p->ID);
+			}
+		}
+		// end hapus page
+
 		$page = $wpdb->get_var( $sql );
 		if ( $page ) {
 			return get_post( $page, $output );
