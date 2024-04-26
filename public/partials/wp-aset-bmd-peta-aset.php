@@ -248,7 +248,7 @@ foreach($jenis_aset_all as $jenis_aset){
             'nilai' => number_format($aset->harga_asli,2,",","."),
             'nama_aset' => $aset->Nm_Aset5,
             'keterangan' => implode(' | ', $keterangan),
-            'nama_skpd' => $nama_skpd,
+            'nama_skpd' => $nama_gabungan,
             'kd_barang' => $kd_barang,
             'kd_lokasi' => $kd_lokasi,
             'warna_map' => $warna_map,
