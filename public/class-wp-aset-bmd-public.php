@@ -1965,8 +1965,11 @@ class Wp_Aset_Bmd_Public {
 		}
 	}
 
-	function get_total_aset_upb($table_simda, $params = array(), $data_jenis){
+	function get_total_aset_upb($table_simda, $params, $data_jenis){
 		global $wpdb;
+		if(empty($params)){
+			$params = array();
+		}
         $where = ' WHERE 1=1';
         if(!empty($params['kd_lokasi'])){
         	$kode = explode('.', $params['kd_lokasi']);

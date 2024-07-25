@@ -56,6 +56,7 @@ class Wp_Aset_Bmd {
 	 * @var      string    $version    The current version of the plugin.
 	 */
 	protected $version;
+	protected $functions;
 
 	/**
 	 * Define the core functionality of the plugin.
